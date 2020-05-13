@@ -34,4 +34,8 @@ class BotManController extends Controller
     {
         $bot->startConversation(new ExampleConversation());
     }
+
+    public function dashboard(){
+        return view('admin.dashboard');
+    }
 }
