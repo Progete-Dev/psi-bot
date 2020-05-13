@@ -13,5 +13,5 @@
 
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/', 'BotManController@home');
-Route::get('/admin','BotManController@dashboard ')
+Route::get('/admin','BotManController@dashboard ');
 Route::get('/login', "Auth\LoginController@show");
