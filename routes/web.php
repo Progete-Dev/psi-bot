@@ -15,3 +15,7 @@ Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/', 'BotManController@home');
 Route::get('/admin','BotManController@dashboard ');
 Route::get('/login', "Auth\LoginController@show");
+Route::get('/dashboard', 'DashboardController@dash')->name('dashboard');
+Auth::routes();
+Route::get('/paciente','PacienteController@show')->middleware('auth')->name('paciente');
+Route::get('/home', 'HomeController@index')->name('home');

@@ -1,41 +1,14 @@
-@extends('layout')
+@extends('layouts.app')
 
-@push('styles')
-    
-
-    <!-- Styles -->
-    <style>
-        body {
-            font-family: "Source Sans Pro", sans-serif;
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(#57bfc7, #45a6b3);
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .content {
-            text-align: center;
-        }
-                
-        #app {
-            position: absolute;
-            bottom: 10px;
-        }
-    </style>
-@endpush
-
-@section('body')
-<div class="container">
-    <div class="content" id="app">
+@section('content')
+    <div class="container">
         <botman-tinker api-endpoint="/botman"></botman-tinker>
     </div>
-</div>
-
-<script src="/js/app.js"></script>
+    
 @endsection
+
+
+@push('body-script')
+
+@endpush
+    

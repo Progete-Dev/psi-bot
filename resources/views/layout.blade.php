@@ -19,7 +19,7 @@
         <div class="h-full w-full flex overflow-hidden antialiased text-gray-800">
 
             <main class="flex-grow flex min-h-0 ">
-            @if(request()->has('user'))
+            @if(Auth::user()!=null)
                 <section class="flex flex-col p-4 max-w-sm flex-none bg-gray-300 min-h-0 overflow-auto w-1/5">
                     @include('menu')
                 </section>

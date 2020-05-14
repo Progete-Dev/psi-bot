@@ -1,8 +1,8 @@
-@extends('layout')
+@extends('layouts.app')
 
-@section('body')
+@section('content')
 
-<div class="font-sans bg-grey-lighter flex flex-col min-h-screen w-full">
+<div class="font-sans bg-grey flex flex-col min-h-screen w-full">
         <div>
           <div class="bg-blue-dark">
             <div class="container mx-auto px-4">
@@ -18,7 +18,7 @@
                     <img class="inline-block h-8 w-8 rounded-full" src="https://avatars0.githubusercontent.com/u/4323180?s=460&v=4" alt="">
                   </div>
                   <div class="hidden md:block md:flex md:items-center ml-2">
-                    <span class="text-white text-sm mr-1">Adam Wathan</span>
+                  <span class="text-white text-sm mr-1">{{$nome}}</span>
                     <div>
                       <svg class="fill-current text-white h-4 w-4 block opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z"/></svg>
                     </div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="hidden lg:flex">
                   <button type="button" class="appearance-none py-4 text-blue-dark border-b border-blue-dark mr-6">
-                                      Bitcoin &middot; CA$21,404.74
+                                      Bitcoin &middot; {{$name}}
                                   </button>
                   <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark mr-6">
                                       Ethereum &middot; CA$884.80
