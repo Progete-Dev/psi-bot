@@ -20,6 +20,7 @@
     "vue": "^2.5.7"
   },
   "dependencies": {
-    "botman-tinker": "^0.0.1"
+    "botman-tinker": "^0.0.1",
+    "v-calendar": "^1.0.6"
   }
 }
