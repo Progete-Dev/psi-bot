@@ -15,9 +15,10 @@
   
     @stack('styles')
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+  
     <script type="module" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
 <script nomodule src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine-ie11.min.js" defer></script>
+<script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
@@ -26,7 +27,7 @@
     
 </head>
 <body>
-    <div id="app">
+   
         <div class="h-screen flex overflow-hidden bg-gray-200">
      
 
@@ -45,6 +46,6 @@
               
               </div>
             
-    </div>
+    
 </body>
 </html>
