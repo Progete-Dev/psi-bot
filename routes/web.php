@@ -19,3 +19,4 @@ Route::get('/dashboard', 'DashboardController@dash')->name('dashboard');
 Auth::routes();
 Route::get('/paciente','PacienteController@show')->middleware('auth')->name('paciente');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/psicologo', 'PsicologoController@perfil');
