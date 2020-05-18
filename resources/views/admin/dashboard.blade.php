@@ -1,288 +1,259 @@
 @extends('layouts.app')
 
 @section('content')
-
+@include('partials.alerts_partial')
 <div class="font-sans bg-grey flex flex-col min-h-screen w-full">
-        <div>
-          <div class="hidden bg-blue-dark md:block md:bg-white md:border-b">
-            <div class="container mx-auto px-4">
-              <div class="md:flex">
-                <div class="flex -mb-px mr-8">
-                  <a href="#" class="no-underline text-white md:text-blue-dark flex items-center py-4 border-b border-blue-dark">
-                    <svg class="h-6 w-6 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M3.889 3h6.222a.9.9 0 0 1 .889.91v8.18a.9.9 0 0 1-.889.91H3.89A.9.9 0 0 1 3 12.09V3.91A.9.9 0 0 1 3.889 3zM3.889 15h6.222c.491 0 .889.384.889.857v4.286c0 .473-.398.857-.889.857H3.89C3.398 21 3 20.616 3 20.143v-4.286c0-.473.398-.857.889-.857zM13.889 11h6.222a.9.9 0 0 1 .889.91v8.18a.9.9 0 0 1-.889.91H13.89a.9.9 0 0 1-.889-.91v-8.18a.9.9 0 0 1 .889-.91zM13.889 3h6.222c.491 0 .889.384.889.857v4.286c0 .473-.398.857-.889.857H13.89C13.398 9 13 8.616 13 8.143V3.857c0-.473.398-.857.889-.857z"/></svg>              Dashboard
-                  </a>
-                </div>
-                <div class="flex -mb-px mr-8">
-                  <a href="#" class="no-underline text-white opacity-50 md:text-grey-dark md:opacity-100 flex items-center py-4 border-b border-transparent hover:opacity-100 md:hover:border-grey-dark">
-                    <svg class="h-6 w-6 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 7h10V5l4 3.5-4 3.5v-2H8V7zm-6 8.5L6 12v2h10v3H6v2l-4-3.5z" fill-rule="nonzero"/></svg> Buy/Sell
-                  </a>
-                </div>
-                <div class="flex -mb-px mr-8">
-                  <a href="#" class="no-underline text-white opacity-50 md:text-grey-dark md:opacity-100 flex items-center py-4 border-b border-transparent hover:opacity-100 md:hover:border-grey-dark">
-                    <svg class="h-6 w-6 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 8H5.5v-.5l11-.88v.88H18V6c0-1.1-.891-1.872-1.979-1.717L5.98 5.717C4.891 5.873 4 6.9 4 8v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-1.5 7.006a1.5 1.5 0 1 1 .001-3.001 1.5 1.5 0 0 1-.001 3.001z" fill-rule="nonzero"/></svg>              Accounts
-                  </a>
-                </div>
-                <div class="flex -mb-px mr-8">
-                  <a href="#" class="no-underline text-white opacity-50 md:text-grey-dark md:opacity-100 flex items-center py-4 border-b border-transparent hover:opacity-100 md:hover:border-grey-dark">
-                    <svg class="h-6 w-6 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 12h2v2h9s-.149-4.459-.2-5.854C21.75 6.82 21.275 6 19.8 6h-3.208l-1.197-2.256C15.064 3.121 14.951 3 14.216 3H9.783c-.735 0-.847.121-1.179.744-.165.311-.7 1.318-1.196 2.256H4.199c-1.476 0-1.945.82-2 2.146C2.145 9.473 2 14 2 14h9v-2zM9.649 4.916c.23-.432.308-.516.817-.516h3.067c.509 0 .588.084.816.516L14.924 6h-5.85l.575-1.084zM13 17h-2v-2H2.5s.124 1.797.199 3.322c.031.633.218 1.678 1.8 1.678H19.5c1.582 0 1.765-1.047 1.8-1.678.087-1.568.2-3.322.2-3.322H13v2z" fill-rule="nonzero"/></svg>              Tools
-                  </a>
-                </div>
-                <div class="flex -mb-px">
-                  <a href="#" class="no-underline text-white opacity-50 md:text-grey-dark md:opacity-100 flex items-center py-4 border-b border-transparent hover:opacity-100 md:hover:border-grey-dark">
-                    <svg class="h-6 w-6 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.783 12c0-1.049.646-1.875 1.617-2.443a8.932 8.932 0 0 0-.692-1.672c-1.089.285-1.97-.141-2.711-.883-.741-.74-.968-1.621-.683-2.711a8.732 8.732 0 0 0-1.672-.691c-.568.97-1.595 1.615-2.642 1.615-1.048 0-2.074-.645-2.643-1.615-.58.172-1.14.403-1.671.691.285 1.09.059 1.971-.684 2.711-.74.742-1.621 1.168-2.711.883A8.797 8.797 0 0 0 3.6 9.557c.97.568 1.615 1.394 1.615 2.443 0 1.047-.645 2.074-1.615 2.643.173.58.404 1.14.691 1.672 1.09-.285 1.971-.059 2.711.682.741.742.969 1.623.684 2.711.532.288 1.092.52 1.672.693.568-.973 1.595-1.617 2.643-1.617 1.047 0 2.074.645 2.643 1.617a8.963 8.963 0 0 0 1.672-.693c-.285-1.088-.059-1.969.683-2.711.741-.74 1.622-1.166 2.711-.883.287-.532.52-1.092.692-1.672-.973-.569-1.619-1.395-1.619-2.442zM12 15.652a3.653 3.653 0 1 1 0-7.306 3.653 3.653 0 0 1 0 7.306z" fill-rule="nonzero"/></svg>              Settings
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="flex-grow container mx-auto sm:px-4 pt-6 pb-8">
-          <div class="bg-white border-t border-b sm:border-l sm:border-r sm:rounded shadow mb-6">
-            <div class="border-b px-6">
-              <div class="flex justify-between -mb-px">
-                <div class="lg:hidden text-blue-dark py-4 text-lg">
-                  Price Charts
-                </div>
-                <div class="hidden lg:flex">
-                  <button type="button" class="appearance-none py-4 text-blue-dark border-b border-blue-dark mr-6">
-                                      Bitcoin &middot; {{$name}}
-                                  </button>
-                  <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark mr-6">
-                                      Ethereum &middot; CA$884.80
-                                  </button>
-                  <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark">
-                                      Litecoin &middot; CA$358.24
-                                  </button>
-                </div>
-                <div class="flex text-sm">
-                  <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark mr-3">
-                                      1M
-                                  </button>
-                  <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark mr-3">
-                                      1D
-                                  </button>
-                  <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark mr-3">
-                                      1W
-                                  </button>
-                  <button type="button" class="appearance-none py-4 text-blue-dark border-b border-blue-dark mr-3">
-                                      1M
-                                  </button>
-                  <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark mr-3">
-                                      1Y
-                                  </button>
-                  <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark">
-                                      ALL
-                                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="flex items-center px-6 lg:hidden">
-              <div class="flex-grow flex-no-shrink py-6">
-                <div class="text-grey-darker mb-2">
-                  <span class="text-3xl align-top">CA$</span>
-                  <span class="text-5xl">21,404</span>
-                  <span class="text-3xl align-top">.74</span>
-                </div>
-                <div class="text-green-light text-sm">
-                  &uarr; CA$12,955.35 (154.16%)
-                </div>
-              </div>
-              <div class="flex-shrink w-32 inline-block relative">
-                <select class="block appearance-none w-full bg-white border border-grey-light px-4 py-2 pr-8 rounded">
-                              <option>BTC</option>
-                              <option>ETH</option>
-                              <option>LTC</option>
-                            </select>
-                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey">
-                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="hidden lg:flex">
-              <div class="w-1/3 text-center py-8">
-                <div class="border-r">
-                  <div class="text-grey-darker mb-2">
-                    <span class="text-3xl align-top">CA$</span>
-                    <span class="text-5xl">21,404</span>
-                    <span class="text-3xl align-top">.74</span>
-                  </div>
-                  <div class="text-sm uppercase text-grey tracking-wide">
-                    Bitcoin Price
-                  </div>
-                </div>
-              </div>
-              <div class="w-1/3 text-center py-8">
-                <div class="border-r">
-                  <div class="text-grey-darker mb-2">
-                    <span class="text-3xl align-top"><span class="text-green align-top">+</span>CA$</span>
-                    <span class="text-5xl">12,998</span>
-                    <span class="text-3xl align-top">.48</span>
-                  </div>
-                  <div class="text-sm uppercase text-grey tracking-wide">
-                    Since last month (CAD)
-                  </div>
-                </div>
-              </div>
-              <div class="w-1/3 text-center py-8">
-                <div>
-                  <div class="text-grey-darker mb-2">
-                    <span class="text-3xl align-top"><span class="text-green align-top">+</span></span>
-                    <span class="text-5xl">154.47</span>
-                    <span class="text-3xl align-top">%</span>
-                  </div>
-                  <div class="text-sm uppercase text-grey tracking-wide">
-                    Since last month (%)
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-wrap -mx-4">
-            <div class="w-full mb-6 lg:mb-0 lg:w-1/2 px-4 flex flex-col">
-              <div class="flex-grow flex flex-col bg-white border-t border-b sm:rounded sm:border shadow overflow-hidden">
-                <div class="border-b">
-                  <div class="flex justify-between px-6 -mb-px">
-                    <h3 class="text-blue-dark py-4 font-normal text-lg">Your Portfolio</h3>
-                    <div class="flex">
-                      <button type="button" class="appearance-none py-4 text-blue-dark border-b border-blue-dark mr-3">
-                                              List
-                                          </button>
-                      <button type="button" class="appearance-none py-4 text-grey-dark border-b border-transparent hover:border-grey-dark">
-                                              Chart
-                                          </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex-grow flex px-6 py-6 text-grey-darker items-center border-b -mx-4">
-                  <div class="w-2/5 xl:w-1/4 px-4 flex items-center">
-                    <div class="rounded-full bg-orange inline-flex mr-3">
-                      <svg class="fill-current text-white h-8 w-8 block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g fill-rule="evenodd"><path d="M21.78 15.37c.51-.61.83-1.4.83-2.26 0-2.74-1.6-4.38-4.24-4.38V5.45c0-.12-.1-.22-.22-.22h-1.27c-.11 0-.2.1-.2.21v3.3h-1.7V5.44c0-.12-.1-.22-.22-.22H13.5c-.12 0-.2.1-.21.21v3.3H9.67c-.12 0-.21.09-.21.21v1.31c0 .12.1.22.21.22h.21c.94 0 1.7.79 1.7 1.75v7c0 .92-.68 1.67-1.55 1.75a.21.21 0 0 0-.18.16l-.33 1.32c-.01.06 0 .13.04.19.04.05.1.08.17.08h3.55v3.3c0 .1.1.2.2.2h1.28c.12 0 .21-.1.21-.22v-3.28h1.7v3.3c0 .1.1.2.21.2h1.27c.12 0 .22-.1.22-.22v-3.28h.85c2.65 0 4.24-1.64 4.24-4.37 0-1.28-.68-2.39-1.68-3zm-6.8-4.01h2.54c.94 0 1.7.78 1.7 1.75 0 .96-.76 1.75-1.7 1.75h-2.55v-3.5zm3.39 8.75h-3.4v-3.5h3.4c.93 0 1.7.78 1.7 1.75 0 .96-.77 1.75-1.7 1.75z"></path></g></svg>
-                    </div>
-                    <span class="text-lg">Bitcoin</span>
-                  </div>
-                  <div class="hidden md:flex lg:hidden xl:flex w-1/4 px-4 items-center">
-                    <div class="bg-orange h-2 rounded-full flex-grow mr-2"></div>
-                    100%
-                  </div>
-                  <div class="flex w-3/5 md:w/12">
-                    <div class="w-1/2 px-4">
-                      <div class="text-right">
-                        0.0010 BTC
-                      </div>
-                    </div>
-                    <div class="w-1/2 px-4">
-                      <div class="text-right text-grey">
-                        CA$21.28
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex-grow flex px-6 py-6 text-grey-darker items-center border-b -mx-4">
-                  <div class="w-2/5 xl:w-1/4 px-4 flex items-center">
-                    <div class="rounded-full bg-grey inline-flex mr-3">
-                      <svg class="fill-current text-white h-8 w-8 block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38"><g fill-rule="evenodd"><path d="M12.29 28.04l1.29-5.52-1.58.67.63-2.85 1.64-.68L16.52 10h5.23l-1.52 7.14 2.09-.74-.58 2.7-2.05.8-.9 4.34h8.1l-.99 3.8z"></path></g></svg>
-                    </div>
-                    <span class="text-lg">Litecoin</span>
-                  </div>
-                  <div class="hidden md:flex lg:hidden xl:flex w-1/4 px-4 items-center">
-                    <div class="bg-grey h-2 w-2 rounded-full mr-2"></div>
-                    0%
-                  </div>
-                  <div class="flex w-3/5 md:w/12">
-                    <div class="w-1/2 px-4">
-                      <div class="text-right">
-                        0.0000 LTC
-                      </div>
-                    </div>
-                    <div class="w-1/2 px-4">
-                      <div class="text-right text-grey">
-                        CA$0.00
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex-grow flex px-6 py-6 text-grey-darker items-center border-b -mx-4">
-                  <div class="w-2/5 xl:w-1/4 px-4 flex items-center">
-                    <div class="rounded-full bg-indigo inline-flex mr-3">
-                      <svg class="fill-current text-white h-8 w-8 block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g fill-rule="evenodd"><path d="M10.13 17.76c-.1-.15-.06-.2.09-.12l5.49 3.09c.15.08.4.08.56 0l5.58-3.08c.16-.08.2-.03.1.11L16.2 25.9c-.1.15-.28.15-.38 0l-5.7-8.13zm.04-2.03a.3.3 0 0 1-.13-.42l5.74-9.2c.1-.15.25-.15.34 0l5.77 9.19c.1.14.05.33-.12.41l-5.5 2.78a.73.73 0 0 1-.6 0l-5.5-2.76z"></path></g></svg>
-                    </div>
-                    <span class="text-lg">Ethereum</span>
-                  </div>
-                  <div class="hidden md:flex lg:hidden xl:flex w-1/4 px-4 items-center">
-                    <div class="bg-indigo h-2 w-2 rounded-full mr-2"></div>
-                    0%
-                  </div>
-                  <div class="flex w-3/5 md:w/12">
-                    <div class="w-1/2 px-4">
-                      <div class="text-right">
-                        0.0000 ETH
-                      </div>
-                    </div>
-                    <div class="w-1/2 px-4">
-                      <div class="text-right text-grey">
-                        CA$0.00
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="px-6 py-4">
-                  <div class="text-center text-grey">
-                    Total Balance &asymp; CA$21.28
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="w-full lg:w-1/2 px-4">
-              <div class="bg-white border-t border-b sm:rounded sm:border shadow">
-                <div class="border-b">
-                  <div class="flex justify-between px-6 -mb-px">
-                    <h3 class="text-blue-dark py-4 font-normal text-lg">Recent Activity</h3>
-                  </div>
-                </div>
-                <div>
-                  <div class="text-center px-6 py-4">
-                    <div class="py-8">
-                      <div class="mb-4">
-                        <svg class="inline-block fill-current text-grey h-16 w-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M11.933 13.069s7.059-5.094 6.276-10.924a.465.465 0 0 0-.112-.268.436.436 0 0 0-.263-.115C12.137.961 7.16 8.184 7.16 8.184c-4.318-.517-4.004.344-5.974 5.076-.377.902.234 1.213.904.959l2.148-.811 2.59 2.648-.793 2.199c-.248.686.055 1.311.938.926 4.624-2.016 5.466-1.694 4.96-6.112zm1.009-5.916a1.594 1.594 0 0 1 0-2.217 1.509 1.509 0 0 1 2.166 0 1.594 1.594 0 0 1 0 2.217 1.509 1.509 0 0 1-2.166 0z"/></svg>
-                      </div>
-                      <p class="text-2xl text-grey-darker font-medium mb-4">No buys or sells yet</p>
-                      <p class="text-grey max-w-xs mx-auto mb-6">You've successfully linked a payment method and can start buying digital currency.</p>
-                      <div>
-                        <button type="button" class="bg-blue hover:bg-blue-dark text-white border border-blue-dark rounded px-6 py-4">Buy now</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="bg-white border-t">
-          <div class="container mx-auto px-4">
-            <div class="md:flex justify-between items-center text-sm">
-              <div class="text-center md:text-left py-3 md:py-4 border-b md:border-b-0">
-                <a href="#" class="no-underline text-grey-dark mr-4">Home</a>
-                <a href="#" class="no-underline text-grey-dark mr-4">Careers</a>
-                <a href="#" class="no-underline text-grey-dark">Legal &amp; Privacy</a>
-              </div>
-              <div class="md:flex md:flex-row-reverse items-center py-4">
-                <div class="text-center mb-4 md:mb-0 md:flex">
-                  <div class="w-48 inline-block relative mb-4 md:mb-0 md:mr-4">
-                    <select class="leading-tight block appearance-none w-full bg-white border border-grey-light px-3 py-2 pr-8 rounded">
-                                      <option>English</option>
-                                    </select>
-                    <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey">
-                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
-                  </div>
-                  <div>
-                    <a href="#" class="inline-block leading-tight bg-blue border border-blue-dark hover:bg-blue-dark px-3 py-2 text-white no-underline rounded">Need help?</a>
-                  </div>
-                </div>
-                <div class="text-grey text-center md:mr-4">&copy; 2017 Cointoad</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="flex justify-between -mb-px">        
+    <div class="font-bold text-gray-800 text-xl mb-4 border-b w-full border-gray-400">
+        Schedule Tasks
+    </div>
+  </div>
+<div>
+
+	<style>
+		[x-cloak] {
+			display: none;
+		}
+	</style>
+
+<div class="antialiased sans-serif bg-gray-100 ">
+	<div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
+		<div class="w-full">
+			  
+			
+
+			<div class="bg-white rounded shadow overflow-hidden mb-4">
+
+				<div class="flex items-center justify-between py-2 px-6">
+					<div>
+						<span x-text="MONTH_NAMES[month]" class="text-lg font-bold text-gray-800"></span>
+						<span x-text="year" class="ml-1 text-lg text-gray-600 font-normal"></span>
+					</div>
+					<div class="border rounded-lg px-1" style="padding-top: 2px;">
+						<button 
+							type="button"
+							class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center" 
+							:class="{'cursor-not-allowed opacity-25': month == 0 }"
+							:disabled="month == 0 ? true : false"
+							@click="month--; getNoOfDays()">
+							<svg class="h-6 w-6 text-gray-500 inline-flex leading-none"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+							</svg>  
+						</button>
+						<div class="border-r inline-flex h-6"></div>		
+						<button 
+							type="button"
+							class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1" 
+							:class="{'cursor-not-allowed opacity-25': month == 11 }"
+							:disabled="month == 11 ? true : false"
+							@click="month++; getNoOfDays()">
+							<svg class="h-6 w-6 text-gray-500 inline-flex leading-none"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+							</svg>									  
+						</button>
+					</div>
+				</div>	
+
+				<div class="mx-1 mb-1">
+					<div class="flex flex-wrap" style="margin-bottom: -40px;">
+						<template x-for="(day, index) in DAYS" :key="index">	
+							<div style="width: 14.26%" class="px-2 py-2">
+								<div
+									x-text="day" 
+									class="text-gray-600 text-sm uppercase tracking-wide font-bold text-center"></div>
+							</div>
+						</template>
+					</div>
+
+					<div class="flex flex-wrap border-t border-l">
+						<template x-for="blankday in blankdays">
+							<div 
+								style="width: 14.28%; height: 80px"
+								class="text-center border-r border-b px-4 pt-2"	
+							></div>
+						</template>	
+						<template x-for="(date, dateIndex) in no_of_days" :key="dateIndex">	
+							<div style="width: 14.28%; height: 80px" class="px-4 pt-8 border-r border-b relative">
+								<div
+									@click="showEventModal(date)"
+									x-text="date"
+									class="inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 text-1xl"
+									:class="{'bg-blue-500 text-white md:text-2xl': isToday(date) == true, 'text-gray-700 hover:bg-blue-200 md:text-2xl': isToday(date) == false }"	
+								></div>
+								<div style="" class="overflow-hidden mt-1">
+									<div 
+										class="absolute top-0 right-0 mt-2 mr-2 inline-flex items-center justify-center rounded-full text-sm w-6 h-4 bg-gray-700 text-white leading-none"
+										x-show="events.filter(e => e.event_date === new Date(year, month, date).toDateString()).length"
+										x-text="events.filter(e => e.event_date === new Date(year, month, date).toDateString()).length"></div>
+
+								
+								</div>
+							</div>
+						</template>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div style=" background-color: rgba(0, 0, 0, 0.8)" class="fixed overflow-auto  z-40 top-0 right-0 left-0 bottom-0 h-full w-full" x-show.transition.opacity="openEventModal">
+			<div class="p-4 max-w-xl mx-auto relative absolute left-0 right-0 overflow-auto mt-10">
+				<div class="shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white text-gray-500 hover:text-gray-800 inline-flex items-center justify-center cursor-pointer"
+					x-on:click="openEventModal = !openEventModal">
+					<svg class="fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+						<path
+							d="M16.192 6.344L11.949 10.586 7.707 6.344 6.293 7.758 10.535 12 6.293 16.242 7.707 17.656 11.949 13.414 16.192 17.656 17.606 16.242 13.364 12 17.606 7.758z" />
+					</svg>
+				</div>
+
+				<div class="shadow w-full rounded-lg bg-white overflow-hidden w-full block p-8">
+					
+					<h2 class="font-bold text-2xl mb-6 text-gray-800 border-b pb-2">Add Event Details</h2>
+				 
+					<div class="mb-4">
+						<label class="text-gray-800 block mb-1 font-bold text-sm tracking-wide">Event title</label>
+						<input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" x-model="event_title">
+					</div>
+
+					<div class="mb-4">
+						<label class="text-gray-800 block mb-1 font-bold text-sm tracking-wide">Event date</label>
+						<input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" x-model="event_date" readonly>
+					</div>
+
+					<div class="inline-block w-64 mb-4">
+						<label class="text-gray-800 block mb-1 font-bold text-sm tracking-wide">Select a theme</label>
+						<div class="relative">
+							<select @change="event_theme = $event.target.value;" x-model="event_theme" class="block appearance-none w-full bg-gray-200 border-2 border-gray-200 hover:border-gray-500 px-4 py-2 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500 text-gray-700">
+									<template x-for="(theme, index) in themes">
+										<option :value="theme.value" x-text="theme.label"></option>
+									</template>
+								
+							</select>
+							<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+							<svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+							</div>
+						</div>
+					</div>
+ 
+					<div class="mt-8 flex justify-end">
+						<button type="button" class="flex bg-white hover:bg-gray-100 text-gray-700 font-semibold  border border-gray-300 rounded-lg shadow-sm px-2 py-2 mx-2" @click="openEventModal = !openEventModal">
+							Cancel
+						</button>	
+						<button type="button" class="flex bg-gray-800 hover:bg-gray-700 text-white font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2" @click="addEvent()">
+							Save Event
+						</button>	
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Modal -->
+	</div>
+</div>
+
+	<script>
+		const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+		function app() {
+			return {
+				month: '',
+				year: '',
+				no_of_days: [],
+				blankdays: [],
+				days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+
+				events: [],
+				event_title: '',
+				event_date: '',
+				event_theme: 'blue',
+
+				themes: [
+					{
+						value: "blue",
+						label: "Blue Theme"
+					},
+					{
+						value: "red",
+						label: "Red Theme"
+					},
+					{
+						value: "yellow",
+						label: "Yellow Theme"
+					},
+					{
+						value: "green",
+						label: "Green Theme"
+					},
+					{
+						value: "purple",
+						label: "Purple Theme"
+					}
+				],
+
+				openEventModal: false,
+
+				initDate() {
+					let today = new Date();
+					this.month = today.getMonth();
+					this.year = today.getFullYear();
+					this.datepickerValue = new Date(this.year, this.month, today.getDate()).toDateString();
+				},
+
+				isToday(date) {
+					const today = new Date();
+					const d = new Date(this.year, this.month, date);
+
+					return today.toDateString() === d.toDateString() ? true : false;
+				},
+
+				showEventModal(date) {
+					// open the modal
+					this.openEventModal = true;
+					this.event_date = new Date(this.year, this.month, date).toDateString();
+				},
+
+				addEvent() {
+					if (this.event_title == '') {
+						return;
+					}
+
+					this.events.push({
+						event_date: this.event_date,
+						event_title: this.event_title,
+						event_theme: this.event_theme
+					});
+
+					console.log(this.events);
+
+					// clear the form data
+					this.event_title = '';
+					this.event_date = '';
+					this.event_theme = 'blue';
+
+					//close the modal
+					this.openEventModal = false;
+				},
+
+				getNoOfDays() {
+					let daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+
+					// find where to start calendar day of week
+					let dayOfWeek = new Date(this.year, this.month).getDay();
+					let blankdaysArray = [];
+					for ( var i=1; i <= dayOfWeek; i++) {
+						blankdaysArray.push(i);
+					}
+
+					let daysArray = [];
+					for ( var i=1; i <= daysInMonth; i++) {
+						daysArray.push(i);
+					}
+					
+					this.blankdays = blankdaysArray;
+					this.no_of_days = daysArray;
+				}
+			}
+		}
+	</script>
 @endsection
+
