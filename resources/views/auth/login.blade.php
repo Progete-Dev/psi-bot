@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-{{var_dump($errors)}}
+<div class="flex justify-center lg:mt-10 lg:mx-6  ">
 <form method="POST" action="{{ route('login') }}" class="bg-white shadow-xl mb-4 flex flex-wrap justify-center">
  @csrf
     <div class="w-full md:w-1/3 bg-blue-600 p-6 text-white">
@@ -37,6 +37,7 @@
           placeholder="Password"
         />
       </div>
+      
      
 {{-- @error('password')
 <div class="alert alert-danger">{{ $message }}</div>
@@ -84,4 +85,5 @@
       </div>
     </div>
   </form>
+</div>
 @endsection
