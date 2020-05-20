@@ -16,16 +16,25 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'paula',
                 'email' => 'paula@email.com',
-                'password' => bcrypt('123456')
+                'password' => bcrypt('123456'),
+                'ehpsicologo' => false
             ],
             [
                 'name' => 'maria',
                 'email' => 'mariaza@email.com',
-                'password' => bcrypt('123456')
+                'password' => bcrypt('123456'),
+                'ehpsicologo' => false
             ],
             [
                 'name' => 'joao',
                 'email' => 'maria@email.com',
+                'password' => bcrypt('123456'),
+                'ehpsicologo' => false                
+            ],
+            [
+                'ehpsicologo'=>true,
+                'name' => 'michele',
+                'email' => 'michele@email.com',
                 'password' => bcrypt('123456')                
             ],
        

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Historico do Cliente')
-@section('page-title', 'Histórico do Cliente')
 @section('content')
 
 

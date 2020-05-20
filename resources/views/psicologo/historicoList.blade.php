@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Lista')
-@section('page-title', 'Lista de Clientes')
+@section('title', 'Lista de Clientes')
 @section('content')
 
     <div class="bg-white shadow overflow-hidden sm:rounded-md">

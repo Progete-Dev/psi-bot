@@ -2,6 +2,9 @@
 
 namespace App\Conversations;
 
+use App\Jobs\NotificaPsicologo;
+use App\Notifications\NotificaPsicologos;
+use App\User;
 use Illuminate\Foundation\Inspiring;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
@@ -9,37 +12,60 @@ use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 
 class ExampleConversation extends Conversation
-{
-    /**
-     * First question
-     */
-    public function askReason()
-    {
-        $question = Question::create("Huh - you woke me up. What do you need?")
-            ->fallback('Unable to ask question')
-            ->callbackId('ask_reason')
-            ->addButtons([
-                Button::create('Tell a joke')->value('joke'),
-                Button::create('Give me a fancy quote')->value('quote'),
-            ]);
+{protected $firstname;
 
-        return $this->ask($question, function (Answer $answer) {
-            if ($answer->isInteractiveMessageReply()) {
-                if ($answer->getValue() === 'joke') {
-                    $joke = json_decode(file_get_contents('http://api.icndb.com/jokes/random'));
-                    $this->say($joke->value->joke);
-                } else {
-                    $this->say(Inspiring::quote());
-                }
-            }
+    protected $email;
+    protected $user;
+    public function askFirstname()
+    {
+        $this->ask('Olá, tudo bem? Qual seu nome', function(Answer $answer) {
+            // Save result
+            $this->firstname = $answer->getText();
+
+            $this->say('Olá '.$this->firstname);
+            $this->askEmail();
         });
     }
 
-    /**
-     * Start the conversation
-     */
+    public function askEmail()
+    {
+        $this->ask('Qual seu email?', function(Answer $answer) {
+            // Save result
+            $this->email = $answer->getText();
+            $this->user = User::where([
+                'email' => $this->email
+            ])->first();
+            if($this->user != null){
+                $this->say('Vimos que você já tem cadastro. Você quer agendar um atendimento? ');
+            }else{
+               $this->user = User::create(
+                    [
+                    'name' => $this->firstname,
+                    'email' => $this->email,
+                    'ehpsicologo' => false,
+                    'password' => bcrypt($this->firstname.$this->email)
+                    ]
+                );
+
+                 
+                $this->say('Você foi cadastrado com sucesso, '.$this->firstname);
+                
+            }
+            $this->motivo();
+
+        });
+    }
+
+    public function motivo(){
+        $this->ask('Qual o motivo da procura por atendimento?', function(Answer $answer) {
+            NotificaPsicologo::dispatch($this->user, $answer->getText());
+            $this->say("Encaminhamos seu atendimento! Aguarde contato 😊");
+        });
+    }
+
     public function run()
     {
-        $this->askReason();
+        // This will be called immediately
+        $this->askFirstname();
     }
 }
