@@ -19,4 +19,17 @@ Route::get('/dashboard', 'DashboardController@dash')->name('dashboard');
 Auth::routes();
 Route::get('/paciente','PacienteController@show')->middleware('auth')->name('paciente');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/psicologo', 'PsicologoController@perfil');
+
+
+Route::group(['prefix' => 'psicologo'], function () {
+    Route::get('/perfil', 'PsicologoController@perfil')->name('psicologo.perfil');
+    Route::get('/home', 'PsicologoController@home')->name('psicologo.home'); // Dashboard
+    Route::get('/mensagens', 'PsicologoController@mensagens')->name('psicologo.mensagens');
+    Route::get('/configuracoes', 'PsicologoController@configuracoes')->name('psicologo.config');
+    Route::get('/historico', 'PsicologoController@historicoList')->name('psicologo.historicoList');
+    Route::get('/historico/{id}', 'PsicologoController@historicoCliente')->name('psicologo.historicoCliente');
+    Route::get('/calendario', 'PsicologoController@calendario')->name('psicologo.calendario');
+    
+
+
+});

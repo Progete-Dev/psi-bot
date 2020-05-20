@@ -27,6 +27,7 @@
     
 </head>
 <body>
+    
    
         <div class="h-screen flex overflow-hidden bg-gray-200">
      
@@ -39,7 +40,13 @@
                     <main class="flex-1 relative z-0 overflow-y-auto py-6 focus:outline-none" tabindex="0">
                         @include('partials.alerts_partial')
                         <div class="px-2 py-2">
-
+                            <div class="font-sans bg-grey flex flex-col min-h-screen w-full">
+                                <div class="flex justify-between ">        
+                                  <div class="font-bold text-indigo-600 text-xl mb-4 border-b w-full border-gray-400">
+                                      <p class="pl-6" >@yield('page-title') </p>
+                                  </div>
+                                </div>
+                              <div>
                             @yield('content')
 
                         </div>

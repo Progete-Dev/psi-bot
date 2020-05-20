@@ -1,5 +1,5 @@
 
-@if(isset($success))
+@if(session('success'))
 <div class="rounded-md bg-green-200 p-4 mx-2 my-2">
     <div class="flex">
       <div class="flex-shrink-0">
@@ -9,7 +9,7 @@
       </div>
       <div class="ml-3">
         <p class="text-sm leading-5 font-medium text-gray-800">
-          {{ $success }}
+          {{ session('success') }}
         </p>
       </div>
       <div class="ml-auto pl-3">
@@ -24,7 +24,7 @@
     </div>
   </div>
 
-@elseif(isset($warning))
+@elseif(session('warning'))
     <div class="rounded-md bg-yellow-200 p-4">
         <div class="flex">
           <div class="flex-shrink-0">
@@ -34,7 +34,7 @@
           </div>
           <div class="ml-3">
             <p class="text-sm leading-5 font-medium text-gray-800">
-              {{$warning}}
+              {{session('warning')}}
             </p>
           </div>
           <div class="ml-auto pl-3">
