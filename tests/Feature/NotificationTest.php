@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class TestNotification extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     public function setUp(): void{
         parent::setUp();
@@ -22,7 +22,7 @@ class TestNotification extends TestCase
     }
 
     /** @test */
-    public function testExample()
+    public function it_should_see_notifications()
     {
         $usuario = factory(User::class)->create(['ehpsicologo'=>false]);
         $notificacao = factory(Notificacao::class)->create(['mensagem'=>"mensagem", 'cliente'=>$usuario->id]);
