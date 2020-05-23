@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Notificacao;
-use App\User;
+use App\Models\NotificacaoDeAtendimento;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -25,7 +25,7 @@ class TestNotification extends TestCase
     public function it_should_see_notifications()
     {
         $usuario = factory(User::class)->create(['ehpsicologo'=>false]);
-        $notificacao = factory(Notificacao::class)->create(['mensagem'=>"mensagem", 'cliente'=>$usuario->id]);
+        $notificacao = factory(NotificacaoDeAtendimento::class)->create(['mensagem'=>"mensagem", 'cliente_id'=>$usuario->id]);
         $response = $this->get('/psicologo/home');
         $response->assertViewHas("notificacoes");
         $this->assertEquals($response->viewData("notificacoes")->first()->toArray(), $notificacao->toArray());
