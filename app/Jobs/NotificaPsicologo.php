@@ -2,7 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Notificacao;
+use App\Models\NotificacaoDeAtendimento;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,7 +20,7 @@ class NotificaPsicologo implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($user , $mensagem)
+    public function __construct(User $user , $mensagem)
     {
         $this->user=$user;
         $this->mensagem=$mensagem;
@@ -32,9 +33,9 @@ class NotificaPsicologo implements ShouldQueue
      */
     public function handle()
     {
-        Notificacao::create([
-            "cliente"=>$this->user->id,
-            "mensagem"=>$this->mensagem
+        NotificacaoDeAtendimento::create([
+            "user_id"  => $this->user->id,
+            "mensagem" => $this->mensagem
         ]);
     }
 }

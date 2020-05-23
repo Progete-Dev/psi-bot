@@ -4,7 +4,7 @@ namespace App\Conversations;
 
 use App\Jobs\NotificaPsicologo;
 use App\Notifications\NotificaPsicologos;
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
