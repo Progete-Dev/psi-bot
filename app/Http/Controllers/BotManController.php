@@ -23,7 +23,10 @@ class BotManController extends Controller
      */
     public function home()
     {
-        return view('welcome');
+        if(!auth()->user())
+            return redirect('/login');
+        else
+            return view('welcome');
     }
 
     /**

@@ -8,10 +8,15 @@ class NotificacaoDeAtendimento extends Model
 {
     protected $fillable = [
         'cliente_id',
-        'mensagem'
+        'mensagem',
+        'atendimento_id'
     ];
 
     public function cliente(){
         return $this->belongsTo(User::class,'cliente_id','id');
+    }
+
+    public function atendimento(){
+        return $this->belongsTo(Atendimento::class,'atendimento_id','id');
     }
 }

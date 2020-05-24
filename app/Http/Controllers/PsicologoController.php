@@ -31,15 +31,29 @@ class PsicologoController extends Controller
         return redirect('psicologo/historicoList')->with("warning", "Usuario não encontrado.");
     }
     public function historicoList(Request $request){
-        $atendimentos = Atendimento::all();
+        $atendimentos = auth()->user()->atendimentos->map(function($atendimento){
+            return $atendimento->cliente->ultimoAtendimento();
+        });
         return view('psicologo.historicoList', compact('atendimentos'));
     }
     public function home(Request $request){
-       $notificacoes=NotificacaoDeAtendimento::all();
+        $notificacoes = auth()->user()->notificacoes;
+        
         return view('psicologo.home', compact('notificacoes'));
     }
     public function calendario(Request $request){
-       
-        return view('psicologo.calendario');
+
+        $atendimentos = auth()->user()->atendimentos->map(function($atendimento){
+            return ['cliente' => $atendimento->cliente,'psicologo' => $atendimento->psicologo,'data_atendimento' => $atendimento->data_atendimento,'tempo_atendimento' => $atendimento->tempo_atendimento,'status' => $atendimento->status];
+        });
+
+        
+        return view('psicologo.calendario',compact('atendimentos'));
+    }
+
+
+    public function solicitacoes(){
+        $atendimentos = Atendimento::where('psicologo_id',null)->get();
+        return view('psicologo.historicoList', compact('atendimentos'));
     }
 }

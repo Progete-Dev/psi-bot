@@ -37,19 +37,6 @@ class ExampleConversation extends Conversation
             ])->first();
             if($this->user != null){
                 $this->say('Vimos que você já tem cadastro. Você quer agendar um atendimento? ');
-            }else{
-               $this->user = User::create(
-                    [
-                    'name' => $this->firstname,
-                    'email' => $this->email,
-                    'ehpsicologo' => false,
-                    'password' => bcrypt($this->firstname.$this->email)
-                    ]
-                );
-
-                 
-                $this->say('Você foi cadastrado com sucesso, '.$this->firstname);
-                
             }
             $this->motivo();
 
@@ -58,8 +45,20 @@ class ExampleConversation extends Conversation
 
     public function motivo(){
         $this->ask('Qual o motivo da procura por atendimento?', function(Answer $answer) {
+            if($this->user == null){
+                $this->user = User::create(
+                    [
+                    'name' => $this->firstname,
+                    'email' => $this->email,
+                    'ehpsicologo' => false,
+                    'password' => bcrypt($this->firstname.$this->email)
+                    ]
+                );
+            }
+            $this->say('Você foi cadastrado com sucesso, '.$this->firstname);
             NotificaPsicologo::dispatch($this->user, $answer->getText());
             $this->say("Encaminhamos seu atendimento! Aguarde contato 😊");
+            
         });
     }
 

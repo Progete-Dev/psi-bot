@@ -20,7 +20,7 @@ class CreateAtendimentosTable extends Migration
             $table->enum('status',['AGUARDA_PSICOLOGO','AGUARDA_HORARIO','EM_ATENDIMENTO','CONCLUIDO','REMARCADO','CANCELADO']);
             $table->timestamps();
             $table->foreignId('cliente_id')->references('id')->on('users');
-            $table->foreignId('psicologo_id')->references('id')->on('users')->default(null);
+            $table->unsignedInteger('psicologo_id')->nullable();
         });
     }
 

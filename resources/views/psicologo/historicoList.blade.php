@@ -68,7 +68,7 @@
                     </svg>
                     <span>
                     
-                    <time class="ml-2" datetime="{{$atendimento->data_atendimento->format('d/m/Y - H:m' )}}">{{$atendimento->data_atendimento->format('d/m/Y  H:m' )}}</time>
+                    <time class="ml-2" datetime="{{$atendimento->data_atendimento ? $atendimento->data_atendimento->format('d/m/Y - H:m' ) : ''}}">{{$atendimento->data_atendimento ? $atendimento->data_atendimento->format('d/m/Y - H:m' ) : 'A Definir'}}</time>
                     </span>
                 </div>
                 </div>

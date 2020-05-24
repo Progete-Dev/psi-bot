@@ -36,8 +36,14 @@ class User extends Authenticatable
 
     public function notificacoes(){
         if($this->ehpsicologo == true)
-            return $this->hasManyThrough(NotificacaoDeAtendimento::class,NotificacaoPsicologo::class,'psicologo','id','psicologo','notificacao');
+            return $this->hasMany(NotificacaoPsicologo::class,'psicologo','id');
         else
             return $this->hasMany(NotificacaoDeAtendimento::class,'cliente_id','id');   
+    }
+
+    public function ultimoAtendimento(){
+        
+        return $this->atendimentos()->orderBy('updated_at','DESC')->first();
+        
     }
 }

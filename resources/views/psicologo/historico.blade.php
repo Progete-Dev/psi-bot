@@ -1,9 +1,8 @@
 @extends('layouts.app')
-
 @section('title', 'Historico do Cliente')
 @section('content')
 
-
+@include('partials.page_header')
 
 @component('partials.card')
     @slot('cardTitle')
@@ -132,9 +131,7 @@
                     {{$usuario->composicaoatual}}
                 </dd>
             </div>
-            
-                
-    </div>
+        
 @endcomponent
 @component('partials.card')
     @slot('cardTitle')

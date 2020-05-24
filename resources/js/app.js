@@ -16,11 +16,31 @@ window.Vue = require('vue');
  */
 
 import {TinkerComponent} from 'botman-tinker';
+import VueScheduler from 'v-calendar-scheduler';
+import 'v-calendar-scheduler/lib/main.css';
 
+Vue.use(VueScheduler, {
+    locale: 'pt-br',
+    labels: {
+       today: 'Hoje',
+       back: 'Voltar',
+       next: 'Avançar',
+       month: 'Mês',
+       week: 'Semana',
+       day: 'Dia',
+       all_day: 'Dia Interio'
+    },
+    availableViews: ['month','week','day'],
+    initialDate: new Date(),
+    initialView: 'day',
+    use12: false,
+    showTimeMarker: true,
+    showTodayButton: true,
+  });
 
 
 Vue.component('botman-tinker',TinkerComponent);
-
+Vue.component('agenda-psi', require('./CalendarioPsi.vue'));
 const app = new Vue({
     el: '#app',
     
