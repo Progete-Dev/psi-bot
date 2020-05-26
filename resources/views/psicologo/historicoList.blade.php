@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('title', 'Histórico de Atendimentos')
 @section('content')
+@include('partials.page_header')
 
     <div x-data="{searchValue : ''}" class="bg-white shadow overflow-hidden sm:rounded-md">
         <div class="flex m-4 bg-indigo-200 rounded-md align-baseline">
@@ -68,7 +68,7 @@
                     </svg>
                     <span>
                     
-                    <time class="ml-2" datetime="{{$atendimento->data_atendimento->format('d/m/Y - H:m' )}}">{{$atendimento->data_atendimento->format('d/m/Y  H:m' )}}</time>
+                    <time class="ml-2" datetime="{{$atendimento->data_atendimento ? $atendimento->data_atendimento->format('d/m/Y - H:m' ) : ''}}">{{$atendimento->data_atendimento ? $atendimento->data_atendimento->format('d/m/Y - H:m' ) : 'A Definir'}}</time>
                     </span>
                 </div>
                 </div>

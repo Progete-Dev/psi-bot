@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormularioAtendimentosTable extends Migration
+class AddValidacaoToCampoFormularioTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateFormularioAtendimentosTable extends Migration
      */
     public function up()
     {
-        Schema::create('formulario_atendimentos', function (Blueprint $table) {
-            $table->id();
-            $table->string('titulo');
-            $table->timestamps();
+        Schema::table('campo_formularios', function (Blueprint $table) {
+            $table->string("validacao")->nullable();
         });
     }
 
@@ -27,6 +25,8 @@ class CreateFormularioAtendimentosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('formulario_atendimentos');
+        Schema::table('campo_formularios', function (Blueprint $table) {
+            $table->dropColumn("validacao");
+        });
     }
 }

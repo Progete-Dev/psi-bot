@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Atendimento;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -39,5 +40,35 @@ class DatabaseSeeder extends Seeder
             ],
        
        ]);
+       Atendimento::create([
+        'cliente_id' => 2,
+        'status' => 3,
+        'psicologo_id' => 4,
+        'tempo_atendimento' => 0,
+        'data_atendimento' => now()
+        ]);
+        Atendimento::create([
+            'cliente_id' =>3,
+            'status' => 4,
+            'psicologo_id' => 4,
+            'tempo_atendimento' => 0,
+            'data_atendimento' => now()
+            ]);
+
+       Atendimento::create([
+        'cliente_id' => 1,
+        'status' => 2,
+        'psicologo_id' => 4,
+        'tempo_atendimento' => 0,
+        'data_atendimento' => null
+        ]);
+
+        Atendimento::create([
+            'cliente_id' => 1,
+            'status' => 1,
+            'psicologo_id' => null,
+            'tempo_atendimento' => 0,
+            'data_atendimento' => null
+            ]);
     }
 }

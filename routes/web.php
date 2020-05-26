@@ -28,6 +28,7 @@ Route::group(['prefix' => 'psicologo', 'middleware' => ['auth','guest']], functi
     Route::get('/mensagens', 'PsicologoController@mensagens')->name('psicologo.mensagens');
     Route::get('/configuracoes', 'PsicologoController@configuracoes')->name('psicologo.config');
     Route::get('/historico', 'PsicologoController@historicoList')->name('psicologo.historicoList');
+    Route::get('/solicitacoes', 'PsicologoController@solicitacoes')->name('psicologo.solicitacoesAtendimento');
     Route::get('/historico/{id}', 'PsicologoController@historicoCliente')->name('psicologo.historicoCliente');
     Route::get('/calendario', 'PsicologoController@calendario')->name('psicologo.calendario');
     

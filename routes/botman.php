@@ -10,7 +10,8 @@ $botman = resolve('botman');
     
     
 // // });
-$botman->hears('(Oi|Ola|Bom dia|Boa tarde|Boa noite| hello )', BotManController::class."@startConversation");
+$botman->hears("", BotManController::class."@startConversation");
+//$botman->hears("test", BotManController::class."@test");
 
 
 // $botman->fallback(function($bot){
