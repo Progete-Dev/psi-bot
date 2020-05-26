@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('title', 'Histórico de Atendimentos')
 @section('content')
+@include('partials.page_header')
 
     <div x-data="{searchValue : ''}" class="bg-white shadow overflow-hidden sm:rounded-md">
         <div class="flex m-4 bg-indigo-200 rounded-md align-baseline">

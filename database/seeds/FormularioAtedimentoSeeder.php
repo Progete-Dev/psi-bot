@@ -18,11 +18,23 @@ class FormularioAtedimentoSeeder extends Seeder
         ]);
 
         CampoFormulario::create([
-            'nome'          => 'Nome Social',
+
+            'nome'          => 'Nome Completo',
             'tipo'          => 1,
             'opcoes'        => '[]',
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required"
+
+        ]);
+
+        CampoFormulario::create([
+            'nome'          => 'Nome Social',
+            'tipo'          => 1,
+            'opcoes'        => '[]',
+            'obrigatorio'   => false,
+            'formulario_id' => $formulario->id,
+            'validacao'     => ""
         ]);
 
         CampoFormulario::create([
@@ -30,34 +42,38 @@ class FormularioAtedimentoSeeder extends Seeder
             'tipo'          => 1,
             'opcoes'        => '[]',
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required|date_format:d/m/Y"
         ]);
         CampoFormulario::create([
             'nome'          => 'Sexo',
             'tipo'          => 4,
             'opcoes'        => json_encode([
                 [
-                    'valor' => 'M' ,
+                    'valor' => 'Masculino' ,
                     'nome'  =>  'Masculino',
                 ],
                 [
-                    'valor' => 'F' ,
+                    'valor' => 'Feminino' ,
                     'nome'  =>  'Feminino',
                 ],
                 [
-                    'valor' => 'ND' ,
+                    'valor' => 'Não declarado' ,
                     'nome'  =>  'Não Declarado',
                 ]
             ]),
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required|in:Masculino,Feminino,Não declarado"
+            
         ]);
         CampoFormulario::create([
             'nome'          => 'Formação Escolar Básica',
             'tipo'          => 1,
             'opcoes'        => '[]',
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required"
         ]);
 
         CampoFormulario::create([
@@ -65,7 +81,8 @@ class FormularioAtedimentoSeeder extends Seeder
             'tipo'          => 1,
             'opcoes'        => '[]',
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required"
         ]);
 
         CampoFormulario::create([
@@ -85,7 +102,7 @@ class FormularioAtedimentoSeeder extends Seeder
                     'nome'  =>  'Divorciado(a)',
                 ],
                 [
-                    'valor' => 'União Estavél' ,
+                    'valor' => 'União estavél' ,
                     'nome'  =>  'União Estavél',
                 ],
                 [
@@ -98,56 +115,65 @@ class FormularioAtedimentoSeeder extends Seeder
                 ]
             ]),
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required|in:Solteiro(a), Casado(a), Divorciado(a), União estável, Separado(a), Viuvo(a)"
         ]);
         CampoFormulario::create([
             'nome'          => 'Possui Filhos',
             'tipo'          => 3,
             'opcoes'        => json_encode([
                 [
-                    'valor' => 'sim'
+                    'valor' => 'Sim',
+                    'nome'  => 'Sim'
                 ],
                 [
-                    'valor' => 'não'
+                    'valor' => 'Não',
+                    'nome'  => 'Não'
                 ]
             ]),
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required|in:Sim,Não"
         ]);
         CampoFormulario::create([
             'nome'          => 'Cidade de Origem',
             'tipo'          => 1,
             'opcoes'        => '[]',
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required"
         ]);
         CampoFormulario::create([
             'nome'          => 'Endereço Atual',
             'tipo'          => 1,
             'opcoes'        => '[]',
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required"
         ]);
         CampoFormulario::create([
             'nome'          => 'Composição moradia de origem',
             'tipo'          => 1,
             'opcoes'        => '[]',
-            'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'obrigatorio'   => false,
+            'formulario_id' => $formulario->id,
+            'validacao'     => ""
         ]);
         CampoFormulario::create([
             'nome'          => 'Composição moradia atual',
             'tipo'          => 1,
             'opcoes'        => '[]',
-            'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'obrigatorio'   => false,
+            'formulario_id' => $formulario->id,
+            'validacao'     => ""
         ]);
         CampoFormulario::create([
             'nome'          => 'Em caso de emergência ligar para',
             'tipo'          => 1,
             'opcoes'        => '[]',
             'obrigatorio'   => true,
-            'formulario_id' => $formulario->id
+            'formulario_id' => $formulario->id,
+            'validacao'     => "required"
         ]);        
     }
 }

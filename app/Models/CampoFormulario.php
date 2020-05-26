@@ -17,7 +17,8 @@ class CampoFormulario extends Model
         'nome',
         'tipo',
         'opcoes',
-        'obrigatorio'
+        'obrigatorio',
+        'validacao'
     ];
 
 
@@ -49,6 +50,11 @@ class CampoFormulario extends Model
         }
     }
     
+    public function opcoesArray(){
+        if($this->tipo > 1 and $this->tipo < 5)
+            return json_decode($this->opcoes);
+    }
+
     public function formulario(){
         return $this->belongsTo(Formulario::class,'formulario_id','id');
     }

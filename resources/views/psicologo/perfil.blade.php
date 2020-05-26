@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section("title", "Perfil ". Auth::user()->name)
 @section('content')
+@include('partials.page_header')
 <style>
     /* Tab content - closed */
     .tab-content {

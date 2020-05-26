@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Formulario extends Model
 {
+    const INFORMACOES_PESSOAIS = 1;
     protected $table = 'formulario_atendimentos';
     protected $fillable =[
         'titulo',

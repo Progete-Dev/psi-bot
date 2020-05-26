@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Conversations\Boasvindas;
 use BotMan\BotMan\BotMan;
 use Illuminate\Http\Request;
 use App\Conversations\ExampleConversation;
@@ -38,6 +39,10 @@ class BotManController extends Controller
         $bot->startConversation(new ExampleConversation());
     }
 
+    public function test(BotMan $bot)
+    {
+        $bot->startConversation(new Boasvindas());
+    }
     public function dashboard(){
         return view('admin.dashboard');
     }

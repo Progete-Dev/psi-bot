@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Atendimento;
 use App\Models\NotificacaoDeAtendimento;
 use App\Models\NotificacaoPsicologo;
+use App\Models\RespostaFormulario;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,20 +13,22 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class NotificaPsicologo implements ShouldQueue
+class GeraAtendimento implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $user;
-    protected $mensagem;
+    protected $respostas;
+    protected $email;
+    protected $motivo;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(User $user , $mensagem)
+    public function __construct($respostas ,$email,$motivo)
     {
-        $this->user=$user;
-        $this->mensagem=$mensagem;
+        $this->respostas = $respostas;
+        $this->email = $email;
+        $this->motivo = $motivo;
     }
 
     /**
@@ -35,15 +38,24 @@ class NotificaPsicologo implements ShouldQueue
      */
     public function handle()
     {
-        if($this->user->ultimoAtendimento()){
-            if($this->user->ultimoAtendimento()->status > 3 ){
-                return;
-            }
-            return;
-        }
+        
 
+        $user = User::create([
+            'name' => $this->respostas[0]['resposta'],
+            'email' => $this->email,
+            'password' => bcrypt($this->respostas[0]['resposta'].$this->email)
+        ]);
+
+        foreach ($this->respostas as $resposta) {
+            RespostaFormulario::insert([
+                'formulario_id' => $resposta['formulario_id'],
+                'campo_id'      => $resposta['campo_id'],
+                'cliente_id'    => $user->id,
+                'resposta'      => $resposta['resposta']
+            ]);
+        }
         $atendimento = Atendimento::create([
-            'cliente_id' => $this->user->id,
+            'cliente_id' => $user->id,
             'status' => 1,
             'psicologo_id' => null,
             'tempo_atendimento' => 0,
@@ -51,8 +63,8 @@ class NotificaPsicologo implements ShouldQueue
         ])->id;
 
         $id = NotificacaoDeAtendimento::create([
-            'cliente_id'  => $this->user->id,
-            'mensagem' => $this->mensagem,
+            'cliente_id'  => $user->id,
+            'mensagem' => 'Solicitação de atendimento Cliente: '.$user->name.' motivo: '. $this->motivo,
             'atendimento_id' =>  $atendimento
         ])->id;
 
@@ -63,7 +75,5 @@ class NotificaPsicologo implements ShouldQueue
                 'notificado' => false,
             ]);
         });
-        
-        
-    }   
+    }
 }
