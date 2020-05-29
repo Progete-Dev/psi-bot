@@ -13,7 +13,7 @@ use Tests\TestCase;
 
 class FormularioAtendimentoTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
 
     /** @test */
