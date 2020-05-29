@@ -37,5 +37,5 @@ jobs:
         DB_USERNAME: root
         DB_DATABASE: psi-bot
         DB_HOST: 127.0.0.1
-        DB_PORT: 3306
+        DB_PORT: 32768
       run: vendor/bin/phpunit
