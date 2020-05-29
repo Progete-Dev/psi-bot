@@ -26,26 +26,23 @@
     <!-- Styles -->
     
 </head>
-<body>
+<body style="font-family: 'Florence', cursive;">
+  <div class="h-screen flex overflow-hidden bg-gray-200">
+    @auth
+    @include('menu')
+    @endauth
+    <main class="flex-1 relative z-0 overflow-y-auto py-6 focus:outline-none" tabindex="0">
+      <div class="p-2">
+            @include('partials.alerts_partial')
+            @yield('content')
+        @stack('body-script')
+      </div>
+    </main>
+</div>
+                
+        
     
-   
-        <div class="h-screen flex overflow-hidden bg-gray-200">
-     
 
-                
-                    @auth
-                        @include('menu')
-                    @endauth
-                
-                    <main class="flex-1 relative z-0 overflow-y-auto py-6 focus:outline-none" tabindex="0">
-                      <div class="p-2">
-                            @include('partials.alerts_partial')
-                            @yield('content')
-                        @stack('body-script')
-                      </div>
-                    </main>
-              </div>
-            
-    
+
 </body>
 </html>

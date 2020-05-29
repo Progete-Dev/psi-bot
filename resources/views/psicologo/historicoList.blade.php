@@ -16,7 +16,7 @@
                 id="search" type="text" 
                 placeholder="Search">
         </div>
-        <div class="ml-4 mb-4 flex justify-between items-center">
+        <div class="mr-4 mb-4 flex justify-end items-right">
 		    <div class="shadow rounded-lg flex">
 			    <div class="relative">
 				    <button @click.prevent="open = !open" class="rounded-lg inline-flex items-center bg-white hover:text-blue-500 focus:outline-none focus:shadow-outline text-gray-500 font-semibold py-2 px-2 md:px-4">
