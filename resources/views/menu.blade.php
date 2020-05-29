@@ -66,7 +66,7 @@
       </div>
     </div>
   <!-- Desktop Side Bar -->
-  <div  x-data="{open: true}"  class="hidden h-full md:flex md:flex-shrink-0">
+  <div  x-data="{open: sessionStorage.getItem('menu_open') == 'true' }" x-init="$watch('open', (value) => {sessionStorage.setItem('menu_open',value)});"  class="hidden h-full md:flex md:flex-shrink-0">
     <div style="transition: linear 0.3s"  class="flex flex-col  bg-indigo-800 pt-5 pb-4"  :class="{ 'w-12' : !open , 'w-64' : open}">
       <div style="transition: 0.5" x-show="open"  class="flex-shrink-0 flex items-center px-4 ">
         <div class="flex relative w-12 h-12 justify-center items-center m-1 mr-2 text-xl rounded-full text-white">
@@ -98,7 +98,7 @@
         
         <nav  class="flex-1 px-2 bg-indigo-800">
           {{-- Perfil --}}
-        <a  x-show="!open" href="{{route('psicologo.perfil')}}" class="group flex items-center  text-sm leading-5 font-medium  rounded-md focus:outline-none focus:bg-indigo-700 transition ease-in-out duration-150 text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4" >
+        <a  x-show="!open" href="{{route('psicologo.perfil')}}" class="mb-2 appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.perfil' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}" >
 
             <svg  class="ml-1 h-6 w-6 text-indigo-400 group-focus:text-indigo-300 m-auto transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
               <path  d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"/> 
@@ -114,8 +114,8 @@
             <p x-show="open"> Home </p>
           </a>
           {{-- Mensagens --}}
-          <a href="{{route('psicologo.mensagens')}}" class="group flex items-center  text-sm leading-5 font-medium  rounded-md focus:outline-none focus:bg-indigo-700 transition ease-in-out duration-150"
-          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white bg-indigo-800 px-2 py-2 mb-2 hover:bg-indigo-700' : open }">
+          <a href="{{route('psicologo.mensagens')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.mensagens' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
+          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white px-2 py-2 mb-2 hover:bg-indigo-700' : open }">
           <svg :class="{'mr-2' : open,  'm-auto' : !open}" class="ml-1 h-6 w-6 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
             <path d="M6 14H4a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v13a1 1 0 0 1-1.7.7L16.58 18H8a2 2 0 0 1-2-2v-2zm0-2V8c0-1.1.9-2 2-2h8V4H4v8h2zm14-4H8v8h9a1 1 0 0 1 .7.3l2.3 2.29V8z"/>
             
@@ -123,8 +123,8 @@
             <p x-show="open"> Mensagens </p>
           </a>
           {{-- configurações  --}}
-          <a href="{{route('psicologo.config')}}" class="group flex items-center  text-sm leading-5 font-medium  rounded-md focus:outline-none focus:bg-indigo-700 transition ease-in-out duration-150"
-          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white bg-indigo-800 px-2 py-2 mb-2 hover:bg-indigo-700' : open }">
+          <a href="{{route('psicologo.config')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.config' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
+          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white px-2 py-2 mb-2 hover:bg-indigo-700' : open }">
             <svg :class="{'mr-2' : open,  'm-auto' : !open}" class="ml-1 h-6 w-6 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
               <path d="M9 4.58V4c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v.58a8 8 0 0 1 1.92 1.11l.5-.29a2 2 0 0 1 2.74.73l1 1.74a2 2 0 0 1-.73 2.73l-.5.29a8.06 8.06 0 0 1 0 2.22l.5.3a2 2 0 0 1 .73 2.72l-1 1.74a2 2 0 0 1-2.73.73l-.5-.3A8 8 0 0 1 15 19.43V20a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.58a8 8 0 0 1-1.92-1.11l-.5.29a2 2 0 0 1-2.74-.73l-1-1.74a2 2 0 0 1 .73-2.73l.5-.29a8.06 8.06 0 0 1 0-2.22l-.5-.3a2 2 0 0 1-.73-2.72l1-1.74a2 2 0 0 1 2.73-.73l.5.3A8 8 0 0 1 9 4.57zM7.88 7.64l-.54.51-1.77-1.02-1 1.74 1.76 1.01-.17.73a6.02 6.02 0 0 0 0 2.78l.17.73-1.76 1.01 1 1.74 1.77-1.02.54.51a6 6 0 0 0 2.4 1.4l.72.2V20h2v-2.04l.71-.2a6 6 0 0 0 2.41-1.4l.54-.51 1.77 1.02 1-1.74-1.76-1.01.17-.73a6.02 6.02 0 0 0 0-2.78l-.17-.73 1.76-1.01-1-1.74-1.77 1.02-.54-.51a6 6 0 0 0-2.4-1.4l-.72-.2V4h-2v2.04l-.71.2a6 6 0 0 0-2.41 1.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
               
@@ -132,10 +132,8 @@
             <p x-show="open"> Configurações </p>
           </a>
           {{-- Histórico --}}
-          <a href="{{route('psicologo.historicoList')}}" class="group flex items-center  text-sm leading-5 font-medium  rounded-md focus:outline-none focus:bg-indigo-700 transition ease-in-out duration-150"
-          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white bg-indigo-800 px-2 py-2 mb-2 hover:bg-indigo-700' : open }"
-            :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white focus:bg-indigo-700' : !open }"
-          >
+          <a href="{{route('psicologo.historicoList')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.historicoList' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
+          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white px-2 py-2 mb-2 hover:bg-indigo-700' : open }">
           
           <svg :class="{'mr-2' : open,  'm-auto' : !open}" class="ml-1 h-6 w-6 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150" stroke="currentColor" fill="none" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -143,10 +141,8 @@
             <p x-show="open"> Histórico </p>
           </a>
           {{-- Calendario --}}
-          <a href="{{route('psicologo.calendario')}}" class="group flex items-center  text-sm leading-5 font-medium  rounded-md focus:outline-none focus:bg-indigo-700 transition ease-in-out duration-150"
-          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white bg-indigo-800 px-2 py-2 mb-2 hover:bg-indigo-700' : open }"
-            :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white focus:bg-indigo-700' : !open }"
-          >
+          <a href="{{route('psicologo.calendario')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.calendario' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
+          :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white px-2 py-2 mb-2 hover:bg-indigo-700' : open }">
           <svg :class="{'mr-2' : open,  'm-auto' : !open}" class="ml-1 h-6 w-6 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
             <path  d="M17 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2h2V3a1 1 0 1 1 2 0v1h6V3a1 1 0 0 1 2 0v1zm-2 2H9v1a1 1 0 1 1-2 0V6H5v4h14V6h-2v1a1 1 0 0 1-2 0V6zm4 6H5v8h14v-8z"/>
             </svg>
