@@ -18,7 +18,7 @@ window.Vue = require('vue');
 import {TinkerComponent} from 'botman-tinker';
 import VueScheduler from 'v-calendar-scheduler';
 import 'v-calendar-scheduler/lib/main.css';
-
+import VueTrix from "vue-trix";
 Vue.use(VueScheduler, {
     locale: 'pt-br',
     labels: {
@@ -37,11 +37,13 @@ Vue.use(VueScheduler, {
     showTimeMarker: true,
     showTodayButton: true,
   });
-
+Vue.use(VueTrix);
 
 Vue.component('botman-tinker',TinkerComponent);
 Vue.component('agenda-psi', require('./CalendarioPsi.vue'));
 const app = new Vue({
     el: '#app',
-    
+components: {
+      VueTrix
+    }    
 });
