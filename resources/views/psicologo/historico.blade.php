@@ -105,16 +105,96 @@
                                 <textarea class="resize border rounded focus:outline-none focus:shadow-outline w-full"></textarea>
                             </span>
                         </div>
-                        <div class="ml-4 flex-shrink-0">
-                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 transition duration-150 ease-in-out">
-                                Gerar planilha com dados.
-                            </a>
-                        </div>
+                        
                     </li>
                     
                 </ul>
             </dd>
     @endcomponent
+    @component('partials.card')
+    @slot('cardTitle')
+        Descrição da Sessão:
+    @endslot
+    <div id="app">
+        <dd class="mt-1 text-sm leading-5 text-gray-900">
+            <ul class="rounded-md">
+                <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm leading-5">                    
+                    <div class="w-0 flex-1 flex items-center">
+                        <span class="ml-2 flex-1 w-0 truncate">
+                            <dt class="text-sm leading-5 font-medium text-gray-500">
+                                Horário de Inicio
+                            </dt>     
+                            <div class=" flex  w-auto ">
+                                <div class="bg-indigo-300 flex  p-3 text-gray rounded-lg">
+                                    <select name="hours" class="bg-transparent text-xl appearance-none">
+                                        @for($j=0 ; $j<24; $j++)
+                                            <option value="{{$j}}"> {{($j< 10 ? '0' : '').$j}} </option>
+                                        @endfor
+                                    </select>
+                                    <span class="text-xl mr-3">:</span>
+                                        <select name="minutes" class="bg-transparent text-xl appearance-none mr-4">
+                                            @for($i=0 ; $i<60; $i++)
+                                            <option value="{{$i}}"> {{($i< 10 ? '0' : '').$i}} </option>
+                                            @endfor
+                    
+                                        </select>
                 
+                                </div>
+                            </div>              
+            
+        
+                        </span>
+                    </div>
+
+                    <div class="w-0 flex-1 flex items-center">
+                        <span class="ml-2 flex-1 w-0 truncate">
+                            <dt class="text-sm leading-5 font-medium text-gray-500">
+                                Horário de fim
+                            </dt>
+                            <div class="flex  w-auto">
+                                <div class="bg-indigo-300 flex  p-3 text-gray rounded-lg">
+                                    <select name="hours" class="bg-transparent text-xl appearance-none">
+                                        @for($j=0 ; $j<24; $j++)
+                                        <option value="{{$j}}"> {{($j< 10 ? '0' : '').$j}} </option>
+                                        @endfor
+                                    </select>
+                                <span class="text-xl mr-3">:</span>
+                                    <select name="minutes" class="bg-transparent text-xl appearance-none mr-4">
+                                        @for($i=0 ; $i<60; $i++)
+                                        <option value="{{$i}}"> {{($i< 10 ? '0' : '').$i}} </option>
+                                        @endfor
+                                        
+                                    </select>
+                                
+                                </div>
+                            </div>              
+                            
+                        
+                        </span>
+                    </div>
+                
+                    
+                </li>
+                
+                        
+            </ul>
+            <span class="ml-2 flex-1 w-0">
+                <dt class="text-sm leading-5 font-medium text-gray-500 mb-4">
+                    Descreva a sessão abaixo:
+                </dt>
+                <trix-editor inputId="editor1" placeholder/>
+            </span>
+        </dd>
+    </div>
+        {{-- <div class="ml-4 flex-shrink-0">
+            
+        </div> --}}
+@endcomponent
+<div class="justify-end flex">
+    <button class="bg-indigo-700 hover:bg-blue-600 py-4 px-4 rounded-md font-medium text-white hover:text-white transition duration-150 ease-in-out">
+        Gerar planilha com dados.
+    </button>
+</div>
+
                
 @endsection

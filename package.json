@@ -24,6 +24,7 @@
     "botman-tinker": "^0.0.1",
     "tailwindcss": "^1.4.6",
     "v-calendar": "^1.0.6",
-    "v-calendar-scheduler": "^0.7.4"
+    "v-calendar-scheduler": "^0.7.4",
+    "vue-trix": "^1.1.9"
   }
 }
