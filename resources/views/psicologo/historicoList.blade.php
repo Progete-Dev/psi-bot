@@ -2,79 +2,40 @@
 
 @section('title', 'Histórico de Atendimentos')
 @section('content')
-
-    <div x-data="{searchValue : '', orderBy: '', open:false}" class="bg-white shadow overflow-hidden sm:rounded-md">
-        <div class="flex m-4 bg-indigo-200 rounded-md align-baseline">
-            <div class="pl-2 mr-2 mt-1">
-                <svg class="fill-current   text-gray-700 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
-                </svg>
-            </div>
-            <input
-                x-model.debounce.500="searchValue"
-                class="w-full rounded-md bg-indigo-200 text-gray-700 leading-tight focus:outline-none py-2 px-2"
-                id="search" type="text" 
-                placeholder="Search">
-        </div>
-        <div class="ml-4 mb-4 flex justify-between items-center">
-		    <div class="shadow rounded-lg flex">
-			    <div class="relative">
-				    <button @click.prevent="open = !open" class="rounded-lg inline-flex items-center bg-white hover:text-blue-500 focus:outline-none focus:shadow-outline text-gray-500 font-semibold py-2 px-2 md:px-4">
-						<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:hidden" viewBox="0 0 24 24"
-						    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-							stroke-linejoin="round">
-							<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
-							<path d="M5.5 5h13a1 1 0 0 1 0.5 1.5L14 12L14 19L10 16L10 12L5 6.5a1 1 0 0 1 0.5 -1.5" />
-						</svg>
-						<span class="hidden md:block">Exibir Somente</span>
-						    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-1" width="24" height="24"
-								viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-								stroke-linecap="round" stroke-linejoin="round">
-								<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
-								<polyline points="6 9 12 15 18 9" />
-							</svg>
-					</button>
-					<div x-show="open" @click.away="open = false" class="z-40 absolute top-0 right-0 bg-white rounded-lg shadow-lg mt-12 -mr-1 block py-1">
-                        <h3 class="p-2 text-lg leading-6 font-medium text-gray-600 border-b border-gray-200 ">
-                                Status 
-                        </h3>
-                        <label class="flex justify-start items-center text-truncate hover:bg-gray-100 px-4 py-2">
-                            <div class="text-teal-600 mr-3">
-							    <input type="checkbox" checked class="form-checkbox focus:outline-none focus:shadow-outline">
-							</div>
-							<div class="select-none text-gray-700">Aguarda Psicologo</div>
-                        </label>
-                        <label class="flex justify-start items-center text-truncate hover:bg-gray-100 px-4 py-2">
-                            <div class="text-teal-600 mr-3">
-							    <input type="checkbox" checked class="form-checkbox focus:outline-none focus:shadow-outline">
-							</div>
-							<div class="select-none text-gray-700">Aguarda Horário</div>
-                        </label>
-                        <label class="flex justify-start items-center text-truncate hover:bg-gray-100 px-4 py-2">
-                            <div class="text-teal-600 mr-3">
-							    <input type="checkbox" checked class="form-checkbox focus:outline-none focus:shadow-outline">
-							</div>
-							<div class="select-none text-gray-700">Cancelado</div>
-                        </label>
-                        <label class="flex justify-start items-center text-truncate hover:bg-gray-100 px-4 py-2">
-                            <div class="text-teal-600 mr-3">
-							    <input type="checkbox" checked class="form-checkbox focus:outline-none focus:shadow-outline">
-							</div>
-							<div class="select-none text-gray-700">Remarcado</div>
-                        </label>
-                        <label class="flex justify-start items-center text-truncate hover:bg-gray-100 px-4 py-2">
-                            <div class="text-teal-600 mr-3">
-							    <input type="checkbox" checked class="form-checkbox focus:outline-none focus:shadow-outline">
-							</div>
-							<div class="select-none text-gray-700">Concluido</div>
-						</label>
-					</div>
-				</div>
-			</div>
-		</div>
-            
-        <ul class="p-4">
-            
+@include('partials.page_header')
+    @component('partials.card')    
+    <div x-data="{searchValue : '', orderBy: '{{$orderBy}}',order:'ASC', open:false}">        
+        @include('partials.table_header',['route' => route('psicologo.historicoList'),
+        'filterOptions'=>[
+            [
+                'name' => 'Aguarda Horario',
+                'value' => \App\Models\Atendimento::AGUARDA_HORARIO
+            ],
+            [
+                'name' => 'Concluido',
+                'value' => \App\Models\Atendimento::CONCLUIDO
+            ],
+            [
+                'name' => 'Cancelado',
+                'value' => \App\Models\Atendimento::CANCELADO
+            ],
+            [
+                'name' => 'Remarcado',
+                'value' => \App\Models\Atendimento::REMARCADO
+            ],
+        ],
+        'orderOptions' => [
+            [
+                'name' => 'Status',
+                'value'=> 'status'
+            ],
+            [
+                'name' => 'Data Atendimento',
+                'value'=> 'data_atendimento'
+            ]
+        ]
+        ])    
+        <ul class="px-4 pb-2">
             @foreach ($atendimentos as $atendimento)
         <li x-show="$refs[{{$atendimento->id}}].innerText.toLowerCase().search(searchValue.toLowerCase()) != -1" class="border rounded-md my-2 shadow-md bg-gray-50 border-indigo-300 hover:bg-gray-100">
             <a href="#" class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
@@ -134,8 +95,11 @@
         </li>
         @endforeach
         </ul>
+        <div class="p-2">
+        {{$atendimentos->links()}}
+        </div>
     </div>
-
+    @endcomponent
     <div x-data="{openEventModal: false ,atendimento : null }" @iniciar-atendimento-modal.window="atendimento = $event.detail.atendimento; openEventModal = true;" style=" background-color: rgba(0, 0, 0, 0.8)" class="fixed overflow-auto  z-40 top-0 right-0 left-0 bottom-0 h-full w-full" x-show.transition.opacity="openEventModal">
         <div class="p-4 max-w-xl mx-auto relative absolute left-0 right-0 overflow-auto mt-10">
             <div class="shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white text-gray-500 hover:text-gray-800 inline-flex items-center justify-center cursor-pointer"

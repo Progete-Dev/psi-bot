@@ -60,6 +60,6 @@ class CampoFormulario extends Model
     }
 
     public function resposta($userId){
-        return RespostaFormulario::where([['cliente_id','=',$userId],['campo_id','=',$this->id],['formulario_id','=',$this->formulario->id]])->get();
+        return RespostaFormulario::where([['cliente_id','=',$userId],['campo_id','=',$this->id],['formulario_id','=',$this->formulario->id]])->first();
     }
 }

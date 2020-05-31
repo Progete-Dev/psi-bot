@@ -8,11 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{config('app.name')}} - @yield('title') </title>
-    <link
-      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-  
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">  
     @stack('styles')
     <!-- Scripts -->
   
@@ -26,26 +22,16 @@
     <!-- Styles -->
     
 </head>
-<body>
-    
-   
-        <div class="h-screen flex overflow-hidden bg-gray-200">
-     
-
-                
-                    @auth
-                        @include('menu')
-                    @endauth
-                
-                    <main class="flex-1 relative z-0 overflow-y-auto py-6 focus:outline-none" tabindex="0">
-                      <div class="p-2">
-                            @include('partials.alerts_partial')
-                            @yield('content')
-                        @stack('body-script')
-                      </div>
-                    </main>
-              </div>
-            
-    
+<body >
+  <div class="h-screen flex overflow-hidden bg-gray-200">
+    @auth
+      @include('menu')
+    @endauth
+    <main class="flex-1 relative z-0 overflow-y-auto p-4 focus:outline-none" tabindex="0">
+            @include('partials.alerts_partial')
+            @yield('content')
+        @stack('body-script')
+    </main>
+  </div>
 </body>
 </html>
