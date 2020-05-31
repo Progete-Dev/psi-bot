@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Home')
-
 @section('content')
 @include('partials.page_header')
 @if(count($notificacoes) > 0)
-<div class="p-2 m-2 bg-indigo-600 items-center text-indigo-100 leading-none rounded-md flex lg:inline-flex" role="alert">
+<div class="p-2 mr-4 bg-indigo-600 items-center text-indigo-100 leading-none rounded-md flex lg:inline-flex w-full"  role="alert">
     <span class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold mr-3">{{count($notificacoes)}}</span>
     <span class="font-semibold mr-2 text-left flex-auto">
         <a href="{{route('psicologo.solicitacoesAtendimento')}}">

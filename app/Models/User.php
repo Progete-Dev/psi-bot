@@ -47,4 +47,8 @@ class User extends Authenticatable
         return $this->atendimentos()->orderBy('updated_at','DESC')->first();
         
     }
+
+    public function getFormulariosAttribute(){
+        return Formulario::all();
+    }
 }

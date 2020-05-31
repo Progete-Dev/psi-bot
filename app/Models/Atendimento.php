@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Atendimento extends Model
 {
-    const AGUARDA_PSICOLOGO = 0;
-    const AGUARDA_HORARIO   = 1;
-    const EM_ATENDIMENTO    = 2;
-    const CONCLUIDO         = 3;
-    const REMARCADO         = 4;
-    const CANCELADO         = 5;
+    const AGUARDA_PSICOLOGO = 1;
+    const AGUARDA_HORARIO   = 2;
+    const EM_ATENDIMENTO    = 3;
+    const CONCLUIDO         = 4;
+    const REMARCADO         = 5;
+    const CANCELADO         = 6;
     
     protected $fillable = [
         'cliente_id',
