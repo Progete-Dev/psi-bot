@@ -32,10 +32,26 @@ class PsicologoController extends Controller
         return redirect('psicologo/historicoList')->with("warning", "Usuario não encontrado.");
     }
     public function historicoList(Request $request){
-        $atendimentos = auth()->user()->atendimentos->map(function($atendimento){
-            return $atendimento->cliente->ultimoAtendimento();
-        });
-        return view('psicologo.historicoList', compact('atendimentos'));
+        $filter = [
+            Atendimento::AGUARDA_HORARIO,
+            Atendimento::CONCLUIDO,
+            Atendimento::CANCELADO,
+            Atendimento::REMARCADO,
+        ];
+        if($request->has('filter')){
+            $filter = array_map(function($id){
+                return intval($id);
+            },$request->get('filter'));
+        }
+
+        $orderBy = $request->get('orderBy','data_atendimento');
+        $order = $request->get('order','ASC');
+        $atendimentos = Atendimento::where('psicologo_id',auth()->user()->id)
+            ->whereIn('status', $filter)
+            ->when($orderBy != '',function($query) use ($orderBy,$order){
+                return $query->orderBy($orderBy,$order);
+            })->paginate(10)->appends(['filter' => $filter,'orderBy' => $orderBy]);
+        return view('psicologo.historicoList', compact('atendimentos','filter','orderBy','order'));
     }
     public function home(Request $request){
         $notificacoes = auth()->user()->notificacoes;
@@ -56,8 +72,17 @@ class PsicologoController extends Controller
     }
 
 
-    public function solicitacoes(){
-        $atendimentos = Atendimento::where('psicologo_id',null)->get();
-        return view('psicologo.historicoList', compact('atendimentos'));
+    public function solicitacoes(Request $request){
+        $filter = [
+            Atendimento::AGUARDA_PSICOLOGO,
+        ];
+        $orderBy = $request->get('orderBy','created_at');
+        $order = $request->get('order','ASC');
+        $atendimentos = Atendimento::where('psicologo_id',null)
+            ->whereIn('status', $filter)
+            ->when($orderBy != '',function($query) use ($orderBy,$order){
+                return $query->orderBy($orderBy,$order);
+            })->paginate(10)->appends(['filter' => $filter,'orderBy' => $orderBy]);
+        return view('psicologo.solicitacoes', compact('atendimentos','filter','orderBy','order'));
     }
 }

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Home')
-
 @section('content')
 @include('partials.page_header')
 @if(count($notificacoes) > 0)
