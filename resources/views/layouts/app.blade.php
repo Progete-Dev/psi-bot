@@ -26,7 +26,7 @@
     <!-- Styles -->
     
 </head>
-<body style="font-family: 'Florence', cursive;">
+<body >
   <div class="h-screen flex overflow-hidden bg-gray-200">
     @auth
     @include('menu')
