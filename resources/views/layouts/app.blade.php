@@ -28,7 +28,6 @@
       @include('menu')
     @endauth
     <main class="flex-1 relative z-0 overflow-y-auto p-4 focus:outline-none" tabindex="0">
-            @include('partials.alerts_partial')
             @yield('content')
         @stack('body-script')
     </main>

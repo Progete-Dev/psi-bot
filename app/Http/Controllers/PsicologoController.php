@@ -35,6 +35,7 @@ class PsicologoController extends Controller
         $filter = [
             Atendimento::AGUARDA_HORARIO,
             Atendimento::CONCLUIDO,
+            Atendimento::EM_ATENDIMENTO,
             Atendimento::CANCELADO,
             Atendimento::REMARCADO,
         ];
@@ -85,4 +86,40 @@ class PsicologoController extends Controller
             })->paginate(10)->appends(['filter' => $filter,'orderBy' => $orderBy]);
         return view('psicologo.solicitacoes', compact('atendimentos','filter','orderBy','order'));
     }
+
+
+    public function perfilUpdate(Request $request){
+        $request->validate([
+            'name' => 'required',
+            'password' => '',
+            'password_confirmation' => 'same:password'
+        ]);
+            
+        if($request->get('password') != null){
+            Auth::user()->update([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'), 
+                'password' => $request->get('password')
+            ]);
+
+        }else{
+            Auth::user()->update([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'), 
+            ]);
+        }
+        
+        return redirect('/psicologo/perfil')->with('success','Perfil Atualizado');
+    }
+
+
+    public function confirmarSolicitacao(Request $request,Atendimento $solicitacao){
+        $solicitacao->psicologo_id = Auth::user()->id;
+        $solicitacao->data_atendimento = Carbon::today();
+        $solicitacao->status = Atendimento::EM_ATENDIMENTO;
+        $solicitacao->save();
+
+        return redirect('psicologo/home')->with('success','Solicitação aceita');
+    }
+
 }
