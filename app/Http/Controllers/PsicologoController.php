@@ -73,9 +73,18 @@ class PsicologoController extends Controller
     }
 
 
-    public function solicitacoes(){
-        $atendimentos = Atendimento::where('psicologo_id',null)->get();
-        return view('psicologo.historicoList', compact('atendimentos'));
+    public function solicitacoes(Request $request){
+        $filter = [
+            Atendimento::AGUARDA_PSICOLOGO,
+        ];
+        $orderBy = $request->get('orderBy','created_at');
+        $order = $request->get('order','ASC');
+        $atendimentos = Atendimento::where('psicologo_id',null)
+            ->whereIn('status', $filter)
+            ->when($orderBy != '',function($query) use ($orderBy,$order){
+                return $query->orderBy($orderBy,$order);
+            })->paginate(10)->appends(['filter' => $filter,'orderBy' => $orderBy]);
+        return view('psicologo.solicitacoes', compact('atendimentos','filter','orderBy','order'));
     }
 
 

@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Home')
-
 @section('content')
 @include('partials.page_header')
 <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">

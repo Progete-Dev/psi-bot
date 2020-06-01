@@ -1,4 +1,3 @@
-
 <div class="container my-4">
     <div class="bg-white shadow overflow-hidden  rounded">
         @if(isset($cardHeader))
@@ -14,5 +13,4 @@
             {{$slot}}
         </div>
     </div>
-
 </div>
