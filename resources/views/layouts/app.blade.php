@@ -31,9 +31,7 @@
     @auth
     @include('menu')
     @endauth
-    <main class="flex-1 relative z-0 overflow-y-auto py-6 focus:outline-none" tabindex="0">
-      <div class="p-2">
-            @include('partials.alerts_partial')
+    <main class="flex-1 relative z-0 overflow-y-auto p-4 focus:outline-none" tabindex="0">
             @yield('content')
         @stack('body-script')
       </div>
