@@ -27,14 +27,12 @@ class FormularioAtendimentoTest extends TestCase
 
         $reposta1 = factory(RespostaFormulario::class)->create([
             'formulario_id' => $formulario->id,
-            'psicologo_id' => null,
             'campo_id' => $campos[0],
             'cliente_id' => $user->id,
             'resposta' => 'Resposta 1'
         ]);
         $reposta2 = factory(RespostaFormulario::class)->create([
             'formulario_id' => $formulario->id,
-            'psicologo_id' => null,
             'campo_id' => $campos[1],
             'cliente_id' => $user->id,
             'resposta' => 'Resposta 2'
