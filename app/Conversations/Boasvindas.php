@@ -17,6 +17,12 @@ class Boasvindas extends Conversation
     protected $campo;
     protected $respostas ;
 
+    public function __construct($formulario)
+    {
+        $this->formulario = $formulario;
+        
+    }
+
     public function pegaResposta($valido = null){
         if($valido == true){
             $this->campo = $this->formulario->campos->shift();
@@ -34,11 +40,11 @@ class Boasvindas extends Conversation
                       return $this->pegaResposta(false);
                 }  
                 $this->email = $resposta->getText();
-                $this->say('Suas informações foram cadastradas com sucesso!');
+                
                 $this->ask('Qual motivo para o seu contato conosco?',function(Answer $resposta){
                     GeraAtendimento::dispatch($this->respostas,$this->email,$resposta->getText());
                 });
-                
+                $this->say('Suas informações foram cadastradas com sucesso!');
 
             });            
             return ;
@@ -126,8 +132,6 @@ class Boasvindas extends Conversation
     public function run()
     {
         $this->respostas = [];
-        $this->formulario = Formulario::find(Formulario::INFORMACOES_PESSOAIS);
-     
         $this->pegaResposta(true);
     }
 }

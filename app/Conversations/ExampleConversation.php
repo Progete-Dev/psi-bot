@@ -3,6 +3,7 @@
 namespace App\Conversations;
 
 use App\Jobs\NotificaPsicologo;
+use App\Models\Formulario;
 use App\Notifications\NotificaPsicologos;
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
@@ -26,7 +27,8 @@ class ExampleConversation extends Conversation
                'pattern' => 'sim|sm|s|ss',
                'callback' => function () {
                    $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
-                   $this->bot->startConversation(new Boasvindas());
+                   $formulario = Formulario::first();
+                   $this->bot->startConversation(new Boasvindas($formulario));
                 }
             ],
             [

@@ -7,11 +7,19 @@ use App\Models\Formulario;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class SaudacaoTest extends TestCase
 {
-    use RefreshDatabase;   
+    use DatabaseTransactions;   
+    
+
+    public function setUp() : void{
+        //Artisan::call('cache:clear');
+        parent::setUp();
+    }
+
     /** @test */
     public function fluxo_primeira_conversa_sim()
     {
@@ -54,8 +62,8 @@ class SaudacaoTest extends TestCase
             ->receives('resposta campo 2')
             ->assertReply('Para completar o seu cadastro precisammos que informe um Email')
             ->receives('email@email.com')
-            ->assertReply('Suas informações foram cadastradas com sucesso!')
             ->assertReply('Qual motivo para o seu contato conosco?')
+            ->assertReply('Suas informações foram cadastradas com sucesso!')
             ->receives('motivo');
 
         $this->assertDatabaseHas('users',[
@@ -66,13 +74,11 @@ class SaudacaoTest extends TestCase
         $this->assertDatabaseHas('resposta_formularios',[
             'formulario_id' => $formulario->id,
             'campo_id'      => $campo1->id,
-            'cliente_id'    => 1,
             'resposta'      => 'nome do usuario'
         ]);
         $this->assertDatabaseHas('resposta_formularios',[
             'formulario_id' => $formulario->id,
             'campo_id'      => $campo2->id,
-            'cliente_id'    => 1,
             'resposta'      => 'resposta campo 2'
         ]);
         
