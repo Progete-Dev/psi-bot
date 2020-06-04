@@ -1,7 +1,25 @@
 @extends('layouts.app')
-@section('title', 'Configurações - Em Desenvolvimento')
+@section('title', 'Configurações')
 @section('content')
 @include('partials.page_header')
+@component('partials.card')
+@slot('cardTitle', "Notificações")
+    
 
-<img class="m-auto h-64 mt-12" src="https://cdn.onlinewebfonts.com/svg/img_543552.png">
+  
+
+  
+@endcomponent
+@component('partials.card')
+@slot('cardTitle', "Aparência")
+
+
+@endcomponent
+@component('partials.card')
+@slot('cardTitle', "Suporte")
+
+
+@endcomponent
+
+
 @endsection
