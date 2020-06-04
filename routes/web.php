@@ -26,7 +26,7 @@ Route::group(['prefix' => 'psicologo', 'middleware' => ['auth','guest']], functi
     Route::get('/perfil', 'PsicologoController@perfil')->name('psicologo.perfil');
     Route::post('/perfil', 'PsicologoController@perfilUpdate')->name('psicologo.perfil_update');
     Route::get('/home', 'PsicologoController@home')->name('psicologo.home'); // Dashboard
-    Route::get('/mensagens', 'PsicologoController@mensagens')->name('psicologo.mensagens');
+    Route::get('/lembretes', 'PsicologoController@lembretes')->name('psicologo.lembretes');
     Route::get('/configuracoes', 'PsicologoController@configuracoes')->name('psicologo.config');
     Route::get('/historico', 'PsicologoController@historicoList')->name('psicologo.historicoList');
     Route::get('/solicitacoes', 'PsicologoController@solicitacoes')->name('psicologo.solicitacoesAtendimento');

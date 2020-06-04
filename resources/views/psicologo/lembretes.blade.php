@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Mensagens - Em Desenvolvimento')
+@section('title', 'Lembretes - Em Desenvolvimento')
 @section('content')
 @include('partials.page_header')
 

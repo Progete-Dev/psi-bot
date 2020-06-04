@@ -1,4 +1,4 @@
-<div class="container my-4">
+<div class="my-4">
     <div class="bg-white shadow overflow-hidden  rounded">
         @if(isset($cardHeader))
             {{$cardHeader}}
