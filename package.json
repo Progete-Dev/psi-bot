@@ -21,6 +21,7 @@
     "vue": "^2.6.11"
   },
   "dependencies": {
+    "alpinejs": "^2.3.5",
     "botman-tinker": "^0.0.1",
     "tailwindcss": "^1.4.6",
     "v-calendar": "^1.0.6",
