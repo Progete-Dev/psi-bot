@@ -18,10 +18,10 @@
             </svg>
             
           </a>
-          {{-- Mensagens --}}
-          <a href="{{route('psicologo.mensagens')}}"  class="flex px-2">
+          {{-- lembretes --}}
+          <a href="{{route('psicologo.lembretes')}}"  class="flex px-2">
           <svg class="ml-1 h-6 w-6 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M6 14H4a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v13a1 1 0 0 1-1.7.7L16.58 18H8a2 2 0 0 1-2-2v-2zm0-2V8c0-1.1.9-2 2-2h8V4H4v8h2zm14-4H8v8h9a1 1 0 0 1 .7.3l2.3 2.29V8z"/>
+            <path class="heroicon-ui" d="M7 5H5v14h14V5h-2v10a1 1 0 0 1-1.45.9L12 14.11l-3.55 1.77A1 1 0 0 1 7 15V5zM5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2zm4 2v8.38l2.55-1.27a1 1 0 0 1 .9 0L15 13.38V5H9z"/>
             
           </svg>
           {{-- Configurações --}}
@@ -113,14 +113,14 @@
             </svg>
             <p x-show="open"> Home </p>
           </a>
-          {{-- Mensagens --}}
-          <a href="{{route('psicologo.mensagens')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.mensagens' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
+          {{-- lembretes --}}
+          <a href="{{route('psicologo.lembretes')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.lembretes' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
           :class="{'text-indigo-300  hover:text-white hover:bg-indigo-700  focus:text-white mb-4' : !open, 'text-white px-2 py-2 mb-2 hover:bg-indigo-700' : open }">
           <svg :class="{'mr-2' : open,  'm-auto' : !open}" class="ml-1 h-6 w-6 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M6 14H4a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v13a1 1 0 0 1-1.7.7L16.58 18H8a2 2 0 0 1-2-2v-2zm0-2V8c0-1.1.9-2 2-2h8V4H4v8h2zm14-4H8v8h9a1 1 0 0 1 .7.3l2.3 2.29V8z"/>
+            <path class="heroicon-ui" d="M7 5H5v14h14V5h-2v10a1 1 0 0 1-1.45.9L12 14.11l-3.55 1.77A1 1 0 0 1 7 15V5zM5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2zm4 2v8.38l2.55-1.27a1 1 0 0 1 .9 0L15 13.38V5H9z"/>
             
           </svg>
-            <p x-show="open"> Mensagens </p>
+            <p x-show="open"> Lembretes </p>
           </a>
           {{-- configurações  --}}
           <a href="{{route('psicologo.config')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:bg-indigo-700 hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.config' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"

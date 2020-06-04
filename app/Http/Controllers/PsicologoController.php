@@ -15,9 +15,9 @@ class PsicologoController extends Controller
        
         return view('psicologo.perfil');
     }
-    public function mensagens(Request $request){
+    public function lembretes(Request $request){
        
-        return view('psicologo.mensagens');
+        return view('psicologo.lembretes');
     }
     public function configuracoes(Request $request){
        

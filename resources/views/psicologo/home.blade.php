@@ -44,9 +44,9 @@
             
         @endcomponent
     </div>
-    <div class="col-span-1">
+    <div class="col-span-1 h-max-64 overflow-y-auto">
         @component('partials.card')
-            <div class="flex justify-start">
+            <div class="flex justify-start ">
                 <div class="text-xl font-medium text-indigo-600 flex border-r px-4 ">
                     Notificações e Lembretes
                 </div>
@@ -55,15 +55,44 @@
                 {{$atendimentosDia->count()}} 
                 </dd>
                 
+            </div>     
+            <div class=" md:flex pb-4 overflow-y-auto  border-t border-gray-300">
+                <a href="#" class="m-auto cursor-pointer">
+                    <svg class="m-auto h-4 w-4 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150 m-auto" stroke="none" fill="currentColor" viewBox="0 0 24 24">
+                        <path class="heroicon-ui" d="M5.41 11H21a1 1 0 0 1 0 2H5.41l5.3 5.3a1 1 0 0 1-1.42 1.4l-7-7a1 1 0 0 1 0-1.4l7-7a1 1 0 0 1 1.42 1.4L5.4 11z"></path>
+                      </svg>
+                </a>
+                                <div class=" md:mx-2 my-2 text-gray-700  font-sans quicksand bg-white overflow-hidden hover:bg-indigo-100 border hover:border-indigo-400 shadow-md rounded px-1 cursor-pointer">
+                        
+                        <div class="m-2 text-sm">
+                            <p class="text-right text-xs">May 17, 2020</p>
+                            <div class="truncate ">
+                            <h2 class="font-bold text-md h-2 mb-8 ">Blog </h2>
+                            </div>
+                            <p class="text-xs text-justify">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.     </p>
+                
+                        </div>
+                        <div class="justify-end mt-4 p-2 ">
+                        <a class="text-indigo-400 uppercase font-bold text-sm" href="#">Read More</a>
+                        </div>
+                    </div>
+                    <a href="#" class="m-auto cursor-pointer">
+                        <svg class="m-auto h-4 w-4 text-indigo-400 group-focus:text-indigo-300 transition ease-in-out duration-150 m-auto" stroke="none" fill="currentColor" viewBox="0 0 24 24">
+                            <path class="heroicon-ui" d="M18.59 13H3a1 1 0 0 1 0-2h15.59l-5.3-5.3a1 1 0 1 1 1.42-1.4l7 7a1 1 0 0 1 0 1.4l-7 7a1 1 0 0 1-1.42-1.4l5.3-5.3z"/>
+                          </svg>
+                    </a>
             </div>
-            <div class="flex justify-start">
-                
-                
-                
+            <div class="flex justify-center w-full">
+                <div class="bg-indigo-500 rounded-full w-3 h-3 mx-2"></div>   
+                <div class="bg-indigo-500 rounded-full w-3 h-3 mx-2"></div>   
+                <div class="bg-indigo-500 rounded-full w-3 h-3 mx-2"></div>   
             </div>
+    </div>        
+    
             
         @endcomponent
-    </div>
+   
 </div>
 <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
 @component('partials.card')
