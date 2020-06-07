@@ -46,6 +46,7 @@
 @endcomponent
 
 <div x-data="{openEventModal: false ,atendimento : null }" @atendimento-modal.window="atendimento = $event.detail.atendimento; openEventModal = true;" style=" background-color: rgba(0, 0, 0, 0.8)" class="fixed overflow-auto  z-40 top-0 right-0 left-0 bottom-0 h-full w-full" x-show.transition.opacity="openEventModal">
+    <template x-if="atendimento !=null">
     <div class="p-4 max-w-3xl mx-auto relative absolute left-0 right-0 overflow-auto mt-10">
         <div class="shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-primary text-gray-500 hover:text-primary  inline-flex items-center justify-center cursor-pointer"
             x-on:click="openEventModal = !openEventModal">
@@ -54,7 +55,7 @@
                     d="M16.192 6.344L11.949 10.586 7.707 6.344 6.293 7.758 10.535 12 6.293 16.242 7.707 17.656 11.949 13.414 16.192 17.656 17.606 16.242 13.364 12 17.606 7.758z" />
             </svg>
         </div>
-
+        
         <div class="shadow w-full rounded-lg bg-secondary overflow-hidden w-full block p-8">
             
             <h2 class="font-bold text-2xl mb-6 text-primary  border-b pb-2" x-text="'Detalhes Atendimento - ' +(new Date(atendimento.data_atendimento).toLocaleString('pt-br'))">Detalhes Atendimento</h2>
@@ -66,6 +67,7 @@
             </div>
         </div>
     </div>
+    </template>
 </div>
 @foreach($usuario->formularios as $formulario)
     @component('partials.card')
@@ -182,7 +184,7 @@
                 <dt class="text-sm leading-5 font-medium text-gray-500 mb-4">
                     Descreva a sessão abaixo:
                 </dt>
-                <trix-editor inputId="editor1" placeholder/>
+                <trix inputId="editor1" placeholder/>
             </span>
         </dd>
     </div>

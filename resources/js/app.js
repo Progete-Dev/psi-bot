@@ -45,6 +45,6 @@ Vue.component('agenda-psi', require('./CalendarioPsi.vue'));
 const app = new Vue({
     el: '#app',
 components: {
-      VueTrix
+      'trix' : VueTrix
     }    
 });
