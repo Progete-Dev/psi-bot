@@ -12,17 +12,18 @@
 */
 
 
+
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/', 'BotManController@home');
 Route::get('/admin','BotManController@dashboard ');
-Route::get('/login', "Auth\LoginController@show");
+Auth::routes(['register'=> false]);
 Route::get('/dashboard', 'DashboardController@dash')->name('dashboard');
-Auth::routes();
+
 Route::get('/paciente','PacienteController@show')->middleware('auth')->name('paciente');
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::group(['prefix' => 'psicologo', 'middleware' => ['auth','guest']], function () {
+Route::group(['prefix' => 'psicologo', 'middleware' => ['auth','psicologo']], function () {
     Route::get('/perfil', 'PsicologoController@perfil')->name('psicologo.perfil');
     Route::post('/perfil', 'PsicologoController@perfilUpdate')->name('psicologo.perfil_update');
     Route::get('/home', 'PsicologoController@home')->name('psicologo.home'); // Dashboard

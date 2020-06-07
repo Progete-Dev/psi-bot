@@ -69,7 +69,7 @@ class GeraAtendimento implements ShouldQueue
         ])->id;
 
         User::where('ehpsicologo',true)->each(function($psicologo) use ($id){
-            NotificacaoPsicologo::insert([
+            NotificacaoPsicologo::create([
                 'notificacao' => $id,
                 'psicologo' => $psicologo->id,
                 'notificado' => false,

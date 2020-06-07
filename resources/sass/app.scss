@@ -15,3 +15,32 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+// root/default variables
+:root {
+  --text-primary   : rgba(90, 103, 216);
+  --text-secondary : #7fa1dd;
+  --text-button : white;
+  --text-link:#1C75B9;
+  --text-menu : rgb(171, 172, 241);
+  --link-white-color:#fff;
+  --bg-color: rgb(243,243,243);
+  --bg-secondary: #f0efef;
+  --bg-theme: white;
+  --bg-button : #434190;
+  --bg-menu : #434190;
+  
+}
+//dark theme
+[data-theme="dark"] {
+  --text-primary :#c3dafe;
+  --text-secondary : #c3aaae;;
+  --text-link:#1C75B9;
+  --text-button : #404041;
+  --text-menu : #c3aaae;
+  --link-white-color:#fff;
+  --bg-color:#23272e;
+  --bg-secondary: #2c2f33;
+  --bg-theme:#343434;
+  --bg-menu : #1a202c;
+  --bg-button : #828a94;
+}

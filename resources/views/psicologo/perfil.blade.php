@@ -39,7 +39,7 @@
             Nome
           </label>
           <input
-            class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+            class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
             name="name"
             id="name"
             type="text"
@@ -54,7 +54,7 @@
             Email
           </label>
           <input
-          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
             name="email"
             id="email"
             type="email"
@@ -69,7 +69,7 @@
             Telefone
           </label>
           <input
-          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
             name="telefone"
             id="telefone"
             type="text"
@@ -85,7 +85,7 @@
             Senha
           </label>
           <input
-          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
             name="password"
             id="password"
             type="password"
@@ -100,7 +100,7 @@
             Confirmação da Senha
           </label>
           <input
-          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
           name="password_confirm"
           id="password_confirm"
           type="password"
@@ -109,7 +109,7 @@
         </div>
       </div>
       <div class="mt-8 flex justify-end">
-        <button type="submit" class="flex bg-indigo-800 hover:bg-gray-700 text-white font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2" @click="addEvent()">
+        <button type="submit" class="flex bg-button hover:bg-gray-700 text-button font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2" @click="addEvent()">
             Salvar 
         </button>	
     </div>
