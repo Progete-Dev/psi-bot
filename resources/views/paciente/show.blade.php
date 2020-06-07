@@ -41,13 +41,13 @@
   </style>
   <div class="font-sans bg-grey flex flex-col min-h-screen w-full">
     <div class="flex justify-between ">        
-      <div class="font-bold text-gray-800 text-xl mb-4 border-b w-full border-gray-400">
+      <div class="font-bold text-primary  text-xl mb-4 border-b w-full border-gray-400">
           Profile Info
       </div>
     </div>
   <div>
   <div
-    class="max-w-full p-4  w-full shadow-lg m-auto lg:mt-10 border-b-2 border-gray-400 bg-white flex flex-col lg:flex-row"
+    class="max-w-full p-4  w-full shadow-lg m-auto lg:mt-10 border-b-2 border-gray-400 bg-primaryflex flex-col lg:flex-row"
   >
     <div class="w-full lg:w-2/5 ">
       <ul class="pb-10">
@@ -57,20 +57,20 @@
             style="background-image: url(https://images.unsplash.com/photo-1521572267360-ee0c2909d518?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1534&amp;q=80);"
           ></div>
           <div
-            class="text-gray-800 font-bold text-gray-100 text-xl w-full text-center tracking-wider font-sans pt-4 pb-2"
+            class="text-primary  font-bold text-gray-100 text-xl w-full text-center tracking-wider font-sans pt-4 pb-2"
           >
             User Name
           </div>
           <div
-            class="text-white text-gray-800 text-xs w-full text-center tracking-wider font-sans"
+            class="text-button text-primary  text-xs w-full text-center tracking-wider font-sans"
           >
             User Role
           </div>
         </li>
       </ul>
-      <div class="w-full bg-white">
+      <div class="w-full bg-theme">
         <div class="w-full">
-          <div class="tab w-full overflow-hidden border-t hover:bg-indigo-200">
+          <div class="tab w-full overflow-hidden border-t hover:bg-button">
             <input
               class="absolute opacity-0 lg:hidden"
               id="tab-multi-one"
@@ -89,7 +89,7 @@
               <div class="connection flex flex-row w-full">
                 <div class="flex flex-col w-full flex-wrap p-4">
                   <input
-                    class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
                     id="name"
                     type="text"
                     placeholder="Your name"
@@ -106,7 +106,7 @@
             </div>
           </div>
         </div>
-        <div class="tab w-full overflow-hidden border-t hover:bg-indigo-200">
+        <div class="tab w-full overflow-hidden border-t hover:bg-button">
             <input
               class="absolute opacity-0 lg:hidden"
               id="tab-multi-two"
@@ -125,7 +125,7 @@
               <div class="connection flex flex-row w-full">
                 <div class="flex flex-col w-full flex-wrap p-4">
                   <input
-                    class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
                     id="name"
                     type="text"
                     placeholder="Your name"
@@ -146,7 +146,7 @@
     </div>      
     <div class="relative w-full  pb-10">
       <div class="connection flex sm:invisible md:invisible lg:visible flex-row w-full">
-        <div class="bg-white rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+        <div class="bg-primaryrounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
             <div class="-mx-3 md:flex mb-6">
               <div class="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
@@ -201,7 +201,7 @@
               </div>
             </div>
             <div class="mt-8 flex justify-end">
-                <button type="button" class="flex bg-indigo-800 hover:bg-gray-700 text-white font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2" @click="addEvent()">
+                <button type="button" class="flex bg-button hover:bg-gray-700 text-button font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2" @click="addEvent()">
                     Save 
                 </button>	
           </div>
