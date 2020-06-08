@@ -10,6 +10,7 @@
     <title>{{config('app.name')}} - @yield('title') </title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">  
     @stack('styles')
+    @livewireStyles 
     <!-- Scripts -->
   
     
@@ -39,6 +40,7 @@
             
         @stack('body-script')
           <div class="max-w-screen-xl flex justify-center mx-auto pt-12 overflow-hidden sm:px-6 lg:px-8">
+            @livewire('counter')
               <div class="bottom-0  relative text-sm font-semibold leading-9 justify-center text-secondary opacity-50"> 
                 <p>Psi - &copy; <a href="" class="text-link">Progete!</a> 2020</p>
               </div>          
@@ -50,6 +52,6 @@
       @include('layouts.notifications',['notifications' => isset($notificacoes) ? $notificacoes : false])
     @endauth
   </div>
-  
+  @livewireScripts
 </body>
 </html>
