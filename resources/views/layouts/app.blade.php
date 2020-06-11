@@ -24,7 +24,7 @@
     
 </head>
 <body >
-  <div class="h-screen flex overflow-hidden bg-primary">
+  <div class="h-screen flex overflow-hidden bg-theme">
     @auth
       @include('menu')
     @endauth
