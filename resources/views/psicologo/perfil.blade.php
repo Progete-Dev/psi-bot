@@ -12,17 +12,17 @@
             style="background-image: url(https://images.unsplash.com/photo-1521572267360-ee0c2909d518?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1534&amp;q=80);"
           ></div>
           <div
-            class="text-gray-600 font-bold text-xl w-full tracking-wider font-sans pt-4 pb-2"
+            class="text-gray-600 text-center font-bold text-xl w-full tracking-wider font-sans pt-4 pb-2"
           >
             Nome : {{auth()->user()->name}}
           </div>
           <div
-            class="text-gray-600 font-bold text-xl w-full tracking-wider font-sans pt-4 pb-2"
+            class="text-gray-600 text-center font-bold text-xl w-full tracking-wider font-sans pt-4 pb-2"
           >
             Email : {{auth()->user()->email}}
           </div>
           <div
-            class="text-gray-600 font-bold text-xl w-full  tracking-wider font-sans pt-4 pb-2"
+            class="text-gray-600 text-center font-bold text-xl w-full  tracking-wider font-sans pt-4 pb-2"
           >
             Telefone : {{auth()->user()->telefone}}
           </div>

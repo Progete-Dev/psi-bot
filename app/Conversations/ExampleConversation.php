@@ -12,6 +12,8 @@ use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ExampleConversation extends Conversation
@@ -39,16 +41,29 @@ class ExampleConversation extends Conversation
             ]
         ]);
     }
+    public static function geraPergunta($texto,$campos){
+        $opcoes = [];
+                
+        foreach($campos as $index => $opcao){
+            $opcoes []= Button::create($opcao)->value($index+1);
+        }
+
+        $pergunta = Question::create($texto.": ")
+        ->fallback('Opção Inválida')
+        ->callbackId(Str::slug($texto))
+        ->addButtons($opcoes);
+        return $pergunta;
+    }
 
     public function askEmail()
     {
         $this->ask('Qual seu email pra te identificar nos nossos arquivos?', function(Answer $answer) {
 
             $validator = Validator::make(['email' =>  $answer->getText()], [
-                'email' => 'required|unique:users|email',
+                'email' => 'required|email',
                 
             ]);
-
+            $this->say($answer->getText());
             if($validator->fails()){
                
                 $this->say('Seu email é invalido 😐');
@@ -60,12 +75,39 @@ class ExampleConversation extends Conversation
                 'email' => $this->email
             ])->first();
             if($this->user != null){
-                $this->say('Vimos que você já tem cadastro. Você quer agendar um atendimento? ');
+                $this->menu();
             }
-
             
 
         });
+    }
+    public function menu(){
+        
+        $opcoes = [
+            "agendar",                   
+            "remarcar",
+            "cancelar",
+        ];
+
+        $pergunta = $this->geraPergunta('Vimos que você já tem cadastro. Você quer agendar, remarcar ou cancelar um atendimento? ',$opcoes);
+
+        $this->ask($pergunta, function(Answer $resposta){
+            $opcao = $resposta->getText();
+           
+            switch(intval($opcao)){
+                case 1:
+                    $this->bot->startConversation(new AtendimentoConversation($this->user));
+                
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+            }
+        });
+
     }
 
     
