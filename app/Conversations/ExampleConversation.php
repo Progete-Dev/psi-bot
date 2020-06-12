@@ -23,7 +23,7 @@ class ExampleConversation extends Conversation
     protected $user;
     public function askFirstname()
     {
-        $this->say('Olá, me chamo Maju!');
+        $this->say('Olá, Me chamo Maju! Sou a Assistente virtual do Papo.');
         $this->ask('É a primeira vez que você fala comigo?',[
             [
                'pattern' => 'sim|sm|s|ss',
@@ -48,7 +48,7 @@ class ExampleConversation extends Conversation
             $opcoes []= Button::create($opcao)->value($index+1);
         }
 
-        $pergunta = Question::create($texto.": ")
+        $pergunta = Question::create($texto)
         ->fallback('Opção Inválida')
         ->callbackId(Str::slug($texto))
         ->addButtons($opcoes);
@@ -63,7 +63,7 @@ class ExampleConversation extends Conversation
                 'email' => 'required|email',
                 
             ]);
-            $this->say($answer->getText());
+            
             if($validator->fails()){
                
                 $this->say('Seu email é invalido 😐');
@@ -75,13 +75,13 @@ class ExampleConversation extends Conversation
                 'email' => $this->email
             ])->first();
             if($this->user != null){
-                $this->menu();
+                $this->mostrarOpcoes();
             }
             
 
         });
     }
-    public function menu(){
+    public function mostrarOpcoes(){
         
         $opcoes = [
             "agendar",                   
@@ -89,7 +89,10 @@ class ExampleConversation extends Conversation
             "cancelar",
         ];
 
-        $pergunta = $this->geraPergunta('Vimos que você já tem cadastro. Você quer agendar, remarcar ou cancelar um atendimento? ',$opcoes);
+        $pergunta = $this->geraPergunta(
+            'Vimos que você já tem cadastro. Você quer agendar, remarcar ou cancelar um atendimento? ',
+            $opcoes
+        );
 
         $this->ask($pergunta, function(Answer $resposta){
             $opcao = $resposta->getText();
