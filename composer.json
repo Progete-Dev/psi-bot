@@ -56,6 +56,7 @@
         "post-create-project-cmd": [
             "php artisan key:generate"
         ],
+        
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations"
@@ -67,6 +68,15 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
+        ],
+        "post-install-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postInstall",
+            "php artisan optimize",
+            "php artisan migrate --force",
+        ],
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "php artisan optimize"
         ]
     },
     "config": {
