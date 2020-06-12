@@ -2,7 +2,7 @@
             <ul style="max-height: 400px; min-height: auto; " class=" overflow-y-auto">
                 <li  x-data="{open : false}" class="flex">
                     <div  style="cursor: pointer" class="block focus:outline-none transition duration-150 ease-in-out hover:bg-primary rounded-md border border-indigo-300 shadow my-1">
-                        <div class="flex items-center px-2 py-4 sm:px-6" @click="open = true">
+                        <div class="flex items-center px-2 py-4 sm:px-6" x-on:click="open = true">
                         <div class="min-w-0 flex-1 flex items-center">
                                 <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                     <div>   
@@ -31,11 +31,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
+                          
                         </div>
                     </div>
                     <div  style="background-color: rgba(0, 0, 0, 0.8)" class="fixed overflow-auto  z-40 top-0 right-0 left-0 bottom-0 h-full w-full" x-show.transition.opacity="open">
@@ -77,7 +73,7 @@
                                 {!! $this->atendimento->motivo  !!}
         
                                 <div class="mt-8 flex justify-end">
-                                    <button @click="open=false" type="button" class="flex bg-button hover:text-secondary hover:bg-menu text-button font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2"">
+                                    <button x-on:click="open=false" type="button" class="flex bg-button hover:text-secondary hover:bg-menu text-button font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2"">
                                         Fechar
                                     </button>	
                                 </div>
