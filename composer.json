@@ -70,12 +70,11 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize",
-            "php artisan migrate --force"
+            "php artisan migrate --force --seed"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "php artisan db:seed --class=FormularioAtedimentoSeeder"
         ]
     },
     "config": {
