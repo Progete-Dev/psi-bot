@@ -15,12 +15,14 @@ class CreateAtendimentosTable extends Migration
     {
         Schema::create('atendimentos', function (Blueprint $table) {
             $table->id();
+            $table->timestamp('inicio_atendimento')->nullable();
+            $table->timestamp('final_atendimento')->nullable();
             $table->timestamp('data_atendimento')->nullable();
-            $table->integer('tempo_atendimento')->nullable();
-            $table->enum('status',['AGUARDA_PSICOLOGO','AGUARDA_HORARIO','EM_ATENDIMENTO','CONCLUIDO','REMARCADO','CANCELADO']);
+            $table->integer('status');
             $table->timestamps();
             $table->foreignId('cliente_id')->references('id')->on('users');
             $table->unsignedInteger('psicologo_id')->nullable();
+
         });
     }
 
