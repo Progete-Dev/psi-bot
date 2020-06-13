@@ -16,7 +16,4 @@ $botman->group(['driver' => WhatsappgoDriver::class],function($bot){
 //$botman->hears("test", BotManController::class."@test");
 
 
-// $botman->fallback(function($bot){
-//     $bot->reply('Desculpe, não entendi. ');
-// });
 

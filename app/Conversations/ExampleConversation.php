@@ -22,22 +22,26 @@ class ExampleConversation extends Conversation
     public function askFirstname()
     {
         $this->say('Olá, me chamo Maju!');
-        $this->ask('É a primeira vez que você fala comigo?',[
-            [
-               'pattern' => 'sim|sm|s|ss',
-               'callback' => function () {
-                   $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
-                   $formulario = Formulario::first();
-                   $this->bot->startConversation(new Boasvindas($formulario));
-                }
-            ],
-            [
-                'pattern' => 'não|n|nao|nn',
-                'callback' => function () {
+        $question = Question::create('É a primeira vez que você fala comigo?')
+        ->fallback('Algo deu errado')
+        ->callbackId('primeiro_contato')
+        ->addButtons([
+            Button::create('Sim')->value('sim'),
+            Button::create('Não')->value('não'),
+        ]);
+        $this->ask($question,function(Answer $resposta){
+            if ($resposta->isInteractiveMessageReply()) {
+                $opcao = $resposta->getValue(); 
+                if($opcao == 'não'){
+                    $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
+                    $formulario = Formulario::first();
+                    $this->bot->startConversation(new Boasvindas($formulario));
+                }elseif($opcao == 'sim'){
                     $this->askEmail();
                 }
-            ]
-        ]);
+            }
+            
+        });
     }
 
     public function askEmail()
