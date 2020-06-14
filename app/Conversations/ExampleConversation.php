@@ -32,11 +32,11 @@ class ExampleConversation extends Conversation
         $this->ask($question,function(Answer $resposta){
                 $opcao = $resposta; 
                 Log::info($opcao);
-                if($opcao == 'não'){
+                if($opcao == 'sim'){
                     $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
                     $formulario = Formulario::first();
                     $this->bot->startConversation(new Boasvindas($formulario));
-                }elseif($opcao == 'sim'){
+                }elseif($opcao == 'não'){
                     $this->askEmail();
                 }
             
