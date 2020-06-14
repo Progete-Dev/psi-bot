@@ -30,7 +30,6 @@ class ExampleConversation extends Conversation
             Button::create('Não')->value('não'),
         ]);
         $this->ask($question,function(Answer $resposta){
-            if ($resposta->isInteractiveMessageReply()) {
                 $opcao = $resposta->getValue(); 
                 if($opcao == 'não'){
                     $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
@@ -39,7 +38,6 @@ class ExampleConversation extends Conversation
                 }elseif($opcao == 'sim'){
                     $this->askEmail();
                 }
-            }
             
         });
     }
