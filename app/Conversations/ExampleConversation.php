@@ -31,6 +31,7 @@ class ExampleConversation extends Conversation
         ]);
         $this->ask($question,function(Answer $resposta){
                 $opcao = $resposta->getValue(); 
+                Log::info($this->bot->getUser());
                 if($opcao == 'não'){
                     $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
                     $formulario = Formulario::first();
