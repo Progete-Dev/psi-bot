@@ -48,7 +48,7 @@ class ExampleConversation extends Conversation
         $this->ask('Qual seu email pra te identificar nos nossos arquivos?', function(Answer $answer) {
 
             $validator = Validator::make(['email' =>  $answer->getText()], [
-                'email' => 'required|unique:users|email',
+                'email' => 'required|email',
                 
             ]);
 
