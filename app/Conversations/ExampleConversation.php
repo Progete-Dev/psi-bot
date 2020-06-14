@@ -30,7 +30,7 @@ class ExampleConversation extends Conversation
             Button::create('Não')->value('não'),
         ]);
         $this->ask($question,function(Answer $resposta){
-                $opcao = $resposta->getValue(); 
+                $opcao = $resposta; 
                 Log::info($opcao);
                 if($opcao == 'não'){
                     $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
