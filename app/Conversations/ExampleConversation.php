@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Conversations;
-
+use Illuminate\Support\Facades\Log;
 use App\Jobs\NotificaPsicologo;
 use App\Models\Formulario;
 use App\Notifications\NotificaPsicologos;
