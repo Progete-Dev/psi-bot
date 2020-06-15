@@ -58,7 +58,6 @@ class GeraAtendimento implements ShouldQueue
             'cliente_id' => $user->id,
             'status' => 1,
             'psicologo_id' => null,
-            'tempo_atendimento' => 0,
             'data_atendimento' => null
         ])->id;
 
