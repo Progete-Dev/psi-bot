@@ -12,7 +12,7 @@ module.exports = {
         menu : "var(--text-menu)",
       },
       backgroundColor: {
-        primary: "var(--bg-color)",
+        primary: "var(--bg-primary)",
         secondary : "var(--bg-secondary)",
         theme : "var(--bg-theme)",
         button : "var(--bg-button)",
