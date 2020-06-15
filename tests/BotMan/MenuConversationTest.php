@@ -5,7 +5,7 @@ namespace Tests\BotMan;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Tests\TestCase;
 
 class MenuConversationTest extends TestCase
