@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Conversations;
-
+use Illuminate\Support\Facades\Log;
 use App\Jobs\NotificaPsicologo;
 use App\Models\Formulario;
 use App\Notifications\NotificaPsicologos;
@@ -22,22 +22,25 @@ class ExampleConversation extends Conversation
     public function askFirstname()
     {
         $this->say('Olá, me chamo Maju!');
-        $this->ask('É a primeira vez que você fala comigo?',[
-            [
-               'pattern' => 'sim|sm|s|ss',
-               'callback' => function () {
-                   $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
-                   $formulario = Formulario::first();
-                   $this->bot->startConversation(new Boasvindas($formulario));
-                }
-            ],
-            [
-                'pattern' => 'não|n|nao|nn',
-                'callback' => function () {
+        $question = Question::create('É a primeira vez que você fala comigo?')
+        ->fallback('Algo deu errado')
+        ->callbackId('primeiro_contato')
+        ->addButtons([
+            Button::create('Sim')->value('sim'),
+            Button::create('Não')->value('não'),
+        ]);
+        $this->ask($question,function(Answer $resposta){
+                $opcao = $resposta; 
+                Log::info($opcao);
+                if($opcao == 'sim'){
+                    $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
+                    $formulario = Formulario::first();
+                    $this->bot->startConversation(new Boasvindas($formulario));
+                }elseif($opcao == 'não'){
                     $this->askEmail();
                 }
-            ]
-        ]);
+            
+        });
     }
 
     public function askEmail()
@@ -45,7 +48,7 @@ class ExampleConversation extends Conversation
         $this->ask('Qual seu email pra te identificar nos nossos arquivos?', function(Answer $answer) {
 
             $validator = Validator::make(['email' =>  $answer->getText()], [
-                'email' => 'required|unique:users|email',
+                'email' => 'required|email',
                 
             ]);
 

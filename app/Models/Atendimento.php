@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Atendimento extends Model
 {
-    const AGUARDA_PSICOLOGO = 1;
+    const CONFIRMADO = 1;
     const AGUARDA_HORARIO   = 2;
-    const EM_ATENDIMENTO    = 3;
+    const AGUARDA_CONFIRMACAO    = 3;
     const CONCLUIDO         = 4;
     const REMARCADO         = 5;
     const CANCELADO         = 6;
@@ -18,11 +18,14 @@ class Atendimento extends Model
         'cliente_id',
         'psicologo_id',
         'data_atendimento',
-        'tempo_atendimento',
+        'inicio_atendimento',
+        'final_atendimento',
         'status'
     ];
     protected $dates = [
-        'data_atendimento'
+        'data_atendimento',
+        'inicio_atendimento',
+        'final_atendimento'
     ];
     
     public function cliente(){
