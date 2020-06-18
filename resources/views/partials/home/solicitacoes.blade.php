@@ -1,3 +1,4 @@
+@if(count($ids) > 0)
 <div style="max-height: 400px;" class="flex">
     <div x-data="{open : false}" class="px-2">
         <div  style="background-color: rgba(0, 0, 0, 0.8)" class="fixed overflow-auto  z-40 top-0 right-0 left-0 bottom-0 h-full w-full" x-show.transition.opacity="open">
@@ -81,3 +82,4 @@
         </div>
     </div>
 </div>
+@endif

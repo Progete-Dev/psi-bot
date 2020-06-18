@@ -13,9 +13,7 @@ $factory->define(Atendimento::class, function (Faker $faker) {
         'cliente_id' => function(){
             return factory(User::class)->create()->id;
         },
-        'psicologo_id'  => function(){
-            return factory(User::class)->state("psicologo")->create()->id;
-        },
+        'psicologo_id'  => null,
         'inicio_atendimento' => $faker->date(),
         'final_atendimento' => $faker->date(),
         'data_atendimento' => $faker->date(),

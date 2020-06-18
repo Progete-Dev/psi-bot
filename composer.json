@@ -14,6 +14,7 @@
         "botman/botman": "2.0.x-dev",
         "botman/driver-web": "~1.0",
         "botman/studio-addons": "dev-master",
+        "exatasmente/whatsapp-go" : "dev-master",
         "facade/ignition": "^2.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^7.0",
@@ -67,6 +68,10 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
+        ],
+        "post-install-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postInstall",
+            "php artisan migrate:fresh --force --seed"
         ]
     },
     "config": {
@@ -80,7 +85,13 @@
     "repositories": [
         {
             "type": "vcs",
+            "url": "https://github.com/exatasmente/whatsapp-go"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/recca0120/studio-addons"
         }
+        
+        
     ]
 }

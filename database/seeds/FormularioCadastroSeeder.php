@@ -4,7 +4,7 @@ use App\Models\CampoFormulario;
 use App\Models\Formulario;
 use Illuminate\Database\Seeder;
 
-class FormularioAtedimentoSeeder extends Seeder
+class FormularioCadastroSeeder extends Seeder
 {
     /**
      * Run the database seeds.

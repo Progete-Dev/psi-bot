@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Conversations;
-
+use Illuminate\Support\Facades\Log;
 use App\Jobs\NotificaPsicologo;
 use App\Models\Formulario;
 use App\Notifications\NotificaPsicologos;
@@ -23,23 +23,26 @@ class ExampleConversation extends Conversation
     protected $user;
     public function askFirstname()
     {
-        $this->say('Olá, Me chamo Maju! Sou a Assistente virtual do Papo.');
-        $this->ask('É a primeira vez que você fala comigo?',[
-            [
-               'pattern' => 'sim|sm|s|ss',
-               'callback' => function () {
-                   $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
-                   $formulario = Formulario::first();
-                   $this->bot->startConversation(new Boasvindas($formulario));
-                }
-            ],
-            [
-                'pattern' => 'não|n|nao|nn',
-                'callback' => function () {
+        $this->say('Olá, me chamo Maju!');
+        $question = Question::create('É a primeira vez que você fala comigo?')
+        ->fallback('Algo deu errado')
+        ->callbackId('primeiro_contato')
+        ->addButtons([
+            Button::create('Sim')->value('sim'),
+            Button::create('Não')->value('não'),
+        ]);
+        $this->ask($question,function(Answer $resposta){
+                $opcao = $resposta; 
+                Log::info($opcao);
+                if($opcao == 'sim'){
+                    $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
+                    $formulario = Formulario::first();
+                    $this->bot->startConversation(new Boasvindas($formulario));
+                }elseif($opcao == 'não'){
                     $this->askEmail();
                 }
-            ]
-        ]);
+            
+        });
     }
     public static function geraPergunta($texto,$campos){
         $opcoes = [];

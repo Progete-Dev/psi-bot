@@ -26,6 +26,17 @@
           >
             Telefone : {{auth()->user()->telefone}}
           </div>
+          <div
+            class="text-gray-600 font-bold text-xl w-full tracking-wider font-sans pt-4 pb-2"
+          >
+            CRP : {{-- Email : {{auth()->user()->email}} --}}
+          </div>
+          <div
+            class="text-gray-600 font-bold text-xl w-full tracking-wider font-sans pt-4 pb-2"
+          >
+            Especialidade : {{-- Email : {{auth()->user()->email}} --}}
+          </div>
+          
         </li>
       </ul>
       
@@ -77,6 +88,35 @@
             value="{{old('telefone')}}"
           />
           
+        </div>
+      </div>
+      
+      <div class="connection flex flex-row w-full">
+        <div class="flex flex-col w-full flex-wrap p-2">
+          <label for="crp" class="block  leading-normal cursor-pointer text-gray-600">
+            CRP
+          </label>
+          <input
+          class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
+          name="crp"
+          id="crp"
+          type=""
+          />
+          
+        </div>
+        <div class="connection flex flex-row w-full">
+          <div class="flex flex-col w-full flex-wrap p-2">
+            <label for="Especialidade" class="block  leading-normal cursor-pointer text-gray-600">
+              Especialidade
+            </label>
+            <input
+            class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-secondary border border-gray-200 rounded focus:outline-none focus:bg-primaryfocus:border-gray-500 text-secondary"
+            name="especialidade"
+            id="especialidade"
+            type="especialidade_"
+            />
+            
+          </div>
         </div>
       </div>
       <div class="connection flex flex-row w-full">
