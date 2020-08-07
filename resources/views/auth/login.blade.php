@@ -5,11 +5,11 @@
 <!-- Login Section -->
  <div class="w-full md:w-1/2 flex flex-col">
 
-    <div class="flex justify-center md:justify-start pt-12 ">
+    <div class="flex justify-center md:justify-start pt-8 ">
         <a href="#" class="bg-black text-button font-bold text-xl p-4">Logo</a>
     </div>
 
-    <div class="flex flex-col justify-center md:justify-start p-10">
+    <div class="flex flex-col justify-center md:justify-start p-8">
         <p class="text-center text-3xl">Login</p>
         <form class="flex flex-col pt-3 md:pt-8"  method="POST" action="{{ route('login') }}">
           @csrf
@@ -32,11 +32,15 @@
               </span>
             @enderror
             @if (Route::has('password.request'))
-              <a class="block w-full text-sm text-right text-button hover:text-gray-300" href="{{route('password.request')}}">
+              <a class="block w-full text-sm text-right  hover:text-gray-300" href="{{route('password.request')}}">
                 Forgot Password?
               </a>
             @endif
             <button type="submit"  class="bg-indigo-600 text-button font-bold text-lg hover:bg-gray-700 p-2 mt-8">Log In</button>
+
+            <a class="block w-full text-sm text-right  hover:text-gray-300" href="{{route('password.request')}}">
+              Fazer pré-cadastro na plataforma.
+            </a>
         </form>
 
     </div>
