@@ -17,6 +17,7 @@ module.exports = {
         theme : "var(--bg-theme)",
         button : "var(--bg-button)",
         menu : "var(--bg-menu)",
+        "menu-hover" : "var(--bg-menu-hover)",
       },
       screens: {
         dark: { raw: "(prefers-color-scheme: dark)" }

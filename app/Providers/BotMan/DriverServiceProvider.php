@@ -3,6 +3,7 @@
 namespace App\Providers\BotMan;
 
 use BotMan\BotMan\Drivers\DriverManager;
+use BotMan\Drivers\Whatsappgo\WhatsappgoDriver;
 use BotMan\Studio\Providers\DriverServiceProvider as ServiceProvider;
 
 class DriverServiceProvider extends ServiceProvider
@@ -13,7 +14,8 @@ class DriverServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $drivers = [];
+    protected $drivers = [
+    ];
 
     /**
      * @return void
@@ -21,9 +23,7 @@ class DriverServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+        DriverManager::loadDriver(WhatsappgoDriver::class);
 
-        foreach ($this->drivers as $driver) {
-            DriverManager::loadDriver($driver);
-        }
     }
 }

@@ -1,5 +1,5 @@
 @if(count($ids) > 0)
-            <ul style="max-height: 400px; min-height: auto; " class=" overflow-y-auto">
+            <ul style="max-height: 200px; min-height: auto; " class=" overflow-y-auto">
                 <li  x-data="{open : false}" class="flex">
                     <div  style="cursor: pointer" class="block focus:outline-none transition duration-150 ease-in-out hover:bg-primary rounded-md border border-indigo-300 shadow my-1">
                         <div class="flex items-center px-2 py-4 sm:px-6" x-on:click="open = true">

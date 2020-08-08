@@ -17,19 +17,20 @@
 }
 // root/default variables
 :root {
-  --text-primary   : rgba(90, 103, 216);
-  --text-secondary : #7fa1dd;
-  --text-button : white;
-  --text-link:#1C75B9;
-  --text-menu : rgb(171, 172, 241);
+  --text-primary   : #3182ce;
+  --text-secondary : #2768a5;
+  --text-button : #dbe4ed;
+  --text-link: #d5e1ef;
+  --text-menu : #dbe4ed;
   --link-white-color:#fff;
-  --bg-primary: white;
-  --bg-theme: white;
+  --bg-primary: #f3f8fc;
+  --bg-theme: #d6e6f5;
   --bg-secondary: #f0efef;
-  --bg-button : #434190;
-  --bg-menu : #434190;
-  
+  --bg-button : #3182ce;
+  --bg-menu : #3182ce;
+  --bg-menu-hover : #2c52825e;
 }
+
 //dark theme
 [data-theme="dark"] {
   --text-primary :#c3dafe;
