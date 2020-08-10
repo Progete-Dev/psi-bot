@@ -16,6 +16,9 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <style>
+       [x-cloak] { display: none; }
+      </style>
 
     <!-- Styles -->
     <style>
@@ -39,7 +42,7 @@
             
         @stack('body-script')
           <div class="max-w-screen-xl flex justify-center mx-auto pt-12 overflow-hidden sm:px-6 lg:px-8">
-            
+             
               <div class="bottom-0  relative text-sm font-semibold leading-9 justify-center text-secondary opacity-50"> 
                 <p>Psi - &copy; <a href="" class="text-link">Progete!</a> 2020</p>
               </div>          

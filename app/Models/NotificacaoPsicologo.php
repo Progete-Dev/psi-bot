@@ -3,8 +3,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class NotificacaoPsicologo extends Model
 {
+
+    public $dates = [
+        'created_at'
+    ];
     protected $guarded = [];
 
     public function psicologo(){
