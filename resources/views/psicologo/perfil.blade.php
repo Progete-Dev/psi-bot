@@ -2,6 +2,9 @@
 @section("title", "Perfil ". Auth::user()->name)
 @section('content')
 @include('partials.page_header')
+<<<<<<< HEAD
+  <livewire:perfil-psicologo ></livewire:perfil-psicologo>
+=======
 @component('partials.card')
   <div class="flex flex-col lg:flex-row">
     <div class="w-full lg:w-2/5 ">
@@ -157,4 +160,5 @@
     </div>
   </div>
   @endcomponent
+>>>>>>> origin/develop
 @endsection
