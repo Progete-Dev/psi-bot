@@ -70626,8 +70626,18 @@ module.exports = Vue;
   function isTesting() {
     return navigator.userAgent.includes("Node.js") || navigator.userAgent.includes("jsdom");
   }
+  function warnIfMalformedTemplate(el, directive) {
+    if (el.tagName.toLowerCase() !== 'template') {
+      console.warn(`Alpine: [${directive}] directive should only be added to <template> tags. See https://github.com/alpinejs/alpine#${directive}`);
+    } else if (el.content.childElementCount !== 1) {
+      console.warn(`Alpine: <template> tag with [${directive}] encountered with multiple element roots. Make sure <template> only has a single child node.`);
+    }
+  }
   function kebabCase(subject) {
     return subject.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[_\s]/, '-').toLowerCase();
+  }
+  function camelCase(subject) {
+    return subject.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (match, char) => char.toUpperCase());
   }
   function walk(el, callback) {
     if (callback(el) === false) return;
@@ -70654,11 +70664,19 @@ module.exports = Vue;
     };
   }
   function saferEval(expression, dataContext, additionalHelperVariables = {}) {
-    return new Function(['$data', ...Object.keys(additionalHelperVariables)], `var result; with($data) { result = ${expression} }; return result`)(dataContext, ...Object.values(additionalHelperVariables));
+    if (typeof expression === 'function') {
+      return expression.call(dataContext);
+    }
+
+    return new Function(['$data', ...Object.keys(additionalHelperVariables)], `var __alpine_result; with($data) { __alpine_result = ${expression} }; return __alpine_result`)(dataContext, ...Object.values(additionalHelperVariables));
   }
   function saferEvalNoReturn(expression, dataContext, additionalHelperVariables = {}) {
-    // For the cases when users pass only a function reference to the caller: `x-on:click="foo"`
+    if (typeof expression === 'function') {
+      return expression.call(dataContext, additionalHelperVariables['$event']);
+    } // For the cases when users pass only a function reference to the caller: `x-on:click="foo"`
     // Where "foo" is a function. Also, we'll pass the function the event instance when we call it.
+
+
     if (Object.keys(dataContext).includes(expression)) {
       let methodReference = new Function(['dataContext', ...Object.keys(additionalHelperVariables)], `with(dataContext) { return ${expression} }`)(dataContext, ...Object.values(additionalHelperVariables));
 
@@ -70669,29 +70687,54 @@ module.exports = Vue;
 
     return new Function(['dataContext', ...Object.keys(additionalHelperVariables)], `with(dataContext) { ${expression} }`)(dataContext, ...Object.values(additionalHelperVariables));
   }
-  const xAttrRE = /^x-(on|bind|data|text|html|model|if|for|show|cloak|transition|ref)\b/;
+  const xAttrRE = /^x-(on|bind|data|text|html|model|if|for|show|cloak|transition|ref|spread)\b/;
   function isXAttr(attr) {
     const name = replaceAtAndColonWithStandardSyntax(attr.name);
     return xAttrRE.test(name);
   }
-  function getXAttrs(el, type) {
-    return Array.from(el.attributes).filter(isXAttr).map(attr => {
-      const name = replaceAtAndColonWithStandardSyntax(attr.name);
-      const typeMatch = name.match(xAttrRE);
-      const valueMatch = name.match(/:([a-zA-Z\-:]+)/);
-      const modifiers = name.match(/\.[^.\]]+(?=[^\]]*$)/g) || [];
-      return {
-        type: typeMatch ? typeMatch[1] : null,
-        value: valueMatch ? valueMatch[1] : null,
-        modifiers: modifiers.map(i => i.replace('.', '')),
-        expression: attr.value
-      };
-    }).filter(i => {
-      // If no type is passed in for filtering, bypass filter
-      if (!type) return true;
-      return i.type === type;
+  function getXAttrs(el, component, type) {
+    let directives = Array.from(el.attributes).filter(isXAttr).map(parseHtmlAttribute); // Get an object of directives from x-spread.
+
+    let spreadDirective = directives.filter(directive => directive.type === 'spread')[0];
+
+    if (spreadDirective) {
+      let spreadObject = saferEval(spreadDirective.expression, component.$data); // Add x-spread directives to the pile of existing directives.
+
+      directives = directives.concat(Object.entries(spreadObject).map(([name, value]) => parseHtmlAttribute({
+        name,
+        value
+      })));
+    }
+
+    if (type) return directives.filter(i => i.type === type);
+    return sortDirectives(directives);
+  }
+
+  function sortDirectives(directives) {
+    let directiveOrder = ['bind', 'model', 'show', 'catch-all'];
+    return directives.sort((a, b) => {
+      let typeA = directiveOrder.indexOf(a.type) === -1 ? 'catch-all' : a.type;
+      let typeB = directiveOrder.indexOf(b.type) === -1 ? 'catch-all' : b.type;
+      return directiveOrder.indexOf(typeA) - directiveOrder.indexOf(typeB);
     });
   }
+
+  function parseHtmlAttribute({
+    name,
+    value
+  }) {
+    const normalizedName = replaceAtAndColonWithStandardSyntax(name);
+    const typeMatch = normalizedName.match(xAttrRE);
+    const valueMatch = normalizedName.match(/:([a-zA-Z\-:]+)/);
+    const modifiers = normalizedName.match(/\.[^.\]]+(?=[^\]]*$)/g) || [];
+    return {
+      type: typeMatch ? typeMatch[1] : null,
+      value: valueMatch ? valueMatch[1] : null,
+      modifiers: modifiers.map(i => i.replace('.', '')),
+      expression: value
+    };
+  }
+
   function isBooleanAttr(attrName) {
     // As per HTML spec table https://html.spec.whatwg.org/multipage/indices.html#attributes-3:boolean-attribute
     // Array roughly ordered by estimated usage
@@ -70707,11 +70750,23 @@ module.exports = Vue;
 
     return name;
   }
-  function transitionIn(el, show, forceSkip = false) {
+  function convertClassStringToArray(classList, filterFn = Boolean) {
+    return classList.split(' ').filter(filterFn);
+  }
+  const TRANSITION_TYPE_IN = 'in';
+  const TRANSITION_TYPE_OUT = 'out';
+  function transitionIn(el, show, component, forceSkip = false) {
     // We don't want to transition on the initial page load.
     if (forceSkip) return show();
-    const attrs = getXAttrs(el, 'transition');
-    const showAttr = getXAttrs(el, 'show')[0]; // If this is triggered by a x-show.transition.
+
+    if (el.__x_transition && el.__x_transition.type === TRANSITION_TYPE_IN) {
+      // there is already a similar transition going on, this was probably triggered by
+      // a change in a different property, let's just leave the previous one doing its job
+      return;
+    }
+
+    const attrs = getXAttrs(el, component, 'transition');
+    const showAttr = getXAttrs(el, component, 'show')[0]; // If this is triggered by a x-show.transition.
 
     if (showAttr && showAttr.modifiers.includes('transition')) {
       let modifiers = showAttr.modifiers; // If x-show.transition.out, we'll skip the "in" transition.
@@ -70721,17 +70776,25 @@ module.exports = Vue;
 
       modifiers = settingBothSidesOfTransition ? modifiers.filter((i, index) => index < modifiers.indexOf('out')) : modifiers;
       transitionHelperIn(el, modifiers, show); // Otherwise, we can assume x-transition:enter.
-    } else if (attrs.filter(attr => ['enter', 'enter-start', 'enter-end'].includes(attr.value)).length > 0) {
-      transitionClassesIn(el, attrs, show);
+    } else if (attrs.some(attr => ['enter', 'enter-start', 'enter-end'].includes(attr.value))) {
+      transitionClassesIn(el, component, attrs, show);
     } else {
       // If neither, just show that damn thing.
       show();
     }
   }
-  function transitionOut(el, hide, forceSkip = false) {
+  function transitionOut(el, hide, component, forceSkip = false) {
+    // We don't want to transition on the initial page load.
     if (forceSkip) return hide();
-    const attrs = getXAttrs(el, 'transition');
-    const showAttr = getXAttrs(el, 'show')[0];
+
+    if (el.__x_transition && el.__x_transition.type === TRANSITION_TYPE_OUT) {
+      // there is already a similar transition going on, this was probably triggered by
+      // a change in a different property, let's just leave the previous one doing its job
+      return;
+    }
+
+    const attrs = getXAttrs(el, component, 'transition');
+    const showAttr = getXAttrs(el, component, 'show')[0];
 
     if (showAttr && showAttr.modifiers.includes('transition')) {
       let modifiers = showAttr.modifiers;
@@ -70739,8 +70802,8 @@ module.exports = Vue;
       const settingBothSidesOfTransition = modifiers.includes('in') && modifiers.includes('out');
       modifiers = settingBothSidesOfTransition ? modifiers.filter((i, index) => index > modifiers.indexOf('out')) : modifiers;
       transitionHelperOut(el, modifiers, settingBothSidesOfTransition, hide);
-    } else if (attrs.filter(attr => ['leave', 'leave-start', 'leave-end'].includes(attr.value)).length > 0) {
-      transitionClassesOut(el, attrs, hide);
+    } else if (attrs.some(attr => ['leave', 'leave-start', 'leave-end'].includes(attr.value))) {
+      transitionClassesOut(el, component, attrs, hide);
     } else {
       hide();
     }
@@ -70759,7 +70822,7 @@ module.exports = Vue;
         scale: 100
       }
     };
-    transitionHelper(el, modifiers, showCallback, () => {}, styleValues);
+    transitionHelper(el, modifiers, showCallback, () => {}, styleValues, TRANSITION_TYPE_IN);
   }
   function transitionHelperOut(el, modifiers, settingBothSidesOfTransition, hideCallback) {
     // Make the "out" transition .5x slower than the "in". (Visually better)
@@ -70778,7 +70841,7 @@ module.exports = Vue;
         scale: modifierValue(modifiers, 'scale', 95)
       }
     };
-    transitionHelper(el, modifiers, () => {}, hideCallback, styleValues);
+    transitionHelper(el, modifiers, () => {}, hideCallback, styleValues, TRANSITION_TYPE_OUT);
   }
 
   function modifierValue(modifiers, key, fallback) {
@@ -70811,8 +70874,14 @@ module.exports = Vue;
     return rawValue;
   }
 
-  function transitionHelper(el, modifiers, hook1, hook2, styleValues) {
-    // If the user set these style values, we'll put them back when we're done with them.
+  function transitionHelper(el, modifiers, hook1, hook2, styleValues, type) {
+    // clear the previous transition if exists to avoid caching the wrong styles
+    if (el.__x_transition) {
+      cancelAnimationFrame(el.__x_transition.nextFrame);
+      el.__x_transition.callback && el.__x_transition.callback();
+    } // If the user set these style values, we'll put them back when we're done with them.
+
+
     const opacityCache = el.style.opacity;
     const transformCache = el.style.transform;
     const transformOriginCache = el.style.transformOrigin; // If no modifiers are present: x-show.transition, we'll default to both opacity and scale.
@@ -70859,33 +70928,43 @@ module.exports = Vue;
       }
 
     };
-    transition(el, stages);
+    transition(el, stages, type);
   }
-  function transitionClassesIn(el, directives, showCallback) {
-    const enter = (directives.find(i => i.value === 'enter') || {
+  function transitionClassesIn(el, component, directives, showCallback) {
+    let ensureStringExpression = expression => {
+      return typeof expression === 'function' ? component.evaluateReturnExpression(el, expression) : expression;
+    };
+
+    const enter = convertClassStringToArray(ensureStringExpression((directives.find(i => i.value === 'enter') || {
       expression: ''
-    }).expression.split(' ').filter(i => i !== '');
-    const enterStart = (directives.find(i => i.value === 'enter-start') || {
+    }).expression));
+    const enterStart = convertClassStringToArray(ensureStringExpression((directives.find(i => i.value === 'enter-start') || {
       expression: ''
-    }).expression.split(' ').filter(i => i !== '');
-    const enterEnd = (directives.find(i => i.value === 'enter-end') || {
+    }).expression));
+    const enterEnd = convertClassStringToArray(ensureStringExpression((directives.find(i => i.value === 'enter-end') || {
       expression: ''
-    }).expression.split(' ').filter(i => i !== '');
-    transitionClasses(el, enter, enterStart, enterEnd, showCallback, () => {});
+    }).expression));
+    transitionClasses(el, enter, enterStart, enterEnd, showCallback, () => {}, TRANSITION_TYPE_IN);
   }
-  function transitionClassesOut(el, directives, hideCallback) {
-    const leave = (directives.find(i => i.value === 'leave') || {
+  function transitionClassesOut(el, component, directives, hideCallback) {
+    const leave = convertClassStringToArray((directives.find(i => i.value === 'leave') || {
       expression: ''
-    }).expression.split(' ').filter(i => i !== '');
-    const leaveStart = (directives.find(i => i.value === 'leave-start') || {
+    }).expression);
+    const leaveStart = convertClassStringToArray((directives.find(i => i.value === 'leave-start') || {
       expression: ''
-    }).expression.split(' ').filter(i => i !== '');
-    const leaveEnd = (directives.find(i => i.value === 'leave-end') || {
+    }).expression);
+    const leaveEnd = convertClassStringToArray((directives.find(i => i.value === 'leave-end') || {
       expression: ''
-    }).expression.split(' ').filter(i => i !== '');
-    transitionClasses(el, leave, leaveStart, leaveEnd, () => {}, hideCallback);
+    }).expression);
+    transitionClasses(el, leave, leaveStart, leaveEnd, () => {}, hideCallback, TRANSITION_TYPE_OUT);
   }
-  function transitionClasses(el, classesDuring, classesStart, classesEnd, hook1, hook2) {
+  function transitionClasses(el, classesDuring, classesStart, classesEnd, hook1, hook2, type) {
+    // clear the previous transition if exists to avoid caching the wrong classes
+    if (el.__x_transition) {
+      cancelAnimationFrame(el.__x_transition.nextFrame);
+      el.__x_transition.callback && el.__x_transition.callback();
+    }
+
     const originalClasses = el.__x_original_classes || [];
     const stages = {
       start() {
@@ -70916,36 +70995,64 @@ module.exports = Vue;
       }
 
     };
-    transition(el, stages);
+    transition(el, stages, type);
   }
-  function transition(el, stages) {
+  function transition(el, stages, type) {
+    el.__x_transition = {
+      // Set transition type so we can avoid clearing transition if the direction is the same
+      type: type,
+      // create a callback for the last stages of the transition so we can call it
+      // from different point and early terminate it. Once will ensure that function
+      // is only called one time.
+      callback: once(() => {
+        stages.hide(); // Adding an "isConnected" check, in case the callback
+        // removed the element from the DOM.
+
+        if (el.isConnected) {
+          stages.cleanup();
+        }
+
+        delete el.__x_transition;
+      }),
+      // This store the next animation frame so we can cancel it
+      nextFrame: null
+    };
     stages.start();
     stages.during();
-    requestAnimationFrame(() => {
+    el.__x_transition.nextFrame = requestAnimationFrame(() => {
       // Note: Safari's transitionDuration property will list out comma separated transition durations
       // for every single transition property. Let's grab the first one and call it a day.
       let duration = Number(getComputedStyle(el).transitionDuration.replace(/,.*/, '').replace('s', '')) * 1000;
-      stages.show();
-      requestAnimationFrame(() => {
-        stages.end();
-        setTimeout(() => {
-          stages.hide(); // Adding an "isConnected" check, in case the callback
-          // removed the element from the DOM.
 
-          if (el.isConnected) {
-            stages.cleanup();
-          }
-        }, duration);
+      if (duration === 0) {
+        duration = Number(getComputedStyle(el).animationDuration.replace('s', '')) * 1000;
+      }
+
+      stages.show();
+      el.__x_transition.nextFrame = requestAnimationFrame(() => {
+        stages.end();
+        setTimeout(el.__x_transition.callback, duration);
       });
     });
   }
   function isNumeric(subject) {
     return !isNaN(subject);
+  } // Thanks @vuejs
+  // https://github.com/vuejs/vue/blob/4de4649d9637262a9b007720b59f80ac72a5620c/src/shared/util.js
+
+  function once(callback) {
+    let called = false;
+    return function () {
+      if (!called) {
+        called = true;
+        callback.apply(this, arguments);
+      }
+    };
   }
 
   function handleForDirective(component, templateEl, expression, initialUpdate, extraVars) {
-    warnIfNotTemplateTag(templateEl);
-    let iteratorNames = parseForExpression(expression);
+    warnIfMalformedTemplate(templateEl, 'x-for');
+    let iteratorNames = typeof expression === 'function' ? parseForExpression(component.evaluateReturnExpression(templateEl, expression)) : parseForExpression(expression);
     let items = evaluateItemsAndReturnEmptyIfXIfIsPresentAndFalseOnElement(component, templateEl, iteratorNames, extraVars); // As we walk the array, we'll also walk the DOM (updating/creating as we go).
 
     let currentEl = templateEl;
@@ -70957,7 +71064,7 @@ module.exports = Vue;
       if (!nextEl) {
         nextEl = addElementInLoopAfterCurrentEl(templateEl, currentEl); // And transition it in if it's not the first page load.
 
-        transitionIn(nextEl, () => {}, initialUpdate);
+        transitionIn(nextEl, () => {}, component, initialUpdate);
         nextEl.__x_for = iterationScopeVariables;
         component.initializeElements(nextEl, () => nextEl.__x_for); // Otherwise update the element we found.
       } else {
@@ -70970,7 +71077,7 @@ module.exports = Vue;
       currentEl = nextEl;
       currentEl.__x_for_key = currentKey;
     });
-    removeAnyLeftOverElementsFromPreviousUpdate(currentEl);
+    removeAnyLeftOverElementsFromPreviousUpdate(currentEl, component);
   } // This was taken from VueJS 2.* core. Thanks Vue!
 
   function parseForExpression(expression) {
@@ -71008,18 +71115,14 @@ module.exports = Vue;
   }
 
   function generateKeyForIteration(component, el, index, iterationScopeVariables) {
-    let bindKeyAttribute = getXAttrs(el, 'bind').filter(attr => attr.value === 'key')[0]; // If the dev hasn't specified a key, just return the index of the iteration.
+    let bindKeyAttribute = getXAttrs(el, component, 'bind').filter(attr => attr.value === 'key')[0]; // If the dev hasn't specified a key, just return the index of the iteration.
 
     if (!bindKeyAttribute) return index;
     return component.evaluateReturnExpression(el, bindKeyAttribute.expression, () => iterationScopeVariables);
   }
 
-  function warnIfNotTemplateTag(el) {
-    if (el.tagName.toLowerCase() !== 'template') console.warn('Alpine: [x-for] directive should only be added to <template> tags.');
-  }
-
   function evaluateItemsAndReturnEmptyIfXIfIsPresentAndFalseOnElement(component, el, iteratorNames, extraVars) {
-    let ifAttribute = getXAttrs(el, 'if')[0];
+    let ifAttribute = getXAttrs(el, component, 'if')[0];
 
     if (ifAttribute && !component.evaluateReturnExpression(el, ifAttribute.expression)) {
       return [];
@@ -71030,7 +71133,6 @@ module.exports = Vue;
 
   function addElementInLoopAfterCurrentEl(templateEl, currentEl) {
     let clone = document.importNode(templateEl.content, true);
-    if (clone.childElementCount !== 1) console.warn('Alpine: <template> tag with [x-for] encountered with multiple element roots. Make sure <template> only has a single child node.');
     currentEl.parentElement.insertBefore(clone, currentEl.nextElementSibling);
     return currentEl.nextElementSibling;
   }
@@ -71052,7 +71154,7 @@ module.exports = Vue;
     }
   }
 
-  function removeAnyLeftOverElementsFromPreviousUpdate(currentEl) {
+  function removeAnyLeftOverElementsFromPreviousUpdate(currentEl, component) {
     var nextElementFromOldLoop = currentEl.nextElementSibling && currentEl.nextElementSibling.__x_for_key !== undefined ? currentEl.nextElementSibling : false;
 
     while (nextElementFromOldLoop) {
@@ -71060,12 +71162,12 @@ module.exports = Vue;
       let nextSibling = nextElementFromOldLoop.nextElementSibling;
       transitionOut(nextElementFromOldLoop, () => {
         nextElementFromOldLoopImmutable.remove();
-      });
+      }, component);
       nextElementFromOldLoop = nextSibling && nextSibling.__x_for_key !== undefined ? nextSibling : false;
     }
   }
 
-  function handleAttributeBindingDirective(component, el, attrName, expression, extraVars, attrType) {
+  function handleAttributeBindingDirective(component, el, attrName, expression, extraVars, attrType, modifiers) {
     var value = component.evaluateReturnExpression(el, expression, extraVars);
 
     if (attrName === 'value') {
@@ -71084,26 +71186,20 @@ module.exports = Vue;
           el.checked = el.value == value;
         }
       } else if (el.type === 'checkbox') {
-        if (Array.isArray(value)) {
-          // I'm purposely not using Array.includes here because it's
-          // strict, and because of Numeric/String mis-casting, I
-          // want the "includes" to be "fuzzy".
-          let valueFound = false;
-          value.forEach(val => {
-            if (val == el.value) {
-              valueFound = true;
-            }
-          });
-          el.checked = valueFound;
-        } else {
-          el.checked = !!value;
-        } // If we are explicitly binding a string to the :value, set the string,
+        // If we are explicitly binding a string to the :value, set the string,
         // If the value is a boolean, leave it alone, it will be set to "on"
         // automatically.
-
-
-        if (typeof value === 'string') {
+        if (typeof value === 'string' && attrType === 'bind') {
           el.value = value;
+        } else if (attrType !== 'bind') {
+          if (Array.isArray(value)) {
+            // I'm purposely not using Array.includes here because it's
+            // strict, and because of Numeric/String mis-casting, I
+            // want the "includes" to be "fuzzy".
+            el.checked = value.some(val => val == el.value);
+          } else {
+            el.checked = !!value;
+          }
         }
       } else if (el.tagName === 'SELECT') {
         updateSelect(el, value);
@@ -71121,23 +71217,30 @@ module.exports = Vue;
         const keysSortedByBooleanValue = Object.keys(value).sort((a, b) => value[a] - value[b]);
         keysSortedByBooleanValue.forEach(classNames => {
           if (value[classNames]) {
-            classNames.split(' ').filter(Boolean).forEach(className => el.classList.add(className));
+            convertClassStringToArray(classNames).forEach(className => el.classList.add(className));
           } else {
-            classNames.split(' ').filter(Boolean).forEach(className => el.classList.remove(className));
+            convertClassStringToArray(classNames).forEach(className => el.classList.remove(className));
           }
         });
       } else {
         const originalClasses = el.__x_original_classes || [];
-        const newClasses = value.split(' ').filter(Boolean);
+        const newClasses = convertClassStringToArray(value);
         el.setAttribute('class', arrayUnique(originalClasses.concat(newClasses)).join(' '));
       }
     } else {
-      // If an attribute's bound value is null, undefined or false, remove the attribute
+      attrName = modifiers.includes('camel') ? camelCase(attrName) : attrName; // If an attribute's bound value is null, undefined or false, remove the attribute
+
       if ([null, undefined, false].includes(value)) {
         el.removeAttribute(attrName);
       } else {
-        isBooleanAttr(attrName) ? el.setAttribute(attrName, attrName) : el.setAttribute(attrName, value);
+        isBooleanAttr(attrName) ? setIfChanged(el, attrName, attrName) : setIfChanged(el, attrName, value);
       }
+    }
+  }
+
+  function setIfChanged(el, attrName, value) {
+    if (el.getAttribute(attrName) != value) {
+      el.setAttribute(attrName, value);
     }
   }
 
@@ -71152,7 +71255,7 @@ module.exports = Vue;
 
   function handleTextDirective(el, output, expression) {
     // If nested model key is undefined, set the default value to empty string.
-    if (output === undefined && expression.match(/\./).length) {
+    if (output === undefined && expression.match(/\./)) {
       output = '';
     }
 
@@ -71187,25 +71290,24 @@ module.exports = Vue;
     }
 
     const handle = resolve => {
-      if (!value) {
+      if (value) {
+        if (el.style.display === 'none' || el.__x_transition) {
+          transitionIn(el, () => {
+            show();
+          }, component);
+        }
+
+        resolve(() => {});
+      } else {
         if (el.style.display !== 'none') {
           transitionOut(el, () => {
             resolve(() => {
               hide();
             });
-          });
+          }, component);
         } else {
           resolve(() => {});
         }
-      } else {
-        if (el.style.display !== '') {
-          transitionIn(el, () => {
-            show();
-          });
-        } // Resolve immediately, only hold up parent `x-show`s for hidin.
-
-
-        resolve(() => {});
       }
     }; // The working of x-show is a bit complex because we need to
     // wait for any child transitions to finish before hiding
@@ -71223,34 +71325,41 @@ module.exports = Vue;
 
     if (component.showDirectiveLastElement && !component.showDirectiveLastElement.contains(el)) {
       component.executeAndClearRemainingShowDirectiveStack();
-    } // We'll push the handler onto a stack to be handled later.
-
+    }
 
     component.showDirectiveStack.push(handle);
     component.showDirectiveLastElement = el;
   }
 
   function handleIfDirective(component, el, expressionResult, initialUpdate, extraVars) {
-    if (el.nodeName.toLowerCase() !== 'template') console.warn(`Alpine: [x-if] directive should only be added to <template> tags. See https://github.com/alpinejs/alpine#x-if`);
+    warnIfMalformedTemplate(el, 'x-if');
     const elementHasAlreadyBeenAdded = el.nextElementSibling && el.nextElementSibling.__x_inserted_me === true;
 
-    if (expressionResult && !elementHasAlreadyBeenAdded) {
+    if (expressionResult && (!elementHasAlreadyBeenAdded || el.__x_transition)) {
       const clone = document.importNode(el.content, true);
       el.parentElement.insertBefore(clone, el.nextElementSibling);
-      transitionIn(el.nextElementSibling, () => {}, initialUpdate);
+      transitionIn(el.nextElementSibling, () => {}, component, initialUpdate);
       component.initializeElements(el.nextElementSibling, extraVars);
       el.nextElementSibling.__x_inserted_me = true;
     } else if (!expressionResult && elementHasAlreadyBeenAdded) {
       transitionOut(el.nextElementSibling, () => {
         el.nextElementSibling.remove();
-      }, initialUpdate);
+      }, component, initialUpdate);
     }
   }
 
   function registerListener(component, el, event, modifiers, expression, extraVars = {}) {
+    const options = {
+      passive: modifiers.includes('passive')
+    };
+
+    if (modifiers.includes('camel')) {
+      event = camelCase(event);
+    }
+
     if (modifiers.includes('away')) {
       let handler = e => {
-        // Don't do anything if the click came form the element or within it.
+        // Don't do anything if the click came from the element or within it.
         if (el.contains(e.target)) return; // Don't do anything if this element isn't currently visible.
 
         if (el.offsetWidth < 1 && el.offsetHeight < 1) return; // Now that we are sure the element is visible, AND the click
@@ -71259,12 +71368,12 @@ module.exports = Vue;
         runListenerHandler(component, expression, e, extraVars);
 
         if (modifiers.includes('once')) {
-          document.removeEventListener(event, handler);
+          document.removeEventListener(event, handler, options);
         }
       }; // Listen for this event at the root level.
 
 
-      document.addEventListener(event, handler);
+      document.addEventListener(event, handler, options);
     } else {
       let listenerTarget = modifiers.includes('window') ? window : modifiers.includes('document') ? document : el;
 
@@ -71273,7 +71382,7 @@ module.exports = Vue;
         // has been removed. It's now stale.
         if (listenerTarget === window || listenerTarget === document) {
           if (!document.body.contains(el)) {
-            listenerTarget.removeEventListener(event, handler);
+            listenerTarget.removeEventListener(event, handler, options);
             return;
           }
         }
@@ -71296,7 +71405,7 @@ module.exports = Vue;
             e.preventDefault();
           } else {
             if (modifiers.includes('once')) {
-              listenerTarget.removeEventListener(event, handler);
+              listenerTarget.removeEventListener(event, handler, options);
             }
           }
         }
@@ -71308,13 +71417,13 @@ module.exports = Vue;
         handler = debounce(handler, wait);
       }
 
-      listenerTarget.addEventListener(event, handler);
+      listenerTarget.addEventListener(event, handler, options);
     }
   }
 
   function runListenerHandler(component, expression, e, extraVars) {
     return component.evaluateCommandExpression(e.target, expression, () => {
-      return _objectSpread2({}, extraVars(), {
+      return _objectSpread2(_objectSpread2({}, extraVars()), {}, {
         '$event': e
       });
     });
@@ -71380,7 +71489,7 @@ module.exports = Vue;
     var event = el.tagName.toLowerCase() === 'select' || ['checkbox', 'radio'].includes(el.type) || modifiers.includes('lazy') ? 'change' : 'input';
     const listenerExpression = `${expression} = rightSideOfExpression($event, ${expression})`;
     registerListener(component, el, event, modifiers, listenerExpression, () => {
-      return _objectSpread2({}, extraVars(), {
+      return _objectSpread2(_objectSpread2({}, extraVars()), {}, {
         rightSideOfExpression: generateModelAssignmentFunction(el, modifiers, expression)
       });
     });
@@ -71399,26 +71508,30 @@ module.exports = Vue;
       if (event instanceof CustomEvent && event.detail) {
         return event.detail;
       } else if (el.type === 'checkbox') {
-        // If the data we are binding to is an array, toggle it's value inside the array.
+        // If the data we are binding to is an array, toggle its value inside the array.
         if (Array.isArray(currentValue)) {
-          return event.target.checked ? currentValue.concat([event.target.value]) : currentValue.filter(i => i !== event.target.value);
+          const newValue = modifiers.includes('number') ? safeParseNumber(event.target.value) : event.target.value;
+          return event.target.checked ? currentValue.concat([newValue]) : currentValue.filter(i => i !== newValue);
         } else {
           return event.target.checked;
         }
       } else if (el.tagName.toLowerCase() === 'select' && el.multiple) {
         return modifiers.includes('number') ? Array.from(event.target.selectedOptions).map(option => {
           const rawValue = option.value || option.text;
-          const number = rawValue ? parseFloat(rawValue) : null;
-          return isNaN(number) ? rawValue : number;
+          return safeParseNumber(rawValue);
         }) : Array.from(event.target.selectedOptions).map(option => {
           return option.value || option.text;
         });
       } else {
         const rawValue = event.target.value;
-        const number = rawValue ? parseFloat(rawValue) : null;
-        return modifiers.includes('number') ? isNaN(number) ? rawValue : number : modifiers.includes('trim') ? rawValue.trim() : rawValue;
+        return modifiers.includes('number') ? safeParseNumber(rawValue) : modifiers.includes('trim') ? rawValue.trim() : rawValue;
       }
     };
+  }
+
+  function safeParseNumber(rawValue) {
+    const number = rawValue ? parseFloat(rawValue) : null;
+    return isNumeric(number) ? number : rawValue;
   }
 
   /**
@@ -71821,12 +71934,14 @@ module.exports = Vue;
   }
 
   class Component {
-    constructor(el, seedDataForCloning = null) {
+    constructor(el, componentForClone = null) {
       this.$el = el;
       const dataAttr = this.$el.getAttribute('x-data');
       const dataExpression = dataAttr === '' ? '{}' : dataAttr;
       const initExpression = this.$el.getAttribute('x-init');
-      this.unobservedData = seedDataForCloning ? seedDataForCloning : saferEval(dataExpression, {});
+      this.unobservedData = componentForClone ? componentForClone.getUnobservedData() : saferEval(dataExpression, {
+        $el: this.$el
+      });
       // Construct a Proxy-based observable. This will be used to handle reactivity.
 
       let {
@@ -71852,11 +71967,20 @@ module.exports = Vue;
         this.watchers[property].push(callback);
       };
 
+      let canonicalComponentElementReference = componentForClone ? componentForClone.$el : this.$el; // Register custom magic properties.
+
+      Object.entries(Alpine.magicProperties).forEach(([name, callback]) => {
+        Object.defineProperty(this.unobservedData, `$${name}`, {
+          get: function get() {
+            return callback(canonicalComponentElementReference);
+          }
+        });
+      });
       this.showDirectiveStack = [];
       this.showDirectiveLastElement;
       var initReturnedCallback; // If x-init is present AND we aren't cloning (skip x-init on clone)
 
-      if (initExpression && !seedDataForCloning) {
+      if (initExpression && !componentForClone) {
         // We want to allow data manipulation, but not trigger DOM updates just yet.
         // We haven't even initialized the elements with their Alpine bindings. I mean c'mon.
         this.pauseReactivity = true;
@@ -71875,6 +71999,10 @@ module.exports = Vue;
         // Alpine's got it's grubby little paws all over everything.
         initReturnedCallback.call(this.$data);
       }
+
+      componentForClone || setTimeout(() => {
+        Alpine.onComponentInitializeds.forEach(callback => callback(this));
+      }, 0);
     }
 
     getUnobservedData() {
@@ -71951,8 +72079,8 @@ module.exports = Vue;
     initializeElement(el, extraVars) {
       // To support class attribute merging, we have to know what the element's
       // original class attribute looked like for reference.
-      if (el.hasAttribute('class') && getXAttrs(el).length > 0) {
-        el.__x_original_classes = el.getAttribute('class').split(' ');
+      if (el.hasAttribute('class') && getXAttrs(el, this).length > 0) {
+        el.__x_original_classes = convertClassStringToArray(el.getAttribute('class'));
       }
 
       this.registerListeners(el, extraVars);
@@ -71973,11 +72101,14 @@ module.exports = Vue;
 
     executeAndClearNextTickStack(el) {
       // Skip spawns from alpine directives
-      if (el === this.$el) {
-        // Walk through the $nextTick stack and clear it as we go.
-        while (this.nextTickStack.length > 0) {
-          this.nextTickStack.shift()();
-        }
+      if (el === this.$el && this.nextTickStack.length > 0) {
+        // We run the tick stack after the next frame to allow any
+        // running transitions to pass the initial show stage.
+        requestAnimationFrame(() => {
+          while (this.nextTickStack.length > 0) {
+            this.nextTickStack.shift()();
+          }
+        });
       }
     }
 
@@ -72006,7 +72137,7 @@ module.exports = Vue;
     }
 
     registerListeners(el, extraVars) {
-      getXAttrs(el).forEach(({
+      getXAttrs(el, this).forEach(({
         type,
         value,
         modifiers,
@@ -72025,7 +72156,7 @@ module.exports = Vue;
     }
 
     resolveBoundAttributes(el, initialUpdate = false, extraVars) {
-      let attrs = getXAttrs(el);
+      let attrs = getXAttrs(el, this);
 
       if (el.type !== undefined && el.type === 'radio') {
         // If there's an x-model on a radio input, move it to end of attribute list
@@ -72045,13 +72176,13 @@ module.exports = Vue;
       }) => {
         switch (type) {
           case 'model':
-            handleAttributeBindingDirective(this, el, 'value', expression, extraVars, type);
+            handleAttributeBindingDirective(this, el, 'value', expression, extraVars, type, modifiers);
             break;
 
           case 'bind':
             // The :key binding on an x-for is special, ignore it.
             if (el.tagName.toLowerCase() === 'template' && value === 'key') return;
-            handleAttributeBindingDirective(this, el, value, expression, extraVars, type);
+            handleAttributeBindingDirective(this, el, value, expression, extraVars, type, modifiers);
             break;
 
           case 'text':
@@ -72071,7 +72202,7 @@ module.exports = Vue;
           case 'if':
             // If this element also has x-for on it, don't process x-if.
             // We will let the "x-for" directive handle the "if"ing.
-            if (attrs.filter(i => i.type === 'for').length > 0) return;
+            if (attrs.some(i => i.type === 'for')) return;
             var output = this.evaluateReturnExpression(el, expression, extraVars);
             handleIfDirective(this, el, output, initialUpdate, extraVars);
             break;
@@ -72088,13 +72219,13 @@ module.exports = Vue;
     }
 
     evaluateReturnExpression(el, expression, extraVars = () => {}) {
-      return saferEval(expression, this.$data, _objectSpread2({}, extraVars(), {
+      return saferEval(expression, this.$data, _objectSpread2(_objectSpread2({}, extraVars()), {}, {
         $dispatch: this.getDispatchFunction(el)
       }));
     }
 
     evaluateCommandExpression(el, expression, extraVars = () => {}) {
-      return saferEvalNoReturn(expression, this.$data, _objectSpread2({}, extraVars(), {
+      return saferEvalNoReturn(expression, this.$data, _objectSpread2(_objectSpread2({}, extraVars()), {}, {
         $dispatch: this.getDispatchFunction(el)
       }));
     }
@@ -72122,7 +72253,9 @@ module.exports = Vue;
           if (!(closestParentComponent && closestParentComponent.isSameNode(this.$el))) continue;
 
           if (mutations[i].type === 'attributes' && mutations[i].attributeName === 'x-data') {
-            const rawData = saferEval(mutations[i].target.getAttribute('x-data'), {});
+            const rawData = saferEval(mutations[i].target.getAttribute('x-data') || '{}', {
+              $el: this.$el
+            });
             Object.keys(rawData).forEach(key => {
               if (this.$data[key] !== rawData[key]) {
                 this.$data[key] = rawData[key];
@@ -72134,7 +72267,7 @@ module.exports = Vue;
             mutations[i].addedNodes.forEach(node => {
               if (node.nodeType !== 1 || node.__x_inserted_me) return;
 
-              if (node.matches('[x-data]')) {
+              if (node.matches('[x-data]') && !node.__x) {
                 node.__x = new Component(node);
                 return;
               }
@@ -72175,7 +72308,10 @@ module.exports = Vue;
   }
 
   const Alpine = {
-    version: "2.3.5",
+    version: "2.5.0",
+    pauseMutationObserver: false,
+    magicProperties: {},
+    onComponentInitializeds: [],
     start: async function start() {
       if (!isTesting()) {
         await domReady();
@@ -72215,6 +72351,8 @@ module.exports = Vue;
         subtree: true
       };
       const observer = new MutationObserver(mutations => {
+        if (this.pauseMutationObserver) return;
+
         for (let i = 0; i < mutations.length; i++) {
           if (mutations[i].addedNodes.length > 0) {
             mutations[i].addedNodes.forEach(node => {
@@ -72234,13 +72372,27 @@ module.exports = Vue;
     },
     initializeComponent: function initializeComponent(el) {
       if (!el.__x) {
-        el.__x = new Component(el);
+        // Wrap in a try/catch so that we don't prevent other components
+        // from initializing when one component contains an error.
+        try {
+          el.__x = new Component(el);
+        } catch (error) {
+          setTimeout(() => {
+            throw error;
+          }, 0);
+        }
       }
     },
     clone: function clone(component, newEl) {
       if (!newEl.__x) {
-        newEl.__x = new Component(newEl, component.getUnobservedData());
+        newEl.__x = new Component(newEl, component);
       }
+    },
+    addMagicProperty: function addMagicProperty(name, callback) {
+      this.magicProperties[name] = callback;
+    },
+    onComponentInitialized: function onComponentInitialized(callback) {
+      this.onComponentInitializeds.push(callback);
     }
   };
 
@@ -75790,7 +75942,7 @@ var content = __webpack_require__(188);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("25475fd9", content, false, {});
+var update = __webpack_require__(4)("d9dc7834", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -76311,7 +76463,7 @@ var content = __webpack_require__(193);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("62ca6d8a", content, false, {});
+var update = __webpack_require__(4)("bbf3dbfe", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -76497,7 +76649,7 @@ var content = __webpack_require__(196);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("5c2b22e3", content, false, {});
+var update = __webpack_require__(4)("32adfc14", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -76851,7 +77003,7 @@ var content = __webpack_require__(202);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("79cd0750", content, false, {});
+var update = __webpack_require__(4)("4f128dca", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -77280,7 +77432,7 @@ var content = __webpack_require__(207);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("41360240", content, false, {});
+var update = __webpack_require__(4)("a7107db4", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -77728,7 +77880,7 @@ var content = __webpack_require__(213);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("25c4ae57", content, false, {});
+var update = __webpack_require__(4)("4cedd652", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -77922,7 +78074,7 @@ var content = __webpack_require__(217);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(4)("467f8854", content, false, {});
+var update = __webpack_require__(4)("35f731d4", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -78693,6 +78845,17 @@ var script = {
       default: function default$6 () {
         return false
       }
+    },
+    /**
+     * Focuses cursor in the editor when attached to the DOM
+     * (optional, default is `false`).
+     */
+    autofocus: {
+      type: Boolean,
+      required: false,
+      default: function default$7 () {
+        return false
+      }
     }
   },
   mounted: function mounted () {
@@ -78723,6 +78886,17 @@ var script = {
     handleContentChange: function handleContentChange (event) {
       this.editorContent = event.srcElement ? event.srcElement.value : event.target.value;
       this.$emit('input', this.editorContent);
+    },
+    handleInitialize: function handleInitialize (event) {
+      /**
+       * If autofocus is true, manually set focus to
+       * beginning of content (consistent with Trix behavior)
+       */
+      if (this.autofocus) {
+        this.$refs.trix.editor.setSelectedRange(0);
+      }
+
+      this.$emit('trix-initialize', this.emitInitialize);
     },
     handleInitialContentChange: function handleInitialContentChange (newContent, oldContent) {
       newContent = newContent === undefined ? '' : newContent;
@@ -78972,7 +79146,7 @@ var __vue_render__ = function() {
           "trix-attachment-add": _vm.emitAttachmentAdd,
           "trix-attachment-remove": _vm.emitAttachmentRemove,
           "trix-selection-change": _vm.emitSelectionChange,
-          "trix-initialize": _vm.emitInitialize,
+          "trix-initialize": _vm.handleInitialize,
           "trix-before-initialize": _vm.emitBeforeInitialize,
           "trix-focus": _vm.processTrixFocus,
           "trix-blur": _vm.processTrixBlur
@@ -78993,7 +79167,7 @@ __vue_render__._withStripped = true;
   /* style */
   var __vue_inject_styles__ = function (inject) {
     if (!inject) { return }
-    inject("data-v-22ca123f_0", { source: "\n.src-components-trix_container-5Bcy {\n  max-width: 100%;\n  height: auto;\n}\n.src-components-trix_container-5Bcy .src-components-trix-button-group-2D-J {\n  background-color: white;\n}\n.src-components-trix_container-5Bcy .src-components-trix-content-1TD_ {\n  background-color: white;\n}\n", map: {"version":3,"sources":["/home/hanh/side-projects/vue-trix/src/components/VueTrix.vue"],"names":[],"mappings":";AAkPA;EACA,eAAA;EACA,YAAA;AACA;AACA;EACA,uBAAA;AACA;AACA;EACA,uBAAA;AACA","file":"VueTrix.vue","sourcesContent":["<template>\n  <div :class=\"[$style.trix_container]\">\n    <trix-editor\n      :contenteditable=\"!disabledEditor\"\n      :class=\"['trix-content']\"\n      ref=\"trix\"\n      :input=\"computedId\"\n      :placeholder=\"placeholder\"\n      @trix-change=\"handleContentChange\"\n      @trix-file-accept=\"emitFileAccept\"\n      @trix-attachment-add=\"emitAttachmentAdd\"\n      @trix-attachment-remove=\"emitAttachmentRemove\"\n      @trix-selection-change=\"emitSelectionChange\"\n      @trix-initialize=\"emitInitialize\"\n      @trix-before-initialize=\"emitBeforeInitialize\"\n      @trix-focus=\"processTrixFocus\"\n      @trix-blur=\"processTrixBlur\"\n    />\n    <input\n      type=\"hidden\"\n      :name=\"inputName\"\n      :id=\"computedId\"\n      :value=\"editorContent\"\n    />\n  </div>\n</template>\n\n<script>\nimport 'trix'\nimport 'trix/dist/trix.css'\nimport EmitFileAccept from '../mixins/EmitFileAccept.js'\nimport EmitInitialize from '../mixins/EmitInitialize.js'\nimport EmitAttachmentAdd from '../mixins/EmitAttachmentAdd.js'\nimport EmitSelectionChange from '../mixins/EmitSelectionChange.js'\nimport EmitAttachmentRemove from '../mixins/EmitAttachmentRemove.js'\nimport EmitBeforeInitialize from '../mixins/EmitBeforeInitialize.js'\nimport ProcessEditorFocusAndBlur from '../mixins/ProcessEditorFocusAndBlur.js'\n\nexport default {\n  name: 'vue-trix',\n  mixins: [\n    EmitFileAccept(),\n    EmitInitialize(),\n    EmitAttachmentAdd(),\n    EmitSelectionChange(),\n    EmitAttachmentRemove(),\n    EmitBeforeInitialize(),\n    ProcessEditorFocusAndBlur()\n  ],\n  model: {\n    prop: 'srcContent',\n    event: 'update'\n  },\n  props: {\n    /**\n     * This prop will put the editor in read-only mode\n     */\n    disabledEditor: {\n      type: Boolean,\n      required: false,\n      default () {\n        return false\n      }\n    },\n    /**\n     * This is referenced `id` of the hidden input field defined.\n     * It is optional and will be a random string by default.\n     */\n    inputId: {\n      type: String,\n      required: false,\n      default () {\n        return ''\n      }\n    },\n    /**\n     * This is referenced `name` of the hidden input field defined,\n     * default value is `content`.\n     */\n    inputName: {\n      type: String,\n      required: false,\n      default () {\n        return 'content'\n      }\n    },\n    /**\n     * The placeholder attribute specifies a short hint\n     * that describes the expected value of a editor.\n     */\n    placeholder: {\n      type: String,\n      required: false,\n      default () {\n        return ''\n      }\n    },\n    /**\n     * The source content is associcated to v-model directive.\n     */\n    srcContent: {\n      type: String,\n      required: false,\n      default () {\n        return ''\n      }\n    },\n    /**\n     * The boolean attribute allows saving editor state into browser's localStorage\n     * (optional, default is `false`).\n     */\n    localStorage: {\n      type: Boolean,\n      required: false,\n      default () {\n        return false\n      }\n    }\n  },\n  mounted () {\n    /** Check if editor read-only mode is required */\n    this.decorateDisabledEditor(this.disabledEditor)\n    this.$nextTick(() => {\n      /**\n       *  If localStorage is enabled,\n       *  then load editor's content from the beginning.\n       */\n      if (this.localStorage) {\n        const savedValue = localStorage.getItem(this.storageId('VueTrix'))\n        if (savedValue && !this.srcContent) {\n          this.$refs.trix.editor.loadJSON(JSON.parse(savedValue))\n        }\n      }\n    })\n  },\n  data () {\n    return {\n      editorContent: this.srcContent,\n      isActived: null\n    }\n  },\n  methods: {\n    handleContentChange (event) {\n      this.editorContent = event.srcElement ? event.srcElement.value : event.target.value\n      this.$emit('input', this.editorContent)\n    },\n    handleInitialContentChange (newContent, oldContent) {\n      newContent = newContent === undefined ? '' : newContent\n\n      if (this.$refs.trix.editor && this.$refs.trix.editor.innerHTML !== newContent) {\n        /* Update editor's content when initial content changed */\n        this.editorContent = newContent\n\n        /**\n         *  If user are typing, then don't reload the editor,\n         *  hence keep cursor's position after typing.\n         */\n        if (!this.isActived) {\n          this.reloadEditorContent(this.editorContent)\n        }\n      }\n    },\n    emitEditorState (value) {\n      /**\n       * If localStorage is enabled,\n       * then save editor's content into storage\n       */\n      if (this.localStorage) {\n        localStorage.setItem(\n          this.storageId('VueTrix'),\n          JSON.stringify(this.$refs.trix.editor)\n        )\n      }\n      this.$emit('update', this.editorContent)\n    },\n    storageId (component) {\n      if (this.inputId) {\n        return `${component}.${this.inputId}.content`\n      } else {\n        return `${component}.content`\n      }\n    },\n    reloadEditorContent (newContent) {\n      // Reload HTML content\n      this.$refs.trix.editor.loadHTML(newContent)\n\n      // Move cursor to end of new content updated\n      this.$refs.trix.editor.setSelectedRange(this.getContentEndPosition())\n    },\n    getContentEndPosition () {\n      return this.$refs.trix.editor.getDocument().toString().length - 1\n    },\n    decorateDisabledEditor (editorState) {\n      /** Disable toolbar and editor by pointer events styling */\n      if (editorState) {\n        this.$refs.trix.toolbarElement.style['pointer-events'] = 'none'\n        this.$refs.trix.contentEditable = false\n        this.$refs.trix.style['background'] = '#e9ecef'\n      } else {\n        this.$refs.trix.toolbarElement.style['pointer-events'] = 'unset'\n        this.$refs.trix.style['pointer-events'] = 'unset'\n        this.$refs.trix.style['background'] = 'transparent'\n      }\n    }\n  },\n  computed: {\n    /**\n     * Compute a random id of hidden input\n     * when it haven't been specified.\n     */\n    generateId () {\n      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {\n        var r = Math.random() * 16 | 0\n        var v = c === 'x' ? r : (r & 0x3 | 0x8)\n        return v.toString(16)\n      })\n    },\n    computedId () {\n      return this.inputId || this.generateId\n    },\n    initialContent () {\n      return this.srcContent\n    },\n    isDisabled () {\n      return this.disabledEditor\n    }\n  },\n  watch: {\n    editorContent: {\n      handler: 'emitEditorState'\n    },\n    initialContent: {\n      handler: 'handleInitialContentChange'\n    },\n    isDisabled: {\n      handler: 'decorateDisabledEditor'\n    }\n  }\n}\n</script>\n\n<style lang=\"css\" module>\n.trix_container {\n  max-width: 100%;\n  height: auto;\n}\n.trix_container .trix-button-group {\n  background-color: white;\n}\n.trix_container .trix-content {\n  background-color: white;\n}\n</style>\n"]}, media: undefined });
+    inject("data-v-39d3716e_0", { source: "\n.src-components-trix_container-5Bcy {\n  max-width: 100%;\n  height: auto;\n}\n.src-components-trix_container-5Bcy .src-components-trix-button-group-2D-J {\n  background-color: white;\n}\n.src-components-trix_container-5Bcy .src-components-trix-content-1TD_ {\n  background-color: white;\n}\n", map: {"version":3,"sources":["/home/hanh/side-projects/vue-trix/src/components/VueTrix.vue"],"names":[],"mappings":";AAwQA;EACA,eAAA;EACA,YAAA;AACA;AACA;EACA,uBAAA;AACA;AACA;EACA,uBAAA;AACA","file":"VueTrix.vue","sourcesContent":["<template>\n  <div :class=\"[$style.trix_container]\">\n    <trix-editor\n      :contenteditable=\"!disabledEditor\"\n      :class=\"['trix-content']\"\n      ref=\"trix\"\n      :input=\"computedId\"\n      :placeholder=\"placeholder\"\n      @trix-change=\"handleContentChange\"\n      @trix-file-accept=\"emitFileAccept\"\n      @trix-attachment-add=\"emitAttachmentAdd\"\n      @trix-attachment-remove=\"emitAttachmentRemove\"\n      @trix-selection-change=\"emitSelectionChange\"\n      @trix-initialize=\"handleInitialize\"\n      @trix-before-initialize=\"emitBeforeInitialize\"\n      @trix-focus=\"processTrixFocus\"\n      @trix-blur=\"processTrixBlur\"\n    />\n    <input\n      type=\"hidden\"\n      :name=\"inputName\"\n      :id=\"computedId\"\n      :value=\"editorContent\"\n    />\n  </div>\n</template>\n\n<script>\nimport 'trix'\nimport 'trix/dist/trix.css'\nimport EmitFileAccept from '../mixins/EmitFileAccept.js'\nimport EmitInitialize from '../mixins/EmitInitialize.js'\nimport EmitAttachmentAdd from '../mixins/EmitAttachmentAdd.js'\nimport EmitSelectionChange from '../mixins/EmitSelectionChange.js'\nimport EmitAttachmentRemove from '../mixins/EmitAttachmentRemove.js'\nimport EmitBeforeInitialize from '../mixins/EmitBeforeInitialize.js'\nimport ProcessEditorFocusAndBlur from '../mixins/ProcessEditorFocusAndBlur.js'\n\nexport default {\n  name: 'vue-trix',\n  mixins: [\n    EmitFileAccept(),\n    EmitInitialize(),\n    EmitAttachmentAdd(),\n    EmitSelectionChange(),\n    EmitAttachmentRemove(),\n    EmitBeforeInitialize(),\n    ProcessEditorFocusAndBlur()\n  ],\n  model: {\n    prop: 'srcContent',\n    event: 'update'\n  },\n  props: {\n    /**\n     * This prop will put the editor in read-only mode\n     */\n    disabledEditor: {\n      type: Boolean,\n      required: false,\n      default () {\n        return false\n      }\n    },\n    /**\n     * This is referenced `id` of the hidden input field defined.\n     * It is optional and will be a random string by default.\n     */\n    inputId: {\n      type: String,\n      required: false,\n      default () {\n        return ''\n      }\n    },\n    /**\n     * This is referenced `name` of the hidden input field defined,\n     * default value is `content`.\n     */\n    inputName: {\n      type: String,\n      required: false,\n      default () {\n        return 'content'\n      }\n    },\n    /**\n     * The placeholder attribute specifies a short hint\n     * that describes the expected value of a editor.\n     */\n    placeholder: {\n      type: String,\n      required: false,\n      default () {\n        return ''\n      }\n    },\n    /**\n     * The source content is associcated to v-model directive.\n     */\n    srcContent: {\n      type: String,\n      required: false,\n      default () {\n        return ''\n      }\n    },\n    /**\n     * The boolean attribute allows saving editor state into browser's localStorage\n     * (optional, default is `false`).\n     */\n    localStorage: {\n      type: Boolean,\n      required: false,\n      default () {\n        return false\n      }\n    },\n    /**\n     * Focuses cursor in the editor when attached to the DOM\n     * (optional, default is `false`).\n     */\n    autofocus: {\n      type: Boolean,\n      required: false,\n      default () {\n        return false\n      }\n    }\n  },\n  mounted () {\n    /** Check if editor read-only mode is required */\n    this.decorateDisabledEditor(this.disabledEditor)\n    this.$nextTick(() => {\n      /**\n       *  If localStorage is enabled,\n       *  then load editor's content from the beginning.\n       */\n      if (this.localStorage) {\n        const savedValue = localStorage.getItem(this.storageId('VueTrix'))\n        if (savedValue && !this.srcContent) {\n          this.$refs.trix.editor.loadJSON(JSON.parse(savedValue))\n        }\n      }\n    })\n  },\n  data () {\n    return {\n      editorContent: this.srcContent,\n      isActived: null\n    }\n  },\n  methods: {\n    handleContentChange (event) {\n      this.editorContent = event.srcElement ? event.srcElement.value : event.target.value\n      this.$emit('input', this.editorContent)\n    },\n    handleInitialize (event) {\n      /**\n       * If autofocus is true, manually set focus to\n       * beginning of content (consistent with Trix behavior)\n       */\n      if (this.autofocus) {\n        this.$refs.trix.editor.setSelectedRange(0)\n      }\n\n      this.$emit('trix-initialize', this.emitInitialize)\n    },\n    handleInitialContentChange (newContent, oldContent) {\n      newContent = newContent === undefined ? '' : newContent\n\n      if (this.$refs.trix.editor && this.$refs.trix.editor.innerHTML !== newContent) {\n        /* Update editor's content when initial content changed */\n        this.editorContent = newContent\n\n        /**\n         *  If user are typing, then don't reload the editor,\n         *  hence keep cursor's position after typing.\n         */\n        if (!this.isActived) {\n          this.reloadEditorContent(this.editorContent)\n        }\n      }\n    },\n    emitEditorState (value) {\n      /**\n       * If localStorage is enabled,\n       * then save editor's content into storage\n       */\n      if (this.localStorage) {\n        localStorage.setItem(\n          this.storageId('VueTrix'),\n          JSON.stringify(this.$refs.trix.editor)\n        )\n      }\n      this.$emit('update', this.editorContent)\n    },\n    storageId (component) {\n      if (this.inputId) {\n        return `${component}.${this.inputId}.content`\n      } else {\n        return `${component}.content`\n      }\n    },\n    reloadEditorContent (newContent) {\n      // Reload HTML content\n      this.$refs.trix.editor.loadHTML(newContent)\n\n      // Move cursor to end of new content updated\n      this.$refs.trix.editor.setSelectedRange(this.getContentEndPosition())\n    },\n    getContentEndPosition () {\n      return this.$refs.trix.editor.getDocument().toString().length - 1\n    },\n    decorateDisabledEditor (editorState) {\n      /** Disable toolbar and editor by pointer events styling */\n      if (editorState) {\n        this.$refs.trix.toolbarElement.style['pointer-events'] = 'none'\n        this.$refs.trix.contentEditable = false\n        this.$refs.trix.style['background'] = '#e9ecef'\n      } else {\n        this.$refs.trix.toolbarElement.style['pointer-events'] = 'unset'\n        this.$refs.trix.style['pointer-events'] = 'unset'\n        this.$refs.trix.style['background'] = 'transparent'\n      }\n    }\n  },\n  computed: {\n    /**\n     * Compute a random id of hidden input\n     * when it haven't been specified.\n     */\n    generateId () {\n      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {\n        var r = Math.random() * 16 | 0\n        var v = c === 'x' ? r : (r & 0x3 | 0x8)\n        return v.toString(16)\n      })\n    },\n    computedId () {\n      return this.inputId || this.generateId\n    },\n    initialContent () {\n      return this.srcContent\n    },\n    isDisabled () {\n      return this.disabledEditor\n    }\n  },\n  watch: {\n    editorContent: {\n      handler: 'emitEditorState'\n    },\n    initialContent: {\n      handler: 'handleInitialContentChange'\n    },\n    isDisabled: {\n      handler: 'decorateDisabledEditor'\n    }\n  }\n}\n</script>\n\n<style lang=\"css\" module>\n.trix_container {\n  max-width: 100%;\n  height: auto;\n}\n.trix_container .trix-button-group {\n  background-color: white;\n}\n.trix_container .trix-content {\n  background-color: white;\n}\n</style>\n"]}, media: undefined });
 Object.defineProperty(this, "$style", { value: {"trix_container":"src-components-trix_container-5Bcy","trix-button-group":"src-components-trix-button-group-2D-J","trix-content":"src-components-trix-content-1TD_"} });
 
   };
@@ -79009,7 +79183,7 @@ Object.defineProperty(this, "$style", { value: {"trix_container":"src-components
   
 
   
-  var __vue_component__ = normalizeComponent(
+  var __vue_component__ = /*#__PURE__*/normalizeComponent(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
@@ -79422,7 +79596,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("\n\t\t\t\t\t\t\tCancelar\n\t\t\t\t\t\t")]
+                      [_vm._v("\r\n\t\t\t\t\t\t\tCancelar\r\n\t\t\t\t\t\t")]
                     ),
                     _vm._v(" "),
                     _c(
@@ -79437,7 +79611,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("\n\t\t\t\t\t\t\tSalvar\n\t\t\t\t\t\t")]
+                      [_vm._v("\r\n\t\t\t\t\t\t\tSalvar\r\n\t\t\t\t\t\t")]
                     )
                   ])
                 ]
