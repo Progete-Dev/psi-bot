@@ -18,12 +18,13 @@
                 <input wire:model="password" type="password" id="password" name="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('password') border border-red-500 @enderror">
             </div>
             @if (Route::has('password.request'))
-                <a class="block w-full text-sm text-right text-button hover:text-gray-300" href="{{route('password.request')}}">
+                <a class="block w-full text-sm text-center text-button hover:text-gray-300" href="{{route('password.request')}}">
                     Recupera senha
                 </a>
             @endif
-            <a href="#"  class="bg-indigo-600 text-button font-bold text-lg hover:bg-gray-700 p-2 mt-8">Realizar Pré cadastro </a>
             <button type="submit"  class="bg-indigo-600 text-button font-bold text-lg hover:bg-gray-700 p-2 mt-8">Log In</button>
+            <a href="/pre-cadastro"  class="border border-indigo-600 text-center font-bold text-lg text-indigo-700 p-2 mt-8">Realizar Pré cadastro </a>
+
         </form>
 
     </div>
