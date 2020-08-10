@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Conversations\Boasvindas;
-use BotMan\BotMan\BotMan;
-use Illuminate\Http\Request;
 use App\Conversations\ExampleConversation;
+use BotMan\BotMan\BotMan;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 class BotManController extends Controller
 {
@@ -20,7 +21,7 @@ class BotManController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function home()
     {
@@ -36,6 +37,7 @@ class BotManController extends Controller
      */
     public function startConversation(BotMan $bot)
     {
+
         $bot->startConversation(new ExampleConversation());
     }
 

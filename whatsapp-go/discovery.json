@@ -1,0 +1,8 @@
+{
+    "botman/driver-config": [
+        "stubs/whatsappgo.php"
+    ],
+    "botman/driver": [
+        "BotMan\\Drivers\\Whatsappgo\\WhatsappgoDriver"
+    ]
+}

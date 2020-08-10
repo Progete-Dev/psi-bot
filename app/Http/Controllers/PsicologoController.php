@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Atendimento;
-use App\Models\NotificacaoDeAtendimento;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -35,7 +34,6 @@ class PsicologoController extends Controller
         $filter = [
             Atendimento::AGUARDA_HORARIO,
             Atendimento::CONCLUIDO,
-            Atendimento::EM_ATENDIMENTO,
             Atendimento::CANCELADO,
             Atendimento::REMARCADO,
         ];

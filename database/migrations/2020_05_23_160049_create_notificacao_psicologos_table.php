@@ -14,11 +14,11 @@ class CreateNotificacaoPsicologosTable extends Migration
     public function up()
     {
         Schema::create('notificacao_psicologos', function (Blueprint $table) {
-            $table->foreignId('notificacao')->references('id')->on('notificacao_de_atendimentos');
-            $table->foreignId('psicologo')->references('id')->on('users');
+            $table->foreignId('notificacao_id')->references('id')->on('notificacao_de_atendimentos');
+            $table->foreignId('psicologo_id')->references('id')->on('users');
             $table->boolean('notificado')->default(false);
             $table->timestamps();
-            $table->index('psicologo');
+            $table->index('psicologo_id');
         });
     }
 

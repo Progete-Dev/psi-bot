@@ -1,19 +1,13 @@
 <?php
 
 namespace App\Conversations;
-use Illuminate\Support\Facades\Log;
-use App\Jobs\NotificaPsicologo;
 use App\Models\Formulario;
-use App\Notifications\NotificaPsicologos;
 use App\Models\User;
-use Illuminate\Foundation\Inspiring;
-use BotMan\BotMan\Messages\Incoming\Answer;
-use BotMan\BotMan\Messages\Outgoing\Question;
-use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
-use Illuminate\Support\Facades\App;
+use BotMan\BotMan\Messages\Incoming\Answer;
+use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
+use BotMan\BotMan\Messages\Outgoing\Question;
 use Illuminate\Support\Facades\Validator;
 
 class ExampleConversation extends Conversation
@@ -32,8 +26,7 @@ class ExampleConversation extends Conversation
             Button::create('Não')->value('não'),
         ]);
         $this->ask($question,function(Answer $resposta){
-                $opcao = $resposta; 
-                Log::info($opcao);
+                $opcao = $resposta;
                 if($opcao == 'sim'){
                     $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
                     $formulario = Formulario::first();
@@ -119,7 +112,7 @@ class ExampleConversation extends Conversation
     
     public function run()
     {
-        // This will be called immediately
+
         $this->askFirstname();
         
     }

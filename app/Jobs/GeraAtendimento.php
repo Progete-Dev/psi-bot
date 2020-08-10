@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class GeraAtendimento implements ShouldQueue
 {
@@ -39,7 +40,7 @@ class GeraAtendimento implements ShouldQueue
     public function handle()
     {
         
-
+        Db::beginTransaction();
         $user = User::create([
             'name' => $this->respostas[0]['resposta'],
             'email' => $this->email,
@@ -74,5 +75,6 @@ class GeraAtendimento implements ShouldQueue
                 'notificado' => false,
             ]);
         });
+        Db::commit();
     }
 }

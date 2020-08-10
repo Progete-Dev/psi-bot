@@ -3,7 +3,6 @@
 namespace App\Conversations;
 
 use App\Jobs\GeraAtendimento;
-use App\Models\Formulario;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
@@ -17,7 +16,7 @@ class Boasvindas extends Conversation
     protected $campo;
     protected $respostas ;
 
-    public function __construct($formulario)
+    public function  __construct($formulario)
     {
         $this->formulario = $formulario;
         
@@ -39,10 +38,10 @@ class Boasvindas extends Conversation
                 if($validator->fails()){
                       return $this->pegaResposta(false);
                 }  
-                $this->email = $resposta->getText();
+                $email = $resposta->getText();
                 
-                $this->ask('Qual motivo para o seu contato conosco?',function(Answer $resposta){
-                    GeraAtendimento::dispatch($this->respostas,$this->email,$resposta->getText());
+                $this->ask('Qual motivo para o seu contato conosco?',function(Answer $resposta) use($email){
+                    GeraAtendimento::dispatch($this->respostas,$email,$resposta->getText());
                 });
                 $this->say('Suas informações foram cadastradas com sucesso!');
 
@@ -113,20 +112,34 @@ class Boasvindas extends Conversation
 
     public function resposta(Answer $resposta){
         $valido = true;
-        $validator = Validator::make([Str::slug($this->campo->nome) =>  $resposta->getText()], [
-            Str::slug($this->campo->nome) => $this->campo->validacao,
-            
-        ]);
+        $opcao = null;
 
-        if($validator->fails()){
-           $valido =false;
+        if($this->campo->tipo > 1 and $this->campo->tipo < 5){
+            $opcao = collect($this->campo->opcoesArray())->where('valor',$resposta->getText())->first();
+            if($opcao === null){
+                $valido = false;
+            }else{
+                $opcao = $opcao->nome;
+            }
+        }else {
+            $validator = Validator::make([Str::slug($this->campo->nome) => $resposta->getText()], [
+                Str::slug($this->campo->nome) => $this->campo->validacao,
+
+            ]);
+            if ($validator->fails()) {
+                $valido = false;
+            }else{
+                $opcao = $resposta->getText();
+            }
+
         }
-        $this->respostas []= [
-            'formulario_id' => $this->formulario->id,
-            'campo_id' => $this->campo->id,
-            'resposta' => $resposta->getText()
-        ];
-
+        if($valido == true) {
+            $this->respostas [] = [
+                'formulario_id' => $this->formulario->id,
+                'campo_id' => $this->campo->id,
+                'resposta' => $opcao
+            ];
+        }
         return $this->pegaResposta($valido);
     }
     public function run()

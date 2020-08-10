@@ -1117,7 +1117,6 @@ pre {
 button {
   background-color: transparent;
   background-image: none;
-  padding: 0;
 }
 
 /**
@@ -3154,6 +3153,10 @@ video {
   background-color: var(--bg-menu);
 }
 
+.bg-menu-hover{
+  background-color: var(--bg-menu-hover);
+}
+
 .hover\:bg-transparent:hover{
   background-color: transparent;
 }
@@ -3734,6 +3737,10 @@ video {
   background-color: var(--bg-menu);
 }
 
+.hover\:bg-menu-hover:hover{
+  background-color: var(--bg-menu-hover);
+}
+
 .focus\:bg-transparent:focus{
   background-color: transparent;
 }
@@ -4312,6 +4319,10 @@ video {
 
 .focus\:bg-menu:focus{
   background-color: var(--bg-menu);
+}
+
+.focus\:bg-menu-hover:focus{
+  background-color: var(--bg-menu-hover);
 }
 
 .bg-opacity-0{
@@ -18985,17 +18996,18 @@ video {
 }
 
 :root {
-  --text-primary: rgba(90, 103, 216);
-  --text-secondary: #7fa1dd;
-  --text-button: white;
-  --text-link:#1C75B9;
-  --text-menu: rgb(171, 172, 241);
+  --text-primary: #3182ce;
+  --text-secondary: #2768a5;
+  --text-button: #dbe4ed;
+  --text-link: #d5e1ef;
+  --text-menu: #dbe4ed;
   --link-white-color:#fff;
-  --bg-primary: white;
-  --bg-theme: white;
+  --bg-primary: #f3f8fc;
+  --bg-theme: #d6e6f5;
   --bg-secondary: #f0efef;
-  --bg-button: #434190;
-  --bg-menu: #434190;
+  --bg-button: #3182ce;
+  --bg-menu: #3182ce;
+  --bg-menu-hover: #2c52825e;
 }
 
 [data-theme="dark"] {
@@ -19013,6 +19025,34 @@ video {
 }
 
 @media (min-width: 640px){
+  .sm\:container{
+    width: 100%;
+  }
+
+  @media (min-width: 640px){
+    .sm\:container{
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px){
+    .sm\:container{
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px){
+    .sm\:container{
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px){
+    .sm\:container{
+      max-width: 1280px;
+    }
+  }
+
   .sm\:space-y-0 > :not(template) ~ :not(template){
     --space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--space-y-reverse)));
@@ -20757,6 +20797,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .sm\:bg-menu-hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .sm\:hover\:bg-transparent:hover{
     background-color: transparent;
   }
@@ -21337,6 +21381,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .sm\:hover\:bg-menu-hover:hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .sm\:focus\:bg-transparent:focus{
     background-color: transparent;
   }
@@ -21915,6 +21963,10 @@ video {
 
   .sm\:focus\:bg-menu:focus{
     background-color: var(--bg-menu);
+  }
+
+  .sm\:focus\:bg-menu-hover:focus{
+    background-color: var(--bg-menu-hover);
   }
 
   .sm\:bg-opacity-0{
@@ -36583,6 +36635,34 @@ video {
 }
 
 @media (min-width: 768px){
+  .md\:container{
+    width: 100%;
+  }
+
+  @media (min-width: 640px){
+    .md\:container{
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px){
+    .md\:container{
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px){
+    .md\:container{
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px){
+    .md\:container{
+      max-width: 1280px;
+    }
+  }
+
   .md\:space-y-0 > :not(template) ~ :not(template){
     --space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--space-y-reverse)));
@@ -38327,6 +38407,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .md\:bg-menu-hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .md\:hover\:bg-transparent:hover{
     background-color: transparent;
   }
@@ -38907,6 +38991,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .md\:hover\:bg-menu-hover:hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .md\:focus\:bg-transparent:focus{
     background-color: transparent;
   }
@@ -39485,6 +39573,10 @@ video {
 
   .md\:focus\:bg-menu:focus{
     background-color: var(--bg-menu);
+  }
+
+  .md\:focus\:bg-menu-hover:focus{
+    background-color: var(--bg-menu-hover);
   }
 
   .md\:bg-opacity-0{
@@ -54153,6 +54245,34 @@ video {
 }
 
 @media (min-width: 1024px){
+  .lg\:container{
+    width: 100%;
+  }
+
+  @media (min-width: 640px){
+    .lg\:container{
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px){
+    .lg\:container{
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px){
+    .lg\:container{
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px){
+    .lg\:container{
+      max-width: 1280px;
+    }
+  }
+
   .lg\:space-y-0 > :not(template) ~ :not(template){
     --space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--space-y-reverse)));
@@ -55897,6 +56017,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .lg\:bg-menu-hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .lg\:hover\:bg-transparent:hover{
     background-color: transparent;
   }
@@ -56477,6 +56601,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .lg\:hover\:bg-menu-hover:hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .lg\:focus\:bg-transparent:focus{
     background-color: transparent;
   }
@@ -57055,6 +57183,10 @@ video {
 
   .lg\:focus\:bg-menu:focus{
     background-color: var(--bg-menu);
+  }
+
+  .lg\:focus\:bg-menu-hover:focus{
+    background-color: var(--bg-menu-hover);
   }
 
   .lg\:bg-opacity-0{
@@ -71723,6 +71855,34 @@ video {
 }
 
 @media (min-width: 1280px){
+  .xl\:container{
+    width: 100%;
+  }
+
+  @media (min-width: 640px){
+    .xl\:container{
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px){
+    .xl\:container{
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px){
+    .xl\:container{
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px){
+    .xl\:container{
+      max-width: 1280px;
+    }
+  }
+
   .xl\:space-y-0 > :not(template) ~ :not(template){
     --space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--space-y-reverse)));
@@ -73467,6 +73627,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .xl\:bg-menu-hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .xl\:hover\:bg-transparent:hover{
     background-color: transparent;
   }
@@ -74047,6 +74211,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .xl\:hover\:bg-menu-hover:hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .xl\:focus\:bg-transparent:focus{
     background-color: transparent;
   }
@@ -74625,6 +74793,10 @@ video {
 
   .xl\:focus\:bg-menu:focus{
     background-color: var(--bg-menu);
+  }
+
+  .xl\:focus\:bg-menu-hover:focus{
+    background-color: var(--bg-menu-hover);
   }
 
   .xl\:bg-opacity-0{
@@ -89293,6 +89465,34 @@ video {
 }
 
 @media (prefers-color-scheme: dark){
+  .dark\:container{
+    width: 100%;
+  }
+
+  @media (min-width: 640px){
+    .dark\:container{
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px){
+    .dark\:container{
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px){
+    .dark\:container{
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px){
+    .dark\:container{
+      max-width: 1280px;
+    }
+  }
+
   .dark\:space-y-0 > :not(template) ~ :not(template){
     --space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--space-y-reverse)));
@@ -91037,6 +91237,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .dark\:bg-menu-hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .dark\:hover\:bg-transparent:hover{
     background-color: transparent;
   }
@@ -91617,6 +91821,10 @@ video {
     background-color: var(--bg-menu);
   }
 
+  .dark\:hover\:bg-menu-hover:hover{
+    background-color: var(--bg-menu-hover);
+  }
+
   .dark\:focus\:bg-transparent:focus{
     background-color: transparent;
   }
@@ -92195,6 +92403,10 @@ video {
 
   .dark\:focus\:bg-menu:focus{
     background-color: var(--bg-menu);
+  }
+
+  .dark\:focus\:bg-menu-hover:focus{
+    background-color: var(--bg-menu-hover);
   }
 
   .dark\:bg-opacity-0{
