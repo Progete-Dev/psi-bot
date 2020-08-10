@@ -12,16 +12,17 @@
     @stack('styles')
     @livewireStyles 
     <!-- Scripts -->
-  
-    
-    
 <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
     <!-- Styles -->
-    
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 <body >
   <div class="h-screen flex overflow-hidden bg-theme">
@@ -32,8 +33,6 @@
           <div class="m-auto px-4">
             @yield('content')
           </div>
-            
-              
             @auth
               @include('layouts.notifications',['button' => true])
             @endauth
