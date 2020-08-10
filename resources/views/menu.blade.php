@@ -1,6 +1,6 @@
  <!-- Begin Navbar -->
    <!-- Mobile Navbar -->
-  <div  class="md:hidden">
+   <div  class="md:hidden">
     <div class="fixed z-40 bottom-0 w-full h-10 bg-menu">
         <nav class="py-2 bg-menu flex justify-center">
           {{-- Perfil --}}
@@ -65,49 +65,56 @@
         
       </div>
     </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <!-- Desktop Side Bar -->
-  <div  x-data="{open: sessionStorage.getItem('menu_open') == 'true' }" x-init="$watch('open', (value) => {sessionStorage.setItem('menu_open',value)});"  class="hidden h-full md:flex md:flex-shrink-0">
-    <div style="transition: linear 0.3s"  class="flex flex-col  bg-menu pt-5 pb-4"  :class="{ 'w-12' : !open , 'w-64' : open}">
-      <div style="transition: 0.5" x-show="open"  class="flex-shrink-0 flex items-center px-4 ">
-        <div class="flex relative w-12 h-12 justify-center items-center m-1 mr-2 text-xl rounded-full text-menu">
-          {{-- Perfil --}}
-          <a href="{{route("psicologo.perfil")}}">
-            <img class="rounded-full " alt="A" src="https://randomuser.me/api/portraits/men/62.jpg">
-          </a>
-          <div class="bg-green-500 rounded-full w-3 h-3 absolute bottom-0 right-0"></div>
-          
-      </div>
+  <div  x-data="{open: sessionStorage.getItem('menu_open') == 'true' }" x-init="$watch('open', (value) => {sessionStorage.setItem('menu_open',value)});"
+     class="hidden h-full md:flex md:flex-shrink-0" x-on:mouseenter="open = true" x-on:mouseleave="open = false">
+        <div style="transition: linear 0.3s"  class="flex flex-col  bg-menu pt-5 pb-4"  :class="{ 'w-12' : !open , 'w-64' : open}">
+          <div style="transition: 0.5" x-show="open"  class="flex-shrink-0 flex items-center px-4 ">
+            <div class="flex relative w-12 h-12 justify-center items-center m-1 mr-2 text-xl rounded-full text-menu">
+              {{-- Perfil --}}
+              <a href="{{route("psicologo.perfil")}}">
+                <img class="rounded-full " alt="A" src="https://randomuser.me/api/portraits/men/62.jpg">
+              </a>
+              <div class="bg-green-500 rounded-full w-3 h-3 absolute bottom-0 right-0"></div>          
+            </div>
       
-        <p class="text-1xl text-gray-500 m-auto">{{Auth::user()->name}}
-          {{-- Seta de fechar menu --}}
-        <div class="m-auto">
-          <svg x-on:click="open=false" class=" text-menu h-6 w-6 ml-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
-            <path d="M10 19L3 12M3 12L10 5M3 12L21 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          
-        </div>
-      </div>
-        {{-- Seta de abrir menu --}}
-      <div x-show="!open" class="flex flex-col m-auto">
-        <svg  x-on:click="open=true" class=" text-menu h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M14 5L21 12M21 12L14 19M21 12L3 12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+            <p class="text-1xl text-gray-500 m-auto">{{Auth::user()->name}}
+              {{-- Seta de fechar menu --}}
+              <div class="m-auto">
+                <svg x-on:click="open=false" class=" text-menu h-6 w-6 ml-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                  <path d="M10 19L3 12M3 12L10 5M3 12L21 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+          </div>
+          {{-- Seta de abrir menu --}}
+          <div x-show="!open" class="flex flex-col m-auto">
+              <svg  x-on:click="open=true" class=" text-menu h-6 w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 5L21 12M21 12L14 19M21 12L3 12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
     
-      </div>
-      <div class="mt-5 h-0 flex-1 flex flex-col overflow-y-auto">
+          </div>
+          <div class="mt-5 h-0 flex-1 flex flex-col overflow-y-auto">
         
-        <nav  class="flex-1 px-2 bg-menu">
-          {{-- Perfil --}}
-        <a  x-show="!open" href="{{route('psicologo.perfil')}}" class="mb-2 appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:text-secondary hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.perfil' ? 'bg-menu-hover border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}" >
+            <nav  class="flex-1 px-2 bg-menu">
+              {{-- Perfil --}}
+              <a  x-show="!open" href="{{route('psicologo.perfil')}}" class="mb-2 appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:text-secondary hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.perfil' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}" >
 
-            <svg  class="ml-1 h-6 w-6 text-secondary group-focus:text-indigo-300 m-auto transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
-              <path  d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"/> 
-            </svg>
-            
-          </a>
-          {{-- Home --}}
-        <a href="{{route('psicologo.home')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:text-secondary hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.home' ? 'bg-menu-hover border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
-          :class="{'text-indigo-300  hover:text-menu hover:text-secondary  focus:text-menu mb-4' : !open, 'text-menu px-2 py-2 mb-2 hover:text-secondary' : open }">
+                <svg  class="ml-1 h-6 w-6 text-secondary group-focus:text-indigo-300 m-auto transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
+                  <path  d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2z"/> 
+                </svg>
+              </a>
+              {{-- Home --}}
+              <a href="{{route('psicologo.home')}}" class="appearance-none group flex items-center  text-sm leading-5 font-medium focus:outline-none focus:text-secondary hover:border-l-2 border-indigo-700 transition ease-in-out duration-150 {{Route::currentRouteName() == 'psicologo.home' ? 'bg-indigo-900 border-l-2 border-indigo-700 rounded-sm' : ' rounded-md '}}"
+                :class="{'text-indigo-300  hover:text-menu hover:text-secondary  focus:text-menu mb-4' : !open, 'text-menu px-2 py-2 mb-2 hover:text-secondary' : open }">
             <svg :class="{'mr-2' : open,  'm-auto' : !open}" class="ml-1 h-6 w-6 text-menu group-focus:text-indigo-300 transition ease-in-out duration-150" stroke="none" fill="currentColor" viewBox="0 0 24 24">
               <path d="M13 20v-5h-2v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7.59l-.3.3a1 1 0 1 1-1.4-1.42l9-9a1 1 0 0 1 1.4 0l9 9a1 1 0 0 1-1.4 1.42l-.3-.3V20a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2zm5 0v-9.59l-6-6-6 6V20h3v-5c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v5h3z"/>
             </svg>

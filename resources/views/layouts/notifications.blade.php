@@ -1,5 +1,5 @@
 @isset($button)
-<div x-data="{}" x-init="initTheme();"  class="fixed md:bottom-0 md:top-auto top-0 right-0 m-4  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
+<div x-cloak x-data="{}" x-init="initTheme();"  class="fixed md:bottom-0 md:top-auto top-0 right-0 m-4  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
 <button x-on:click="$dispatch('notificaoes');" type="button" class="flex relative text-button">
     <div class="absolute bg-menu text-primary h-3 leading-3 right-0 rounded-full shadow-md text-xs top-0 w-3 z-20 mb-4 ml-4">9</div>
     <svg class="duration-150 ease-in-out group-focus:text-menu h-6 m-auto md:h-8 md:w-8 relative text-secondary transition w-6 z-10" stroke="none" fill="currentColor" viewBox="0 0 24 24">
@@ -10,7 +10,7 @@
 </div>
 @endisset
 @isset($notifications)
-<div x-data="{open : false}" x-on:notificaoes.window="open = true">
+<div x-cloak x-data="{open : false}" x-on:notificaoes.window="open = true">
     <div x-show="open" class="fixed h-full w-full top-0 right-0">
       <div  x-on:click="open = false" x-show="open" class="fixed z-40 bg-gray-900 opacity-50 w-full h-full"></div>
       <div class="h-full md:flex md:flex-shrink-0 z-40 fixed right-0 dark:bg-gray-900 "  x-show="open">

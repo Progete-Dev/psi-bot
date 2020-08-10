@@ -1,4 +1,4 @@
-<div class="my-1">
+<div class="my-4">
     <div class="bg-primary overflow-hidden rounded-md shadow-md @isset($class) {{$class}} @endisset">
         @if(isset($cardHeader))
             {{$cardHeader}}
@@ -9,7 +9,7 @@
             </h3>
         </div>
         @endif
-        <div class="px-4 py-5 sm:px-6">
+        <div class="px-2 py-3 sm:px-4">
             {{$slot}}
         </div>
     </div>
