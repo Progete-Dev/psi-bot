@@ -57,7 +57,7 @@ class PsicologoController extends Controller
     public function home(Request $request){
         $notificacoes = auth()->user()->notificacoes;
         $atendimentosDia = Atendimento::where('psicologo_id',auth()->user()->id)
-            ->whereDay('data_atendimento',Carbon::today())->get();
+            ->get();
         $solicitacoes = Atendimento::where('psicologo_id',null)->get();
         
         return view('psicologo.home', compact('notificacoes','atendimentosDia','solicitacoes'));
@@ -116,7 +116,7 @@ class PsicologoController extends Controller
     public function confirmarSolicitacao(Request $request,Atendimento $solicitacao){
         $solicitacao->psicologo_id = Auth::user()->id;
         $solicitacao->data_atendimento = Carbon::today();
-        $solicitacao->status = Atendimento::EM_ATENDIMENTO;
+        $solicitacao->status = Atendimento::AGUARDA_CONFIRMACAO;
         $solicitacao->save();
 
         return redirect('psicologo/home')->with('success','Solicitação aceita');

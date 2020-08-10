@@ -3135,7 +3135,7 @@ video {
 }
 
 .bg-primary{
-  background-color: var(--bg-color);
+  background-color: var(--bg-primary);
 }
 
 .bg-secondary{
@@ -3715,7 +3715,7 @@ video {
 }
 
 .hover\:bg-primary:hover{
-  background-color: var(--bg-color);
+  background-color: var(--bg-primary);
 }
 
 .hover\:bg-secondary:hover{
@@ -4295,7 +4295,7 @@ video {
 }
 
 .focus\:bg-primary:focus{
-  background-color: var(--bg-color);
+  background-color: var(--bg-primary);
 }
 
 .focus\:bg-secondary:focus{
@@ -18991,9 +18991,9 @@ video {
   --text-link:#1C75B9;
   --text-menu: rgb(171, 172, 241);
   --link-white-color:#fff;
-  --bg-color: rgb(243,243,243);
-  --bg-secondary: #f0efef;
+  --bg-primary: white;
   --bg-theme: white;
+  --bg-secondary: #f0efef;
   --bg-button: #434190;
   --bg-menu: #434190;
 }
@@ -19005,9 +19005,9 @@ video {
   --text-button: #2b2b2c;
   --text-menu: #c3aaae;
   --link-white-color:#fff;
-  --bg-color:#23272e;
-  --bg-secondary: #2c2f33;
-  --bg-theme:#343434;
+  --bg-primary:#2c2f33;
+  --bg-secondary: #2a2d2f;
+  --bg-theme: #23272e;
   --bg-menu: #1a202c;
   --bg-button: #a3bffa;
 }
@@ -20738,7 +20738,7 @@ video {
   }
 
   .sm\:bg-primary{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .sm\:bg-secondary{
@@ -21318,7 +21318,7 @@ video {
   }
 
   .sm\:hover\:bg-primary:hover{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .sm\:hover\:bg-secondary:hover{
@@ -21898,7 +21898,7 @@ video {
   }
 
   .sm\:focus\:bg-primary:focus{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .sm\:focus\:bg-secondary:focus{
@@ -38308,7 +38308,7 @@ video {
   }
 
   .md\:bg-primary{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .md\:bg-secondary{
@@ -38888,7 +38888,7 @@ video {
   }
 
   .md\:hover\:bg-primary:hover{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .md\:hover\:bg-secondary:hover{
@@ -39468,7 +39468,7 @@ video {
   }
 
   .md\:focus\:bg-primary:focus{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .md\:focus\:bg-secondary:focus{
@@ -55878,7 +55878,7 @@ video {
   }
 
   .lg\:bg-primary{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .lg\:bg-secondary{
@@ -56458,7 +56458,7 @@ video {
   }
 
   .lg\:hover\:bg-primary:hover{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .lg\:hover\:bg-secondary:hover{
@@ -57038,7 +57038,7 @@ video {
   }
 
   .lg\:focus\:bg-primary:focus{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .lg\:focus\:bg-secondary:focus{
@@ -73448,7 +73448,7 @@ video {
   }
 
   .xl\:bg-primary{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .xl\:bg-secondary{
@@ -74028,7 +74028,7 @@ video {
   }
 
   .xl\:hover\:bg-primary:hover{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .xl\:hover\:bg-secondary:hover{
@@ -74608,7 +74608,7 @@ video {
   }
 
   .xl\:focus\:bg-primary:focus{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .xl\:focus\:bg-secondary:focus{
@@ -91018,7 +91018,7 @@ video {
   }
 
   .dark\:bg-primary{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .dark\:bg-secondary{
@@ -91598,7 +91598,7 @@ video {
   }
 
   .dark\:hover\:bg-primary:hover{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .dark\:hover\:bg-secondary:hover{
@@ -92178,7 +92178,7 @@ video {
   }
 
   .dark\:focus\:bg-primary:focus{
-    background-color: var(--bg-color);
+    background-color: var(--bg-primary);
   }
 
   .dark\:focus\:bg-secondary:focus{
