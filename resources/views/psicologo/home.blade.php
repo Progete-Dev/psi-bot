@@ -6,8 +6,8 @@
 <div class="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
 <div class="col-span-1">
     @component('partials.card')
-        <div class="flex justify-start break-word">
-            <div class="text-xl font-medium text-primary    flex border-r px-4 ">
+        <div class="flex justify-start break-word mb-4">
+            <div class="text-xl font-medium text-primary    flex border-r px-3">
                 Solicitações de atendimento 
                 </div>
                 
@@ -23,7 +23,7 @@
 <div class="col-span-1">
 @component('partials.card')
     <div class="flex justify-start">
-        <div class="text-xl font-medium text-primary    flex border-r px-4 ">
+        <div class="text-xl font-medium text-primary    flex border-r px-4 mb-4 ">
             Atendimentos do dia 
             {{now()->format('m/d/Y')}} 
             </div>
