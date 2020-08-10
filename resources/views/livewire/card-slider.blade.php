@@ -1,5 +1,5 @@
 <div>
-    <div class=" md:flex pb-4 overflow-y-auto  border-t border-gray-300">
+    <div class=" md:flex pb-4 overflow-y-auto  border-t border-gray-300 pt-4">
     @if(count($ids)> 0 )   
         <a wire:click="prev" href="#" class="m-auto cursor-pointer">
             <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" transform="rotate(180 0 0)">

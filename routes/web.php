@@ -18,6 +18,7 @@ Route::get('/', 'BotManController@home');
 Route::get('/admin','BotManController@dashboard ');
 Auth::routes(['register'=> false]);
 Route::get('/dashboard', 'DashboardController@dash')->name('dashboard');
+Route::livewire('/pre-cadastro','auth.pre-cadastro');
 
 Route::get('/paciente','PacienteController@show')->middleware('auth')->name('paciente');
 Route::get('/home', 'HomeController@index')->name('home');
