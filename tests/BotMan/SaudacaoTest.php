@@ -52,7 +52,7 @@ class SaudacaoTest extends TestCase
 
         $this->bot
             ->receives('')
-            ->assertReply('Olá, me chamo Maju!')
+            ->assertReply('Olá, Me chamo Maju! Sou a Assistente virtual do Papo. ')
             ->assertReply('É a primeira vez que você fala comigo?')
             ->receives('sim')
             ->assertReply('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊')
@@ -60,11 +60,11 @@ class SaudacaoTest extends TestCase
             ->receives('nome do usuario')
             ->assertReply('campo 2: ')
             ->receives('resposta campo 2')
-            ->assertReply('Para completar o seu cadastro precisammos que informe um Email')
+            ->assertReply('Para completar o seu cadastro precisamos que informe um Email')
             ->receives('email@email.com')
-            ->assertReply('Qual motivo para o seu contato conosco?')
-            ->assertReply('Suas informações foram cadastradas com sucesso!')
-            ->receives('motivo');
+            ->assertReply('Qual motivo para o seu contato conosco?')            
+            ->receives('motivo')
+            ->assertReply('Suas informações foram cadastradas com sucesso!');
 
         $this->assertDatabaseHas('users',[
             'name'=> 'nome do usuario',

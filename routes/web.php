@@ -13,7 +13,7 @@
 
 
 
-Route::match(['get', 'post'], '/botman', 'BotManController@handle');
+
 Route::get('/', 'BotManController@home');
 Route::get('/admin','BotManController@dashboard ');
 Auth::routes(['register'=> false]);

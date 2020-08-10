@@ -1,0 +1,76 @@
+version: '3.6'
+networks:
+  backend:
+  frontend:
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - '32768:3306'
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=psi-bot
+      - SERVICE_TAGS= dev
+      - SERVICE_NAME= mysql
+    volumes:
+      - ./mysql:/var/lib/mysql
+  site:
+    image: nginx:stable-alpine
+    container_name: nginx-psi
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - backend
+      - frontend
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: php-psi
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "9000:9000"
+    networks:
+      - backend
+
+  composer:
+    image: composer:latest
+    container_name: composer-psi
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - php
+    networks:
+      - backend
+
+  npm:
+    image: node:13.7
+    container_name: npm-psi
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ['npm']
+
+  artisan:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: artisan-psi
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mysql
+    working_dir: /var/www/html
+    entrypoint: ['php', '/var/www/html/artisan']
+    networks:
+      - backend

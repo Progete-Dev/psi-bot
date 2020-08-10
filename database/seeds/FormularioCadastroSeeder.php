@@ -50,15 +50,15 @@ class FormularioCadastroSeeder extends Seeder
             'tipo'          => 4,
             'opcoes'        => json_encode([
                 [
-                    'valor' => 'Masculino' ,
+                    'valor' => '1' ,
                     'nome'  =>  'Masculino',
                 ],
                 [
-                    'valor' => 'Feminino' ,
+                    'valor' => '2' ,
                     'nome'  =>  'Feminino',
                 ],
                 [
-                    'valor' => 'Não declarado' ,
+                    'valor' => '3' ,
                     'nome'  =>  'Não Declarado',
                 ]
             ]),
@@ -90,27 +90,27 @@ class FormularioCadastroSeeder extends Seeder
             'tipo'          => 4,
             'opcoes'        => json_encode([
                 [
-                    'valor' => 'Solteiro(a)' ,
+                    'valor' => '1' ,
                     'nome'  =>  'Solteiro(a)',
                 ],
                 [
-                    'valor' => 'Casado(a)' ,
+                    'valor' => '2' ,
                     'nome'  =>  'Casado(a)',
                 ],
                 [
-                    'valor' => 'Divorciado(a)' ,
+                    'valor' => '3' ,
                     'nome'  =>  'Divorciado(a)',
                 ],
                 [
-                    'valor' => 'União estavél' ,
+                    'valor' => '4' ,
                     'nome'  =>  'União Estavél',
                 ],
                 [
-                    'valor' => 'Separado(a)' ,
+                    'valor' => '5' ,
                     'nome'  =>  'Separado(a)',
                 ],
                 [
-                    'valor' => 'Viuvo(a)' ,
+                    'valor' => '6' ,
                     'nome'  =>  'Viuvo(a)',
                 ]
             ]),
@@ -123,11 +123,11 @@ class FormularioCadastroSeeder extends Seeder
             'tipo'          => 3,
             'opcoes'        => json_encode([
                 [
-                    'valor' => 'Sim',
+                    'valor' => '1',
                     'nome'  => 'Sim'
                 ],
                 [
-                    'valor' => 'Não',
+                    'valor' => '2',
                     'nome'  => 'Não'
                 ]
             ]),
