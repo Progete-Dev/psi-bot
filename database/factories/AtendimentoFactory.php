@@ -1,17 +1,18 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
-use App\Model;
-use App\Models\Atendimento;
-use App\Models\User;
+
+use App\Models\Atendimento\Atendimento;
+use App\Models\Cliente\Cliente;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Atendimento::class, function (Faker $faker) {
     return [
         
         'cliente_id' => function(){
-            return factory(User::class)->create()->id;
+            return factory(Cliente::class)->create()->id;
         },
         'psicologo_id'  => null,
         'inicio_atendimento' => $faker->date(),

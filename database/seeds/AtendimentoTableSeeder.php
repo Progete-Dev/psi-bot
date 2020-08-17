@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Atendimento;
+use App\Models\Atendimento\Atendimento;
 use Illuminate\Database\Seeder;
 
 class AtendimentoTableSeeder extends Seeder

@@ -5,7 +5,6 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 
 
-
 class CardNotificacoes extends Component
 {
     public $notificacao;

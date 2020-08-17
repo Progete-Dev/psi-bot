@@ -2,10 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Atendimento;
 use App\Models\NotificacaoDeAtendimento;
-use App\Models\NotificacaoPsicologo;
-use App\Notifications\NotificaPsicologos;
 use Livewire\Component;
 
 class CardSlider extends Component

@@ -38,13 +38,9 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'psicologos',
         ],
 
-        'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-        ],
     ],
 
     /*
@@ -65,9 +61,13 @@ return [
     */
 
     'providers' => [
-        'users' => [
+            'psicologos' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Psicologo\Psicologo::class,
+        ],
+        'cliente' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Cliente\Cliente::class,
         ],
 
         // 'users' => [
@@ -92,8 +92,13 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'psicologos' => [
+            'provider' => 'psicologos',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+        'clientes' => [
+            'provider' => 'clientes',
             'table' => 'password_resets',
             'expire' => 60,
         ],
