@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire\Auth;
 
+use App\Models\Psicologo\PreCadastro as PreCadastroModel;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
-use App\Models\PreCadastro as PreCadastroModel;
+
 class PreCadastro extends Component
 {
     public $nome;
@@ -58,12 +60,12 @@ class PreCadastro extends Component
             'nome'=> "required",
             'crp'=> "required|min:2",
             'telefone'=>"required",
-            'email'=>"required|email|unique:users,email",
+            'email'=>"required|email|unique:pre_cadastros|unique:psicologos,email",
             'cep'=>"required|min:8|max:8",
             'cidade'=>"required",
             'estado'=>"required"
         ],[
-
+            'email.unique' => 'Email Inválido',
             '*.required'=> 'Este campo é obrigatório'
         ]);
 
@@ -80,7 +82,7 @@ class PreCadastro extends Component
             $data = $resposta->json();       
             $this->cidade = $data['cidade'];
             $this->estado = $data['estado'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             session()->flash('error', "falha ao buscar endereço pelo cep!");
         }
         

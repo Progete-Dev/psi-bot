@@ -2,11 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Models\Atendimento;
+
+use App\Models\Atendimento\Atendimento;
+use App\Models\Cliente\Cliente;
+use App\Models\Formulario\RespostaFormulario;
+use App\Models\Notificacao\Notificacao;
 use App\Models\NotificacaoDeAtendimento;
-use App\Models\NotificacaoPsicologo;
-use App\Models\RespostaFormulario;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 class GeraAtendimento implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    protected $whatsapp;
     protected $respostas;
     protected $email;
     protected $motivo;
@@ -25,8 +27,9 @@ class GeraAtendimento implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($respostas ,$email,$motivo)
+    public function __construct($whatsapp,$respostas ,$email,$motivo)
     {
+        $this->whatsapp = $whatsapp;
         $this->respostas = $respostas;
         $this->email = $email;
         $this->motivo = $motivo;
@@ -41,10 +44,12 @@ class GeraAtendimento implements ShouldQueue
     {
         
         Db::beginTransaction();
-        $user = User::create([
-            'name' => $this->respostas[0]['resposta'],
+        $user = Cliente::create([
+            'nome' => $this->respostas[0]['resposta'],
             'email' => $this->email,
-            'password' => bcrypt($this->respostas[0]['resposta'].$this->email)
+            'telefone' => $this->whatsapp,
+            'whatsapp' => true,
+            'motivo' => $this->motivo,
         ]);
 
         foreach ($this->respostas as $resposta) {
@@ -62,19 +67,14 @@ class GeraAtendimento implements ShouldQueue
             'data_atendimento' => null
         ])->id;
 
-        $id = NotificacaoDeAtendimento::create([
-            'cliente_id'  => $user->id,
-            'mensagem' => 'Solicitação de atendimento Cliente: '.$user->name.' motivo: '. $this->motivo,
-            'atendimento_id' =>  $atendimento
+        $notificacao = Notificacao::create([
+            'mensagem' => 'Solicitação de atendimento Cliente: '.$user->nome.' motivo: '. $this->motivo,
+            'atendimento_id' =>  $atendimento,
         ])->id;
-
-        User::where('ehpsicologo',true)->each(function($psicologo) use ($id){
-            NotificacaoPsicologo::create([
-                'notificacao' => $id,
-                'psicologo' => $psicologo->id,
-                'notificado' => false,
-            ]);
-        });
+        NotificacaoDeAtendimento::create([
+            'atendimento_id' => $atendimento,
+            'notificacao_id' => $notificacao,
+        ])->id;
         Db::commit();
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
-use App\Models\CampoFormulario;
-use App\Models\Formulario;
+use App\Models\Formulario\CampoFormulario;
+use App\Models\Formulario\Formulario;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(CampoFormulario::class, function (Faker $faker) {
     $tipo = 4;
@@ -33,7 +34,7 @@ $factory->define(CampoFormulario::class, function (Faker $faker) {
                             'nome'  => $faker->sentence(),
                         ];
                     }
-                    return json_encode($opcoes);
+                    return $opcoes;
                 break;
                 case 5 :
                     return '';

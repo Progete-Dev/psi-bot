@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePreCadastrosTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('pre_cadastros', function (Blueprint $table) {
@@ -18,22 +13,16 @@ class CreatePreCadastrosTable extends Migration
             $table->timestamps();
             $table->string('nome');
             $table->string('email')->unique();            
-            $table->unsignedBigInteger('crp')->unique();
+            $table->string('crp',15)->unique();
             $table->string('telefone')->unique();
-            $table->boolean('wpp')->default(false);
+            $table->boolean('whatsapp')->default(false);
             $table->string('cep', 8);
             $table->string('cidade');
             $table->string('estado');
-            
-
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+
     public function down()
     {
         Schema::dropIfExists('pre_cadastros');

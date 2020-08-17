@@ -2,9 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Atendimento;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+
+use App\Models\Atendimento\Atendimento;
 use Livewire\Component;
 
 class CardAtendimentos extends Component

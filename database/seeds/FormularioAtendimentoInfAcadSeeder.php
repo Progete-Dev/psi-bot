@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\CampoFormulario;
-use App\Models\Formulario;
 use Illuminate\Database\Seeder;
 
 class FormularioAtendimentoInfAcadSeeder extends Seeder

@@ -12,7 +12,7 @@ class AuthLogin extends Component
 
     public function login(){
         $credentials = $this->validate([
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email|exists:psicologos,email',
             'password' => 'required'
         ],[
             'email.required' => 'O Email é Obrigatório',
@@ -25,7 +25,11 @@ class AuthLogin extends Component
             $this->addError('error','Usuário inválido');
             return;
         }
-        return redirect()->route('psicologo.home');
+        return redirect()->route('psicologo.dashboard');
+    }
+
+    public function perfil(){
+        return view('psicologo.perfil');
     }
     public function render()
     {

@@ -1,23 +1,25 @@
 <?php
 
 namespace App\Conversations;
-use App\Models\Formulario;
-use App\Models\User;
+use App\Models\Cliente\Cliente;
+use App\Models\Formulario\Formulario;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
-use Illuminate\Support\Str;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use Illuminate\Support\Facades\Validator;
 
 class ExampleConversation extends Conversation
-{protected $firstname;
+{
+    use GeraPergunta;
+    protected $firstname;
 
     protected $email;
     protected $user;
     public function askFirstname()
     {
-        $this->say('Olá, me chamo Maju!');
+
+        $this->say('Olá, Me chamo Maju! Sou a Assistente virtual do Papo.');
         $question = Question::create('É a primeira vez que você fala comigo?')
         ->fallback('Algo deu errado')
         ->callbackId('primeiro_contato')
@@ -37,27 +39,12 @@ class ExampleConversation extends Conversation
             
         });
     }
-    public static function geraPergunta($texto,$campos){
-        $opcoes = [];
-                
-        foreach($campos as $index => $opcao){
-            $opcoes []= Button::create($opcao)->value($index+1);
-        }
-
-        $pergunta = Question::create($texto)
-        ->fallback('Opção Inválida')
-        ->callbackId(Str::slug($texto))
-        ->addButtons($opcoes);
-        return $pergunta;
-    }
 
     public function askEmail()
     {
         $this->ask('Qual seu email pra te identificar nos nossos arquivos?', function(Answer $answer) {
-
             $validator = Validator::make(['email' =>  $answer->getText()], [
                 'email' => 'required|email',
-                
             ]);
             
             if($validator->fails()){
@@ -67,7 +54,7 @@ class ExampleConversation extends Conversation
             }
             
             $this->email = $answer->getText();
-            $this->user = User::where([
+            $this->user = Cliente::where([
                 'email' => $this->email
             ])->first();
             if($this->user != null){
@@ -95,7 +82,7 @@ class ExampleConversation extends Conversation
            
             switch(intval($opcao)){
                 case 1:
-                    $this->bot->startConversation(new AtendimentoConversation($this->user));
+                    $this->bot->startConversation(new AtendimentoConversation(resolve('App\Services\Psicologo\PsicologoService'),$this->user));
                 
                     break;
                 case 2:
