@@ -11,11 +11,11 @@
   },
   "devDependencies": {
     "axios": "^0.18",
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.5.2",
     "cross-env": "^5.1",
     "jquery": "^3.2",
     "laravel-mix": "^2.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.20",
     "popper.js": "^1.12",
     "tailwindcss-plugins": "^0.3.0",
     "vue": "^2.6.11"
@@ -23,8 +23,9 @@
   "dependencies": {
     "alpinejs": "^2.3.5",
     "botman-tinker": "^0.0.1",
-    "tailwindcss": "^1.4.6",
-    "v-calendar": "^1.0.6",
+    "tailwindcss": "^1.6.2",
+    "turbolinks": "^5.2.0",
+    "v-calendar": "^1.0.8",
     "v-calendar-scheduler": "^0.7.4",
     "vue-trix": "^1.1.9"
   }

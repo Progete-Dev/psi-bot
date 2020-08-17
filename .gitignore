@@ -4,6 +4,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/mysql
 /.idea
 /.vagrant
 /.discovery

@@ -11,17 +11,19 @@
     "type": "project",
     "require": {
         "php": "^7.4",
+        "ext-json": "*",
         "botman/botman": "2.0.x-dev",
         "botman/driver-web": "~1.0",
         "botman/studio-addons": "dev-master",
         "exatasmente/whatsapp-go": "@dev",
         "facade/ignition": "^2.0",
         "fideloper/proxy": "^4.0",
+        "google/apiclient": "^2.2",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "livewire/livewire": "^1.1",
-        "ext-json": "*"
+        "rlanvin/php-rrule": "^2.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",
