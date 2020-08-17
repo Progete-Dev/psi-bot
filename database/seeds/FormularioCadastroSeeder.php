@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\CampoFormulario;
-use App\Models\Formulario;
+
+use App\Models\Formulario\CampoFormulario;
+use App\Models\Formulario\Formulario;
 use Illuminate\Database\Seeder;
 
 class FormularioCadastroSeeder extends Seeder
@@ -14,7 +15,7 @@ class FormularioCadastroSeeder extends Seeder
     public function run()
     {
         $formulario = Formulario::create([
-            'titulo' => 'Informações Pessoais'
+            'titulo' => 'Informações Pessoais',
         ]);
 
         CampoFormulario::create([

@@ -14,16 +14,28 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\User::class, function (Faker $faker) {
-    static $password;
-
+$factory->define(App\Models\Cliente\Cliente::class, function (Faker $faker) {
     return [
-        'name'        => $faker->name,
+        'nome'        => $faker->name,
         'email'       => $faker->unique()->safeEmail,
-        'password'    => $password ?: $password = bcrypt('secret'),
-        'ehpsicologo' => false
+        'telefone'    => $faker->phoneNumber,
+        'whatsapp'    => true,
+        'motivo'      => $faker->sentence
     ];
 
 });
 
-$factory->state(User::class,"psicologo",["ehpsicologo"=>true]);
+
+$factory->define(App\Models\Psicologo\Psicologo::class, function (Faker $faker) {
+    return [
+        'nome'        => $faker->name,
+        'email'       => $faker->unique()->safeEmail,
+        'telefone'    => $faker->phoneNumber,
+        'whatsapp'    => true,
+        'crp'         => $faker->numerify(),
+        'especialidade' => $faker->company,
+        'password'   => bcrypt('secret'),
+
+    ];
+
+});

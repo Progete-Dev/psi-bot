@@ -2,19 +2,20 @@
 
 namespace Tests;
 
-use Illuminate\Support\Facades\Hash;
-use BotMan\Studio\Testing\BotManTester;
 use BotMan\BotMan\Drivers\DriverManager;
-use Illuminate\Contracts\Console\Kernel;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
 use BotMan\BotMan\Drivers\Tests\ProxyDriver;
+use BotMan\Studio\Testing\BotManTester;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 
 trait CreatesApplication
 {
     /**
      * Creates the application.
      *
-     * @return \Illuminate\Foundation\Application
+     * @return Application
      */
     public function createApplication()
     {
@@ -27,9 +28,8 @@ trait CreatesApplication
         $app->make(Kernel::class)->bootstrap();
 
         $this->botman = $app->make('botman');
-        $this->bot = new BotManTester($this->botman, $fakeDriver, $this);
+        $this->bot = new BotManTester($this->botman, $fakeDriver);
 
-        Hash::driver('bcrypt')->setRounds(4);
         $this->clearCache(); // NEW LINE -- Testing doesn't work properly with cached stuff.
         return $app;
     }
@@ -41,7 +41,7 @@ protected function clearCache()
 {
     $commands = ['clear-compiled', 'cache:clear', 'view:clear', 'config:clear', 'route:clear'];
     foreach ($commands as $command) {
-        \Illuminate\Support\Facades\Artisan::call($command);
+        Artisan::call($command);
     }
 }
 }

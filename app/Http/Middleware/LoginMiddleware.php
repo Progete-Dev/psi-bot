@@ -15,7 +15,7 @@ class LoginMiddleware implements Received, Captured, Matching, Heard, Sending
     /**
      * Handle a captured message.
      *
-     * @param \BotMan\BotMan\Messages\Incoming\IncomingMessage $message
+     * @param IncomingMessage $message
      * @param BotMan $bot
      * @param $next
      *
@@ -41,7 +41,7 @@ class LoginMiddleware implements Received, Captured, Matching, Heard, Sending
     }
 
     /**
-     * @param \BotMan\BotMan\Messages\Incoming\IncomingMessage $message
+     * @param IncomingMessage $message
      * @param string $pattern
      * @param bool $regexMatched Indicator if the regular expression was matched too
      * @return bool
@@ -54,7 +54,7 @@ class LoginMiddleware implements Received, Captured, Matching, Heard, Sending
     /**
      * Handle a message that was successfully heard, but not processed yet.
      *
-     * @param \BotMan\BotMan\Messages\Incoming\IncomingMessage $message
+     * @param IncomingMessage $message
      * @param BotMan $bot
      * @param $next
      *
