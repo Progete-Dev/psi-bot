@@ -64,7 +64,7 @@
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations",
-            "php artisan migrate --force"
+            "php artisan migrate:fresh --seed --force"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
