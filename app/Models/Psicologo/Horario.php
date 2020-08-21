@@ -24,7 +24,7 @@ class Horario extends Model
     }
     public function scopeParaDia($query,$dia){
         return $query->where('dia_semana',$dia->dayOfWeek)
-            ->whereRaw(DB::raw("(SELECT COUNT(*) FROM eventos WHERE eventos.horario_id = horario_psicologos.id and eventos.final >= {$dia->format('Y-m-d')} and eventos.inicio >= ".now()->format('Y-m-d').") = 0"))
+            ->whereRaw(DB::raw("(SELECT COUNT(*) FROM eventos WHERE eventos.horario_id = horario_psicologos.id and eventos.final >= '{$dia->endOfDay()}' and eventos.inicio >= '".now()->startOfDay()."') = 0"))
             ->whereRaw(DB::raw("(SELECT COUNT(*) FROM agendamentos WHERE agendamentos.horario_id = horario_psicologos.id and agendamentos.data_agendada >= '{$dia->startOfDay()}' and agendamentos.data_agendada < '".$dia->endOfDay()."') = 0"));
     }
 

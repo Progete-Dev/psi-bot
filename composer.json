@@ -1,6 +1,6 @@
 {
     "name": "progete-dev/psi-bot",
-    "description": "BotMan Chatbot framework.",
+    "description": "Laravel Web app with BotMan",
     "keywords": [
         "botman",
         "chatbot",
@@ -12,6 +12,7 @@
     "require": {
         "php": "^7.4",
         "ext-json": "*",
+        "ext-bcmath": "*",
         "botman/botman": "2.0.x-dev",
         "botman/driver-web": "~1.0",
         "botman/studio-addons": "dev-master",
@@ -64,8 +65,7 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations",
-            "php artisan migrate:fresh --seed --force"
+            "BotMan\\Studio\\Providers\\DriverServiceProvider::publishDriverConfigurations"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",

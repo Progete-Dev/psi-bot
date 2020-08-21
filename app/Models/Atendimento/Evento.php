@@ -22,10 +22,10 @@ class Evento extends Model{
         return $this->hasMany(Atendimento::class,'evento_id','id');
     }
     public function scopeWithEventosUntil($query,$date){
-        return $query->where('eventos.final','<=',$date);
+        return $query->where('eventos.final','<=',$date->startOfDay());
     }
     public function scopeWithEventosSince($query,$date){
-        return $query->where('eventos.inicio','>=',$date);
+        return $query->where('eventos.inicio','>=',$date->endOfDay());
     }
     public function scopeWithHorario($query,$dia_semana){
         return $query->join('horario_psicologos','horario_id','=','horario_psicologos.id')->where('horario_psicologos.dia_semana',$dia_semana)

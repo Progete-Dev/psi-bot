@@ -15,7 +15,8 @@ class TokenLinkService extends BaseService{
         $this->repo = $repo;
     }
     public  function invalidateTokenLink($token){
-        return $this->update($token,[
+        $tokenLink = $this->findByToken($token);
+        return $this->update($tokenLink->id,[
             'used' => true
         ]);
     }
