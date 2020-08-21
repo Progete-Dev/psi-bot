@@ -11,20 +11,12 @@ class CreateAtendimentosTable extends Migration
     {
         Schema::create('atendimentos', function (Blueprint $table) {
             $table->id();
-            $table->time('inicio_atendimento');
-            $table->time('final_atendimento');
-            $table->foreignId('cliente_id')
+            $table->datetime('inicio_atendimento');
+            $table->datetime('final_atendimento');
+            $table->foreignId('evento_id')
                 ->references('id')
-                ->on('clientes')
-                ->onDelete('cascade');
-            $table->foreignId('psicologo_id')
-                ->references('id')
-                ->on('psicologos')
-                ->onDelete('cascade');
-            $table->foreignId('agendamento_id')
-                ->references('id')
-                ->on('agendamentos')
-                ->onDelete('cascade');
+                ->on('eventos');
+            $table->integer('status');
             $table->timestamps();
         });
     }

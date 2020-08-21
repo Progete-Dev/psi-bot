@@ -11,7 +11,7 @@
 @endisset
 @isset($notifications)
 <div x-cloak x-data="{open : false}" x-on:notificaoes.window="open = true">
-    <div x-show="open" class="fixed h-full w-full top-0 right-0">
+    <div x-show="open" class="fixed h-full w-full top-0 right-0 z-40">
       <div  x-on:click="open = false" x-show="open" class="fixed z-40 bg-gray-900 opacity-50 w-full h-full"></div>
       <div class="h-full md:flex md:flex-shrink-0 z-40 fixed right-0 dark:bg-gray-900 "  x-show="open">
       

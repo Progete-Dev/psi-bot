@@ -85,8 +85,8 @@
                                                         <div class="flex-wrap m-auto p-2 flex">
                                                             @if(isset($day['events']["$i"]))
                                                                 @foreach($day['events']["$i"] as $index => $event)
-                                                                    <div wire:click="openDetails('{{$weekDay}}',{{$dayIndex}},{{$index}},{{$i}})"  class="p-1 bg-menu cursor-pointer duration-100 ease-in-out h-full inline-flex items-center justify-center leading-none rounded text-center text-menu text-xs transition truncate">
-                                                                        {{$event['label']}}
+                                                                    <div wire:key="{{$event['id'].$event['cliente_id']}}" wire:click="openDetails('{{$event['id']}}',{{isset($event['recorrencia']) ? 'true' : 'false'}})"  class="p-1 {{isset($event['recorrencia']) ? 'bg-menu' : 'bg-green-500'}} cursor-pointer duration-100 ease-in-out h-full inline-flex items-center justify-center leading-none rounded text-center text-menu text-xs transition truncate">
+                                                                        {{$event['hora_inicio'].' - '.$event['hora_final'] }}
                                                                     </div>
                                                                 @endforeach
                                                             @endif
@@ -101,11 +101,13 @@
                                             <div class="flex flex-wrap w-full p-1 justify-start overflow-hidden">
                                                 <div class="justify-start md:text-lg text-center text-start text-xs {{($viewMode == 1 and $day['firstDay'] == false) ?  'text-gray-500' : 'text-primary'}}">{{$day['day']}}</div>
                                                 <div class="w-full h-full">
+                                                    @isset($day['events'])
                                                         @foreach($day['events'] as $index => $event)
-                                                                <div wire:click="openDetails('{{$weekDay}}',{{$dayIndex}},{{$index}})" class="p-1 text-primary cursor-pointer  inline-flex items-center justify-center leading-nonetext-center text-xs transition truncate">
-                                                                    {{$event['label']}}
+                                                                <div wire:click="openDetails('{{$event['id']}}',{{isset($event['recorrencia']) ? 'true' : 'false'}})" class="p-1 {{isset($event['recorrencia']) ? 'text-primary' : 'text-green-200 bg-green-500'}} cursor-pointer  inline-flex items-center justify-center leading-nonetext-center text-xs transition truncate">
+                                                                    {{$event['hora_inicio'].' - '.$event['hora_final'] }}
                                                                 </div>
                                                         @endforeach
+                                                    @endisset
                                                 </div>
                                             </div>
                                         </div>

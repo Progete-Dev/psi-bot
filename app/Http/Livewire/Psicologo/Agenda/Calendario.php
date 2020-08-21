@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Psicologo\Agenda;
 
 use Carbon\Carbon;
 use Livewire\Component;
+use RRule\RRule;
 
 class Calendario extends Component
 {
@@ -12,23 +13,66 @@ class Calendario extends Component
     public $days;
     public $months;
     public $week;
-    public $daysList;
     public $viewMode;
     public $events;
 
-    protected $casts = [
-      'events' => 'collection'
-    ];
     public function mount($events){
         $date = Carbon::now();
         $this->month = $date->month;
         $this->year  = $date->year;
-        $this->daysList = [];
         $this->viewMode  = 1;
         $this->week = $date->weekOfYear;
         $this->days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
         $this->months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        $this->events =$events;
+        $this->events = $events;
+
+    }
+    public function eventosPara($events,$day){
+        if(!isset($events[$day->dayOfWeek])){
+            return [];
+        }
+        $dayEvents= collect($events[$day->dayOfWeek])->filter(function($evento) use ($day){
+            if(isset($evento['recorrencia'])) {
+                $dataEvento = Carbon::parseFromLocale($evento['inicio']);
+                $date = Carbon::create($day->year,$day->month,$day->day,$dataEvento->hour,$dataEvento->minute,$dataEvento->second)->timezone('America/Sao_Paulo');
+                if(count($evento['recorrencia']) > 0) {
+                    $rrule = new RRule($evento['recorrencia']);
+                    $recorrencias = $rrule->getOccurrences();
+
+                    foreach ($recorrencias as $recorrencia) {
+                        $recorrencia = Carbon::parse($recorrencia);
+                        if ($recorrencia->day == $date->day and $recorrencia->month == $date->month and $recorrencia->year == $date->year) {
+                            return true;
+                        }
+                    }
+                }else{
+                    if ($dataEvento->day == $date->day and $dataEvento->month == $date->month and $dataEvento->year == $date->year) {
+                        return true;
+                    }
+                }
+            }else{
+                $dataEvento = Carbon::parseFromLocale($evento['data_agendada']);
+                $date = Carbon::create($day->year,$day->month,$day->day,$dataEvento->hour,$dataEvento->minute,$dataEvento->second)->timezone('America/Sao_Paulo');
+                return $dataEvento->day == $date->day && $dataEvento->month == $date->month;
+
+            }
+            return false;
+        });
+        if($this->viewMode != 1){
+            $dayEvents = $dayEvents->groupBy(function ($evento) {
+                if(isset($evento['recorrencia'])) {
+                    $dataEvento = Carbon::parseFromLocale($evento['inicio']);
+
+                    return $dataEvento->hour;
+                }else{
+                    $dataEvento = Carbon::parseFromLocale($evento['data_agendada']);
+                    return $dataEvento->hour;
+                }
+
+            });
+
+        }
+        return $dayEvents;
     }
     public function today(){
         $date = Carbon::now();
@@ -60,18 +104,14 @@ class Calendario extends Component
         }
     }
 
-    public function openDetails($weekDay,$dayIndex,$index,$hour = null)
+    public function openDetails($eventId,$event=true)
     {
-        if ($this->viewMode == 1){
-            $event = $this->daysList[$weekDay][$dayIndex]['events'][$index];
-        }else{
-            $event = $this->daysList[$weekDay][$dayIndex]['events'][$hour][$index];
-        }
-
-        $this->emitUp('open-details-modal',$event['id']);
+        $this->emitUp('open-details-modal',$eventId,$event);
     }
     public function render()
     {
+        $daysList  =[ ];
+        $events = collect($this->events);
         if($this->viewMode == 1) {
             $firstDay = Carbon::create($this->year, $this->month, 1)->startOfWeek()->subDay();
             $this->week = $firstDay->week;
@@ -92,7 +132,7 @@ class Calendario extends Component
 
         $betweenMonths = $firstDay->month != $lastDay->month;
         for($i = 0 ; $i < 7 ; $i++){
-            $this->daysList[$this->days[$i]] = [];
+            $daysList[$this->days[$i]] = [];
         }
 
         $date = $firstDay->copy();
@@ -103,24 +143,14 @@ class Calendario extends Component
             if($date->day ==1){
                 $firstDay = true;
             }
-            $dayEvents = $this->events->filter(function($event) use ($date){
-                if(isset($event['recurrence']['RFREQ']) and $event['recurrence']['RFREQ'] == "WEEKLY") {
 
-                    return Carbon::parse($event['start'])->dayOfWeek == $date->dayOfWeek;
-                }
-                return Carbon::parse($event['start'])->day == $date->day;
-            });
-            if($this->viewMode != 1){
-                $dayEvents = $dayEvents->groupBy(function($event){
-                   return Carbon::parse($event['start'])->hour;
-                });
-            }
-            $this->daysList[$this->days[$date->dayOfWeek]] []= [
+            $daysList[$this->days[$date->dayOfWeek]] []= [
                 'day' =>$date->day,
                 "month" => $date->month,
                 'firstDay' => $firstDay,
-                'events'   => $dayEvents->toArray()
+                'events' => $this->eventosPara($events,$date)
             ] ;
+
             $date = $date->copy()->addDay();
 
             $count++;
@@ -129,14 +159,13 @@ class Calendario extends Component
 
         if($this->viewMode == 1) {
             foreach ($this->days as $day) {
-                if (count($this->daysList[$day]) < 6) {
-                    $diff = 6 - count($this->daysList[$day]);
+                if (count($daysList[$day]) < 6) {
+                    $diff = 6 - count($daysList[$day]);
                     while($diff--) {
-                        $this->daysList[$day] [] = [
+                        $daysList[$day] [] = [
                             'day' => "",
                             'month' => "",
                             'firstDay' =>false,
-                            'events' => []
                         ];
                     }
                 }
@@ -144,8 +173,9 @@ class Calendario extends Component
         }
 
 
-        return view('livewire.calendario',[
-            'betweenMonths' => $betweenMonths
+        return view('livewire.psicologo.agenda.calendario',[
+            'betweenMonths' => $betweenMonths,
+            'daysList' => $daysList
         ]);
     }
 }

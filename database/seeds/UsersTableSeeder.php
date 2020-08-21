@@ -20,6 +20,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'paula@email.com',
                 'telefone' => '0000000000',
                 'whatsapp'  => true,
+                'password' => bcrypt('123456'),
                 'motivo' => 'teste'
             ],
             [
@@ -27,6 +28,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'mariaza@email.com',
                 'telefone' => '0000000000',
                 'whatsapp'  => true,
+                'password' => bcrypt('123456'),
                 'motivo' => 'teste'
             ],
             [
@@ -34,7 +36,9 @@ class UsersTableSeeder extends Seeder
                 'email' => 'joao@email.com',
                 'telefone' => '0000000000',
                 'whatsapp'  => true,
+                'password' => bcrypt('123456'),
                 'motivo' => 'teste'
+
             ],
        
        ]);

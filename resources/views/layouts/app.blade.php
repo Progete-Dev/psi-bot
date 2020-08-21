@@ -15,32 +15,27 @@
       </style>
 </head>
 <body >
-  <div class="h-screen flex overflow-hidden bg-theme">
-    @auth
+  <main class="flex bg-theme">
+    @auth('psicologo')
       @include('menu')
     @endauth
-    <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none " tabindex="0">
-          <div class="m-auto px-4">
-            @yield('content')
-          </div>
-            @auth
-              @include('layouts.notifications',['button' => true])
-            @endauth
-            
+    <div class="flex-1 relative z-0 overflow-y-auto h-screen focus:outline-none py-2" tabindex="0">
+        @yield('content')
+        @auth('psicologo')
+          @include('layouts.notifications',['button' => true])
+        @endauth
         @stack('body-script')
-          <div class="max-w-screen-xl flex justify-center mx-auto pt-12 overflow-hidden sm:px-6 lg:px-8">
-             
-              <div class="bottom-0  relative text-sm font-semibold leading-9 justify-center text-secondary opacity-50"> 
+        <footer class="max-w-screen-xl flex justify-center mx-auto pt-12 overflow-hidden sm:px-6 lg:px-8">
+
+            <div class="bottom-0  relative text-sm font-semibold leading-9 justify-center text-secondary opacity-50">
                 <p>Psi - &copy; <a href="" class="text-link">Progete!</a> 2020</p>
-              </div>          
-          </div>
-        
-    </main>
-    
-    @auth
-      @include('layouts.notifications',['notifications' => isset($notificacoes) ? $notificacoes : false])
+            </div>
+        </footer>
+    </div>
+    @auth('psicologo')
+        @include('layouts.notifications',['notifications' => isset($notificacoes) ? $notificacoes : false])
     @endauth
-  </div>
+  </main>
   @livewireScripts
 </body>
 </html>

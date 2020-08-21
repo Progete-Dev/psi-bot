@@ -67,7 +67,7 @@
     </div>
   <!-- Desktop Side Bar -->
   <div  x-cloak x-data="{open: sessionStorage.getItem('menu_open') == 'true' }" x-init="$watch('open', (value) => {sessionStorage.setItem('menu_open',value)});"
-     class="hidden h-full md:flex md:flex-shrink-0  bg-menu" x-on:mouseenter="open = true" x-on:mouseleave="open = false">
+     class="hidden md:flex md:flex-shrink-0 overflow-hidden  bg-menu" x-on:mouseenter="open = true" x-on:mouseleave="open = false">
         <div style="transition: linear 0.3s"  class="flex flex-col pt-5 pb-4"  :class="{ 'w-12' : !open , 'w-64' : open}">
           <div style="transition: ease-in-out" x-show="open"  class="flex-shrink-0 flex items-center px-4 ">
             <div class="flex relative w-12 h-12 justify-center items-center m-1 mr-2 text-xl rounded-full text-menu">
