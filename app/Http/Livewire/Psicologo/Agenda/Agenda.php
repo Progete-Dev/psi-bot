@@ -6,6 +6,7 @@ use App\Facades\GoogleCalendar;
 use App\Models\Atendimento\Agendamento;
 use App\Models\Atendimento\Evento;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -80,9 +81,16 @@ class Agenda extends Component
             )->timezone('America/Sao_Paulo'),
             'google_calendar_id' => ''
         ]);
-        $googleEvent = GoogleCalendar::addEvent($evento);
-        $evento->google_calendar_id = $googleEvent->id;
+        try {
+            $googleEvent = GoogleCalendar::addEvent($evento);
+            $evento->google_calendar_id = $googleEvent->id;
+        }catch (Exception $e){
+            session()->flash('warning','Sem integração com o google calendário');
+        }
         $evento->save();
+        $this->closeDetails();
+        session()->flash('success','Soliciatação aceita, novo Atendimento para o dia '. $solicitacao->data_agendada->format('d/m/Y - H:i'));
+        $this->redirect("#");
         Db::commit();
     }
 

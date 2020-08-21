@@ -24,7 +24,7 @@
     @if($slot == null)
         <div class="fixed top-0 w-full p-2 bg-primary rounded-b">
             <label for="data" class="text-lg text-primary p-2 leading-5 mt-4">Selecione uma data</label>
-            <input wire:model.lazy="data" wire:change="buscarData" type="date" id="data" class="w-full mt-2 rounded shadow focus:outline-none text-primary px-4 py-3"  min="{{now()->format('Y-m-d')}}">
+            <input wire:model.lazy="data" wire:change="buscarData" type="date" id="data" class="w-full mt-2 rounded shadow focus:outline-none text-primary px-4 py-3 bg-white "  min="{{now()->addDay()->format('Y-m-d')}}">
         </div>
     @endif
     <div class="py-2 px-4">
