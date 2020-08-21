@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "alpinejs": "^2.6.0",
-    "tailwindcss": "^1.6.2",
+    "tailwindcss": "^1.7.3",
     "turbolinks": "^5.2.0"
   }
 }
