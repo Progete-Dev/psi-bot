@@ -3,6 +3,8 @@
 namespace App\Services\Psicologo;
 
 use App\Models\Atendimento\Atendimento;
+use App\Models\Atendimento\Evento;
+use App\Models\Cliente\Cliente;
 use App\Models\Psicologo\GoogleAuth;
 use App\Models\Psicologo\Psicologo;
 use Carbon\Carbon;
@@ -11,6 +13,7 @@ use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 use Illuminate\Support\Facades\Log;
+use RRule\RRule;
 
 class GoogleCalendarService
 {
@@ -73,8 +76,8 @@ class GoogleCalendarService
                     ->getDateTime());
                 $end = Carbon::createFromFormat(Carbon::RFC3339, $event
                     ->getEnd()
-                    ->getDateTime());
-                if($event->colorId == 2) {
+                    ->getDateTime(),'America/Sao_Paulo');
+
 
                     $result->push([
                         'id' => $event->id,
@@ -87,7 +90,7 @@ class GoogleCalendarService
                         'status' => $event->status,
                         'descricao' => $event->description,
                     ]);
-                }
+
             }
         }
 
@@ -105,9 +108,13 @@ class GoogleCalendarService
         $rules[0] = str_replace("RULE:",'',$rules[0]);
         $rules = collect($rules)->reduce(function ($atual,$rule){
             $rule = explode('=',$rule);
+            if($rule[0] == 'RFREQ'){
+                $rule[0] = 'FREQ';
+            }
             $atual[$rule[0]] = $rule[1];
             return $atual;
         },[]);
+
         return $rules;
     }
     public function fetchCalendars()
@@ -122,32 +129,49 @@ class GoogleCalendarService
         ];
     }
 
-    public function addEvent(Atendimento $event): Google_Service_Calendar_Event
+    public function addEvent(Evento $event): Google_Service_Calendar_Event
     {
-        $psicologo = $event->psicologo()->select(['id','email'])->first();
-        $cliente   = $event->cliente()->select(['id','email'])->first();
+        $horario = $event->horario;
+        $psicologo = $horario->psicologo;
+        $cliente   = $event->cliente;
         $auth = GoogleAuth::where('psicologo_id',$psicologo->id)->first();
-        $calendarId = $this->getCalendarId($event);
+        $calendarId = $this->getCalendarId($psicologo->id);
 
-        $startDateTime = $event->inicio_atendimento;
-        $endDateTime =  $event->final_atendimento;
+        $startDateTime = $event->inicio;
+        $endDateTime =  $event->final;
 
 
         $newEvent = new Google_Service_Calendar_Event([
-            'summary'     => 'Atendimento:'.$event->inicio_atendimento->format('H:m').' - '.$event->final_atendimento->format('H:m') ,
+            'summary'     => 'Atendimento:'.$event->inicio->format('H:m'),
             'description' => 'Cliente: '.$cliente->nome,
             'start'       => [
                 'dateTime' => $startDateTime->toIsoString(),
+                'timeZone' => 'America/Sao_Paulo'
             ],
             'end'         => [
                 'dateTime' => $endDateTime->toIsoString(),
+                'timeZone' => 'America/Sao_Paulo'
             ],
             'attendees'   => [
-                ['email' => $psicologo->email],
                 ['email' => $cliente->email]
             ]
         ]);
-        $newEvent->setColorId(2);
+        if(count($event->recorrencia) > 0) {
+            $rrule = 'RRULE:';
+                $rr = new RRule($event->recorrencia);
+                $rr = $rr->getRule();
+            $rules = array_keys(RRule::FREQUENCIES);
+
+            foreach($rr as $rule => $value){
+                if($value != null) {
+                    if($rule == 'FREQ'){
+                        $value = $rules[$value+1];
+                    }
+                    $rrule .= $rule . '=' . $value.';';
+                }
+            }
+            $newEvent->setRecurrence([$rrule]);
+        }
         $newEvent->setGuestsCanInviteOthers(false);
         $this->client->setAccessToken($auth->access_token);
         $return = $this->calendar()->events->insert($calendarId, $newEvent);
@@ -161,8 +185,7 @@ class GoogleCalendarService
 
         return $this->calendar()->events->delete($calendarId, $event->google_calendar_id);
     }
-    public function getCalendarId($event){
-        $psicologo = $event->psicologo()->select('id')->first();
+    public function getCalendarId($psicologo){
         $auth = GoogleAuth::where('psicologo_id',$psicologo)->first();
         $calendarId = null;
         if($auth !== null) {
@@ -179,7 +202,7 @@ class GoogleCalendarService
         return $this;
     }
 
-    public function user(User $user): self
+    public function user(Psicologo $user): self
     {
         if (!$user->googleAuth) {
             return $this;
@@ -190,7 +213,7 @@ class GoogleCalendarService
         return $this;
     }
 
-    public function client(? User $user)
+    public function client(? Cliente $user)
     {
         if ($user) {
             $this->user($user);
@@ -204,13 +227,15 @@ class GoogleCalendarService
         return $this->service;
     }
 
-    public function getEvent(Atendimento $event)
+    public function getEvent(Evento $event)
     {
-        $calendarId = $this->getCalendarId($event);
+        $horario = $event->horario;
+        $psicologo = $horario->psicologo;
+        $calendarId = $this->getCalendarId($psicologo->id);
         return $this->calendar()->events->get($calendarId, $event->google_calendar_id);
     }
 
-    public function syncEvent(Atendimento $event)
+    public function syncEvent(Evento $event)
     {
         $googleEvent = $this->getEvent($event);
         if ($googleEvent->status === 'cancelled') {

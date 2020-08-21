@@ -9,4 +9,5 @@ class SolicitarAtendimentoService extends BaseService
     public function __construct(AtendimentoRepository $repo){
         $this->repo = $repo;
     }
+
 }

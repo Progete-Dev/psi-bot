@@ -115,4 +115,25 @@
             </div>
         </form>
     @endcomponent
+        @component('partials.card')
+            @slot('cardTitle','Horários')
+            <div class="flex flex-wrap">
+                @foreach($horarios as $diaSemana => $lista)
+                    <div class="p-2">
+                        <h1 class="text-md text-primary">{{$diaSemana}} </h1>
+                        @foreach($lista as $horario)
+                            <div class="flex px-4 py-2 m-2 border text-primary">
+                                <div class="p-2">{{$horario['hora_inicio']}}</div>
+                                <div class="p-2">{{$horario['hora_final']}}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endforeach
+            </div>
+            <div class="mt-8 flex justify-end">
+                <button type="submit" class="flex bg-button hover:bg-gray-700 text-button font-semibold  border border-gray-700 rounded-lg shadow-sm px-2 py-2 mx-2" @click="addEvent()">
+                    Novo
+                </button>
+            </div>
+        @endcomponent
 </div>

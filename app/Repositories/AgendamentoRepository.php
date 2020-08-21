@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Models\Atendimento\Agendamento;
+use Illuminate\Database\Eloquent\Builder;
 
 class AgendamentoRepository extends BaseRepository
 {
@@ -26,5 +27,11 @@ class AgendamentoRepository extends BaseRepository
     public function destroy($id){
         $object = $this->find($id);
         return $object->delete();
+    }
+
+    public function calculaConflito($data){
+        /** @var Builder $query */
+        $query = $this->model->newQuery();
+        $query->where()
     }
 }

@@ -20,8 +20,7 @@ class CreateAgendamentosTable extends Migration
                 ->references('id')
                 ->on('horario_psicologos');
             $table->datetime('data_agendada');
-            $table->integer('status');
-            $table->string('recorrencia');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+
 use Faker\Generator as Faker;
 
 /*
@@ -20,7 +20,8 @@ $factory->define(App\Models\Cliente\Cliente::class, function (Faker $faker) {
         'email'       => $faker->unique()->safeEmail,
         'telefone'    => $faker->phoneNumber,
         'whatsapp'    => true,
-        'motivo'      => $faker->sentence
+        'motivo'      => $faker->sentence,
+        'password'   => bcrypt('secret'),
     ];
 
 });

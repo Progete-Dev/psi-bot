@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Atendimento\Atendimento;
+use App\Models\Atendimento\Agendamento;
 use Illuminate\Database\Seeder;
 
 class AtendimentoTableSeeder extends Seeder
@@ -12,6 +12,6 @@ class AtendimentoTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Atendimento::class,10)->create();
+        factory(Agendamento::class,10)->create();
     }
 }

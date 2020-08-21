@@ -3,7 +3,6 @@ namespace App\Repositories;
 
 abstract class BaseRepository implements RepositoryInterface
 {
-
     protected $model;
     public function all()
     {

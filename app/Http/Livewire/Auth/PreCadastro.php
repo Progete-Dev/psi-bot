@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Auth;
 
-use App\Models\Psicologo\PreCadastro as PreCadastroModel;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
@@ -15,11 +14,12 @@ class PreCadastro extends Component
     public $cep;
     public $cidade;
     public $estado;
-    public $estados;
     public $telefone;
 
-    public function mount(){
-        $this->estados = [
+
+    public function render()
+    {
+        $estados = [
             'AC'=>'Acre',
             'AL'=>'Alagoas',
             'AP'=>'Amapá',
@@ -48,11 +48,9 @@ class PreCadastro extends Component
             'SE'=>'Sergipe',
             'TO'=>'Tocantins'
         ];
-    }
-
-    public function render()
-    {
-        return view('livewire.auth.pre-cadastro');
+        return view('livewire.auth.pre-cadastro',[
+            'estados' => $estados
+        ]);
 
     }
     public function enviar(){
@@ -69,7 +67,7 @@ class PreCadastro extends Component
             '*.required'=> 'Este campo é obrigatório'
         ]);
 
-        dd(PreCadastroModel::create($dados));
+
      
         
 
