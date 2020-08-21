@@ -57,11 +57,10 @@ class ExampleConversation extends Conversation
             $this->user = Cliente::where([
                 'email' => $this->email
             ])->first();
-            if($this->user != null){
-                $this->mostrarOpcoes();
-            }
-            
 
+            if($this->user != null){
+                return $this->mostrarOpcoes();
+            }
         });
     }
     public function mostrarOpcoes(){

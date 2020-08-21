@@ -13,12 +13,16 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\PsicologoController;
+
 Route::get('/',function(){
     return redirect('/login');
 });
 Auth::routes(['register'=> false]);
-Route::livewire('/pre-cadastro','auth.pre-cadastro')->middleware('guest');
+Route::livewire('/pre-cadastro','auth.pre-cadastro')
+    ->name('pre-cadastro')
+    ->middleware('guest');
 Route::middleware(['auth','psicologo'])->prefix('psicologo')->name('psicologo.')
     ->group(function () {
     Route::get('/integrate/google', [GoogleAuthController::class,'store'])->name('integrate.google');
@@ -31,3 +35,4 @@ Route::middleware(['auth','psicologo'])->prefix('psicologo')->name('psicologo.')
     Route::get('/atendimentos')->name('atendimentos');
     Route::get('/atendimentos/{atendimento}')->name('atendimentos.atendimento');
 });
+Route::get('/agendar/{code}',[PacienteController::class,'index'])->name('agendar');

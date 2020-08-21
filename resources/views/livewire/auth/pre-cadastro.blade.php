@@ -23,7 +23,7 @@
 
             <div class="flex flex-col pt-4 mt-2">
                 <label for="email" class="text-lg">Email</label>
-                <input wire:model="email" type="email" id="email" name="email" placeholder="seu@email.com" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('email') border border-red-500 @enderror">
+                <input wire:model.lazy="email" type="email" id="email" name="email" placeholder="seu@email.com" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('email') border border-red-500 @enderror">
             </div>
             @error('email')
               <span class="invalid-feedback text-red-500 text-xs p-2" role="alert">
@@ -32,7 +32,7 @@
             @enderror
             <div class="flex flex-col pt-4 mt-2">
                 <label for="telefone" class="text-lg">Telefone</label>
-                <input wire:model="telefone" type="telefone" id="telefone" name="telefone" placeholder="85999999999" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('telefone') border border-red-500 @enderror">
+                <input wire:model.lazy="telefone" type="telefone" id="telefone" name="telefone" placeholder="85999999999" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('telefone') border border-red-500 @enderror">
             </div>
             @error('telefone')
               <span class="invalid-feedback text-red-500 text-xs p-2" role="alert">
@@ -42,7 +42,7 @@
             {{-- pattern="[0-9]{2}\/\d" --}}
             <div class="flex flex-col pt-4 mt-2">
                 <label for="crp" class="text-lg">CRP</label>
-                <input wire:model="crp" placeholder="00/00000" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('crp') border border-red-500 @enderror">                    
+                <input wire:model.lazy="crp" placeholder="00/00000" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('crp') border border-red-500 @enderror">
             </div>
             @error('crp')
             <span class="invalid-feedback text-red-500 text-xs p-2" role="alert">
@@ -62,18 +62,18 @@
                   <label  class="text-lg" for="grid-city">
                     Cidade
                   </label>
-                  <input wire:model="cidade" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('cidade') border border-red-500 @enderror" id="grid-city" placeholder="Russas">
+                  <input wire:model.lazy="cidade" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('cidade') border border-red-500 @enderror" id="grid-city" placeholder="Russas">
                 </div>
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                   <label class="text-lg" for="grid-state">
                     Estado
                   </label>
                   <div class="relative">
-                    <select wire:model="estado" class="shadow appearance-none border rounded w-full py-2 px-3 text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('estado') border border-red-500 @enderror" id="grid-state">
+                    <select wire:model.lazy="estado" class="shadow appearance-none border rounded w-full py-2 px-3 bg-white  text-secondary mt-1 leading-tight focus:outline-none focus:shadow-outline @error('estado') border border-red-500 @enderror" id="grid-state">
                         @foreach ($estados as $cod => $nome)
-                            <option value="{{$cod}}" {{$cod==$nome ? "selected" : ""}}> {{$nome}} </option>
+                            <option value="{{$cod}}" wire:ignore> {{$nome}} </option>
                         @endforeach
-                        
+
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -82,7 +82,8 @@
                 </div>
                 
               </div>
-              <button type="submit"  class="bg-indigo-600 text-button font-bold text-lg hover:bg-gray-700 p-2 mt-8">Enviar</button>
+              <button type="submit"  class="bg-button text-button font-bold text-lg hover:bg-gray-700 p-2 mt-8">Enviar Pré Cadastro</button>
+            <a href="{{route('login')}}" class="text-center border-2 border-blue-500 text-blue-500 hover:text-button font-bold text-lg hover:bg-button p-2 mt-8">Realizar Login</a>
         </form>
 
     </div>

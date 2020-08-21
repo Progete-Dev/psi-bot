@@ -22,17 +22,11 @@ class PsicologoService extends BaseService
     }
     public function horariosDisponiveisSemana($id,$semanaAno,$ano)
     {
-        $intervalo_datas = $this->getIntervaloDatas($semanaAno,$ano);
-        return $this->findHorariosByWeek($id,$intervalo_datas['data_inicial'],$intervalo_datas['data_final']);
+        $data_inicial = Carbon::now()->weekYear($ano,0,$semanaAno)->startOfDay();
+        $data_final = Carbon::now()->weekYear($ano,0,$semanaAno)->addDays(7);
+        return $this->findHorariosByWeek($id,$data_inicial,$data_final);
     }
-    private function getIntervaloDatas($semana,$ano){
-        $data_inicial = Carbon::now()->setISODate($ano, $semana)->startOfWeek()->subDay();
-        $data_final = Carbon::now()->setISODate($ano, $semana)->endOfWeek()->subDay();
-        return [
-            'data_inicial' => $data_inicial,
-            'data_final' => $data_final
-        ];
-    }
+
     private function findHorariosByDate($id,$data)
     {
         $psicologo    = $this->repo->find($id);
@@ -44,16 +38,15 @@ class PsicologoService extends BaseService
     private function findHorariosByWeek($id,$dataInicial,$dataFinal)
     {
 
+
         $psicologo    = $this->repo->find($id);
         $horarios     = $psicologo->horarios()
                         ->whereBetween('dia_semana',[0,6])
-                        ->get();
-        dd($horarios);
-        $atendimentos = $psicologo->atendimentos()
-                ->whereBetween('inicio_atendimento',[$dataInicial,$dataFinal])
-                ->get();
-
-        return $this->filterHorarios($atendimentos,$horarios);
+                        ->get()->filter(function($horario) use ($dataInicial,$dataFinal){
+                           return $horario->eventos()
+                                    ->whereBetween('data_agendada',[$dataInicial,$dataFinal])->count() == 0;
+                        });
+        return $horarios;
     }
 
 

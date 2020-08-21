@@ -14,6 +14,7 @@ class CreateClientesTable extends Migration
             $table->string('nome');
             $table->string('email')->unique();
             $table->string('telefone',21);
+            $table->string('password');
             $table->boolean('whatsapp')->default(true);
             $table->string('motivo');
             $table->timestamps();

@@ -4,13 +4,13 @@ namespace App\Models\Psicologo;
 
 
 use App\Models\Atendimento\Atendimento;
-use Illuminate\Foundation\Auth\User;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Psicologo extends User
+class Psicologo extends Authenticatable
 {
     use Notifiable, UsesGoogleCalendar;
-
+    protected $guard = 'psicologo';
     protected $guarded = [];
 
     public function atendimentos(){
