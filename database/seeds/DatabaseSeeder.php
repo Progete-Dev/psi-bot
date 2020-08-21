@@ -13,8 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //$this->call(UsersTableSeeder::class);
-        //$this->call(FormularioCadastroSeeder::class);
+        $this->call(UsersTableSeeder::class);
+        $this->call(FormularioCadastroSeeder::class);
         $psi = 1;
         for($i = 1 ; $i < 6; $i++){
             for($j= 8 ; $j < 17 ; $j +=2 ){
