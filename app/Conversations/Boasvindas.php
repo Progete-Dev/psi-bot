@@ -2,7 +2,9 @@
 
 namespace App\Conversations;
 
+use App\Facades\TokenLink;
 use App\Jobs\GeraAtendimento;
+use App\Models\Cliente\Cliente;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
@@ -41,9 +43,18 @@ class Boasvindas extends Conversation
                 $email = $resposta->getText();
                 
                 $this->ask('Qual motivo para o seu contato conosco?',function(Answer $resposta) use($email){
-                    GeraAtendimento::dispatch($this->respostas,$email,$resposta->getText());
+                    $user = $this->getBot()->getUser();
+                    $cliente = Cliente::create([
+                        'nome' => $this->respostas[0]['resposta'],
+                        'email' => $this->email,
+                        'telefone' => $user->getId(),
+                        'whatsapp' => true,
+                        'motivo' => $resposta->getText(),
+                    ]);
+                    GeraAtendimento::dispatch($this->respostas,$cliente->id);
+                    $this->say('Suas informações foram cadastradas com sucesso!');
+                    return $this->bot->startConversation(new AtendimentoConversation($cliente));
                 });
-                $this->say('Suas informações foram cadastradas com sucesso!');
 
             });            
             return ;
