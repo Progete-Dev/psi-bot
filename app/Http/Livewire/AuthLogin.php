@@ -25,6 +25,10 @@ class AuthLogin extends Component
             $this->addError('error','Usuário inválido');
             return;
         }
+        if(Auth::user()->horarios->count() == 0){
+            session()->flash('warning','Você não possui horários cadastrados, adicione horários para atendimento');
+            return redirect()->route('psicologo.perfil');
+        }
         return redirect()->route('psicologo.dashboard');
     }
 

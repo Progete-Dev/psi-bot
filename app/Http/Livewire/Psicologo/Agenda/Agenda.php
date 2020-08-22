@@ -66,15 +66,16 @@ class Agenda extends Component
         $solicitacao->status = Agendamento::AGENDADO;
         $solicitacao->save();
         $horaFinal = Carbon::parse($solicitacao->horario->hora_final);
+        $dataAgendada = Carbon::createFromTimeString($solicitacao->data_agendada);
         $evento = Evento::create([
             'cliente_id' => $solicitacao->cliente_id,
             'horario_id' => $solicitacao->horario_id,
             'recorrencia' => [],
-            'inicio' => $solicitacao->data_agendada,
+            'inicio' => $dataAgendada,
             'final' => Carbon::create(
-                $solicitacao->data_agendada->year,
-                $solicitacao->data_agendada->month,
-                $solicitacao->data_agendada->day,
+                $dataAgendada->year,
+                $dataAgendada->month,
+                $dataAgendada->day,
                 $horaFinal->hour,
                 $horaFinal->minute,
                 0
@@ -89,7 +90,7 @@ class Agenda extends Component
         }
         $evento->save();
         $this->closeDetails();
-        session()->flash('success','Soliciatação aceita, novo Atendimento para o dia '. $solicitacao->data_agendada->format('d/m/Y - H:i'));
+        session()->flash('success','Soliciatação aceita, novo Atendimento para o dia '. $dataAgendada->format('d/m/Y - H:i'));
         $this->redirect("#");
         Db::commit();
     }
