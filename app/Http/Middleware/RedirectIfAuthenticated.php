@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
     {
 
         if (Auth::guard($guard)->check()) {
-            return redirect('psicologo/home');
+            return redirect('psicologo/dashboard');
             
         }
         return $next($request);
