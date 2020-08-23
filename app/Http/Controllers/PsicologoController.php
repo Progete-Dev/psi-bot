@@ -116,7 +116,7 @@ class PsicologoController extends Controller
         $solicitacao->status = Atendimento::AGUARDA_CONFIRMACAO;
         $solicitacao->save();
 
-        return redirect('psicologo/home')->with('success','Solicitação aceita');
+        return redirect('psicologo/dashboard')->with('success','Solicitação aceita');
     }
 
 }
