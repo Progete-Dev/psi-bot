@@ -20,7 +20,15 @@ class PerfilPsicologo extends Component
     public $password_confirmation;
     public $idPsicologo;
     public $horarios;
-    public $diasSemana = [];
+    public $diasSemana =  [
+        'domingo' => false,
+        'segunda' => false,
+        'terca' => false,
+        'quarta' => false,
+        'quinta' => false,
+        'sexta' => false,
+        'sabado' => false,
+    ];
     public $dias =['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
 
     public $horaInicio =0;
@@ -32,7 +40,6 @@ class PerfilPsicologo extends Component
     public  $horarioId;
     public  $openInfo = false;
     public function mount(){
-        $this->diasSemana = [];
         $dias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
         $psicologo = Auth::user();
         $this->horarios = $psicologo->horarios()->orderBy('dia_semana')->orderBy('hora_inicio')->get()->groupBy(function ($horario) use ($dias){
@@ -51,20 +58,6 @@ class PerfilPsicologo extends Component
         $this->minutoFinal = 0;
     }
 
-    public function addDiaSemana($dia){
-        $exists = -1;
-        foreach ($this->diasSemana as $index => $diaSemana) {
-            if ($diaSemana == $dia) {
-                $exists = $index;
-                break;
-            }
-        }
-        if($exists != -1) {
-            array_splice($this->diasSemana,$exists,1);
-        }else{
-            $this->diasSemana [] = $dia;
-        }
-    }
 
     public function update(){
         Psicologo::update([
@@ -88,25 +81,39 @@ class PerfilPsicologo extends Component
     public function getHorarioProperty(){
         return Horario::find($this->horarioId)->load(['eventos.cliente','solicitacoes.cliente']);
     }
+
+    public function getDiasSemana(){
+        $dias = [
+            'domingo' => 0,
+            'segunda' => 1,
+            'terca' => 2,
+            'quarta' => 3,
+            'quinta' => 4,
+            'sexta' => 5,
+            'sabado' => 6,
+        ];
+        return array_map(function ($dia) use($dias){
+          return $dias[$dia];
+        },array_keys(array_filter($this->diasSemana,function ($valor){
+           return $valor == true;
+        })));
+    }
     public function novoHorario(){
 
-
+        $diasSemana = $this->getDiasSemana();
         $this->validate([
             'horaInicio' => 'required|max:23|min:0',
             'minutoInicio' => 'required|min:0|max:59',
             'horaFinal' => 'required|gte:horaInicio',
             'minutoFinal' => 'required|min:0|max:59',
             'diasSemana' => 'array|min:1|max:7',
-            'diasSemana.*' => 'distinct',
         ],
         [
             'horaInicio.*' => 'Hora Inicial Inválida',
             'minutoInicio.*' => 'Minuto Inicial Inválido',
             'horaFinal.*'    => 'Hora Final Inválida',
             'minutoFinal.*'  => 'Minuto Final Inválido',
-            'diasSemana.*'   => 'Escolha pelo menos um dia da semana',
         ]);
-        $diasSemana = $this->diasSemana;
         $horaIncio  = Carbon::create(now()->year,now()->month,now()->day,$this->horaInicio,$this->minutoInicio,0);
         $horaFinal  = Carbon::create(now()->year,now()->month,now()->day,$this->horaFinal,$this->minutoFinal,0);
         if(!$horaIncio->isBefore($horaFinal)){
@@ -170,14 +177,22 @@ class PerfilPsicologo extends Component
 
     public function deleteHorario()
     {
-
         $horario = Horario::find($this->horarioId);
         $this->closeHorarioInfo();
+        Db::beginTransaction();
         if($horario->eventos()->whereDate('final','>=',now())->count() == 0 and $horario->solicitacoes()->where('status',1)->count() == 0){
             $horario->delete();
             $this->dispatchBrowserEvent('open-success-notification','Horário removido com sucesso!');
             $this->refreshHorarios();
+        }else {
+            $this->dispatchBrowserEvent('open-error-notification', 'O Horário não pode ser removido, existem eventos pendentes');
         }
+        Db::commit();
+
+    }
+
+    public function editHorario()
+    {
 
     }
     public function refreshHorarios(){

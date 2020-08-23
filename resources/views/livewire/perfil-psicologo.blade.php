@@ -1,9 +1,4 @@
 <div>
-    <div class="fixed top-0 right-0 mr-6 mt-6 px-4 py-2">
-        @if($errors->any())
-            @include('shared.alerts.error')
-        @endif
-    </div>
     @component('partials.card')
         @slot('class','mx-4 bg-primary border border-gray-300')
         <form wire:submit.prevent="update" method="POST">
@@ -154,33 +149,33 @@
                         <div class="grid grid-cols-2  px-4 w-full">
                             <div class="flex flex-col">
                                 <div class="items-center flex">
-                                    <input wire:click="addDiaSemana(0)" id="dia_semana_dom" type="checkbox">
+                                    <input wire:model.lazy="diasSemana.domingo" id="dia_semana_dom" type="checkbox">
                                     <label for="dia_semana_dom" class="mx-2 leading-6 text-primary font-light" >Domingo</label>
                                 </div>
                                 <div class="items-center flex">
-                                    <input wire:click="addDiaSemana(1)" id="dia_semana_seg" type="checkbox">
+                                    <input wire:model.lazy="diasSemana.segunda" id="dia_semana_seg" type="checkbox">
                                     <label for="dia_semana_seg" class="mx-2 leading-6 text-primary font-light" >Segunda</label>
                                 </div>
                                 <div class="items-center flex">
-                                    <input wire:click="addDiaSemana(2)" id="dia_semana_ter" type="checkbox">
+                                    <input wire:model.lazy="diasSemana.terca" id="dia_semana_ter" type="checkbox">
                                     <label for="dia_semana_ter" class="mx-2 leading-6 text-primary font-light" >Terça</label>
                                 </div>
                                 <div class="items-center flex">
-                                    <input wire:click="addDiaSemana(3)" id="dia_semana_qua" type="checkbox">
+                                    <input wire:model.lazy="diasSemana.quarta" id="dia_semana_qua" type="checkbox">
                                     <label for="dia_semana_qua" class="mx-2 leading-6 text-primary font-light" >Quarta</label>
                                 </div>
                             </div>
                             <div class="flex flex-col">
                                 <div class="items-center flex">
-                                    <input wire:click="addDiaSemana(4)" id="dia_semana_qui" type="checkbox">
+                                    <input wire:model.lazy="diasSemana.quinta" id="dia_semana_qui" type="checkbox">
                                     <label for="dia_semana_qui" class="mx-2 leading-6 text-primary font-light" >Quinta</label>
                                 </div>
                                 <div class="items-center flex">
-                                    <input wire:click="addDiaSemana(5)" id="dia_semana_sex" type="checkbox">
+                                    <input wire:model.lazy="diasSemana.sexta" id="dia_semana_sex" type="checkbox">
                                     <label for="dia_semana_sex" class="mx-2 leading-6 text-primary font-light" >Sexta</label>
                                 </div>
                                 <div class="items-center flex">
-                                    <input wire:click="addDiaSemana(6)" id="dia_semana_sab" type="checkbox">
+                                    <input wire:model.lazy="diasSemana.sabado" id="dia_semana_sab" type="checkbox">
                                     <label for="dia_semana_sab" class="mx-2 leading-6 text-primary font-light" >Sábado</label>
                                 </div>
                             </div>
@@ -234,8 +229,14 @@
                         Novo Horário
                     </button>
                 </div>
+
             </div>
             </form>
+            @if($errors->any())
+                <div class="mt-2 ">
+                    @include('shared.alerts.error')
+                </div>
+            @endif
         @endcomponent
         @if($openInfo)
             <div x-data="{ open: false }" x-init="setTimeout(()=> open=true,250)"  class="fixed inset-0 overflow-hidden z-10">
