@@ -12,6 +12,7 @@ class Horario extends Model
     protected $table = 'horario_psicologos';
     protected $guarded = [];
 
+
     public function psicologo(){
         return $this->belongsTo(Psicologo::class,'psicologo_id','id');
     }
