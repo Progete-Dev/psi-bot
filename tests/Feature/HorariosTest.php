@@ -3,16 +3,15 @@
 namespace Tests\Feature;
 
 
-use App\Models\Atendimento\Atendimento;
+use App\Models\Atendimento\Agendamento;
 use App\Models\Cliente\Cliente;
 use App\Models\Psicologo\Psicologo;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class HorariosTest extends TestCase
 {
-    use RefreshDatabase;
+    //use RefreshDatabase;
 
     public $psicologoService;
     public $atendimentoRepo;
@@ -33,30 +32,26 @@ class HorariosTest extends TestCase
         for($i = 1 ; $i < 6; $i++){
             for($j= 8 ; $j < 17 ; $j +=2 ){
               if($j < 12 or $j > 13){
-                  $this->horarioRepo->create([
+                  $id =$this->horarioRepo->create([
                       'psicologo_id' => $psicologos[0]->id,
                       'dia_semana'   => $i,
-                      'hora_inicio'  => $j,
+                      'hora_inicio'  => Carbon::create(null,null,null,$j,0,0),
+                      'hora_final'  => Carbon::create(null,null,null,$j+1,0,0)
+                  ])->id;
+                  $solicitacao = Agendamento::create([
+                      'cliente_id' => factory(Cliente::class)->create()->id,
+                      'horario_id' => $id,
+                      'data_agendada' => Carbon::create(null,null,$i,$j,0,0),
+                      'status' => Agendamento::AGENDADO,
                   ]);
+
               }
             }
         }
-        $this->atendimentoRepo->create([
-            "psicologo_id"=> $psicologos[0]->id,
-            'cliente_id'   => $clientes[0]->id,
-            "status"=> Atendimento::CONFIRMADO,
-            "data_atendimento" => Carbon::today()->addDays(3)->addHours(10)
-        ]);
 
-        $this->atendimentoRepo->create([
-                "psicologo_id"=> $psicologos[0]->id,
-                'cliente_id'   => $clientes[1]->id,
-                "status"=> Atendimento::CONFIRMADO,
-                "data_atendimento" => Carbon::today()->addDays(1)->addHours(14)
-        ]);
-        dd($this->psicologoService->horariosDisponiveisDia($psicologos[0]->id,14,8,2020)->toArray());
-        dd($this->psicologoService->horariosDisponiveisSemana($psicologos[0]->id,3,8,2020)->toArray());
 
+
+        dd($psicologos[0]->notificacoes);
 
     }
 }

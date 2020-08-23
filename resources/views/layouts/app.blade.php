@@ -39,6 +39,7 @@
     @stack('styles')
     @livewireStyles
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @laravelPWA
     <style>
        [x-cloak] { display: none; }
     </style>
@@ -65,7 +66,6 @@
     @endauth
   </main>
   @livewireScripts
-  @laravelPWA
   <script type="text/javascript">
       window.addEventListener("beforeinstallprompt", function(e) {
           // log the platforms provided as options in an install prompt
