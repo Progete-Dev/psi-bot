@@ -1,5 +1,5 @@
 @isset($button)
-<div x-cloak x-data="{}" x-init="initTheme();"  class="fixed md:bottom-0 md:top-auto top-0 right-0 m-4  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
+<div x-cloak x-data="{}" x-init="initTheme();"  class="fixed md:bottom-0 md:top-auto top-0 right-0 mr-10 md:mb-6 sm:mt-6  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
 <button x-on:click="$dispatch('notificaoes');" type="button" class="flex relative text-button">
     @if(auth()->user()->hasNotifications())
         <div class="absolute bg-red-500 h-3 leading-3 mb-4 ml-4 right-0 rounded-full shadow-md text-white text-xs top-0 w-3 z-20">
@@ -56,24 +56,30 @@
                   </label>
               </div>
 
-                @if($notifications != false ){
+
                   @foreach(auth()->user()->notificacoes as $notification)
-                  @component('partials.card')        
-                  @slot('class',"text-secondary  font-sans quicksandoverflow-hidden hover:bg-secondary border hover:border-indigo-400 px-1 cursor-pointer")
-                      <div class="text-sm">
-                          <p class="text-right text-xs">{{$notification->created_at->format('d, M Y')}}</p>
-                          <div class="truncate ">
-                              <h2 class="font-bold text-md h-2 mb-8 ">{{$notification->notificacao}} </h2>
+                  @component('partials.card')
+                  @slot('class',"bg-primary border border-gray-300 text-secondary  font-sans quicksand overflow-hidden hover:bg-secondary border hover:border-indigo-400 px-1 cursor-pointer")
+                      <div class="text-sm " x-data="{details:false}">
+                          <p class="text-right text-xs">{{$notification->created_at->format('d, M Y - H:i')}}</p>
+                          <div x-show="details == false" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" >
+                              <p class="text-xs text-justify">
+                                  {{$notification->mensagem}}
+                              </p>
+                              <div class="justify-end mt-4 p-2 ">
+                                  <button  x-on:click="details=true" class="text-secondary uppercase font-bold text-sm appearance-none focus:outline-none">Detalhes</button>
+                              </div>
                           </div>
-                          <p class="text-xs text-justify">
-                              {{$notification->mensagem}}
-                          <div class="justify-end mt-4 p-2 ">
-                              <a class="text-secondary uppercase font-bold text-sm" href="#">Detalhes</a>
+                          <div x-show="details == true" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                              <p class="text-xs text-justify">
+                              </p>
+                              <div class="justify-end mt-4 p-2 ">
+                                  <button  x-on:click="details=false" class="text-secondary uppercase font-bold text-sm appearance-none focus:outline-none">Ok</button>
+                              </div>
                           </div>
                       </div>
                   @endcomponent
                   @endforeach
-                  @endif
         </div>
       </div>
     </div>

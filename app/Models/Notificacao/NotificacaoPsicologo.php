@@ -17,4 +17,6 @@ class NotificacaoPsicologo extends Model
     public function notificacao(){
         return $this->belongsTo(Notificacao::class,'notificacao_id','id');
     }
+
+
 }

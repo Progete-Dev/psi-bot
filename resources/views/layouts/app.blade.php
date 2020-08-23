@@ -6,7 +6,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}} - @yield('title') </title>
-    <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet" defer>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet" defer>
     <!-- Web Application Manifest -->
     <link rel="manifest" href="/manifest.json">
     <!-- Chrome for Android theme color -->
@@ -38,10 +38,10 @@
     <meta name="msapplication-TileImage" content="/images/icons/icon-512x512.png">
     @stack('styles')
     @livewireStyles
-    <script src="{{ secure_asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
     <style>
        [x-cloak] { display: none; }
-      </style>
+    </style>
 </head>
 <body >
   <main class="flex bg-theme">
@@ -61,7 +61,7 @@
         </footer>
     </div>
     @auth('psicologo')
-        @include('layouts.notifications',['notifications' => isset($notificacoes) ? $notificacoes : false])
+        @include('layouts.notifications',['notifications' => true])
     @endauth
   </main>
   @livewireScripts
