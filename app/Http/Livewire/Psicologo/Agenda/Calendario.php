@@ -38,25 +38,22 @@ class Calendario extends Component
                 if(count($evento['recorrencia']) > 0) {
                     $rrule = new RRule($evento['recorrencia']);
                     $recorrencias = $rrule->getOccurrences();
-
                     foreach ($recorrencias as $recorrencia) {
                         $recorrencia = Carbon::parse($recorrencia);
                         if ($recorrencia->day == $date->day and $recorrencia->month == $date->month and $recorrencia->year == $date->year) {
                             return true;
                         }
                     }
+                    return false;
                 }else{
-                    if ($dataEvento->day == $date->day and $dataEvento->month == $date->month and $dataEvento->year == $date->year) {
-                        return true;
-                    }
+                    return $dataEvento->day == $date->day and $dataEvento->month == $date->month and $dataEvento->year == $date->year;
                 }
             }else{
                 $dataEvento = Carbon::parseFromLocale($evento['data_agendada']);
                 $date = Carbon::create($day->year,$day->month,$day->day,$dataEvento->hour,$dataEvento->minute,$dataEvento->second)->timezone('America/Sao_Paulo');
-                return $dataEvento->day == $date->day && $dataEvento->month == $date->month;
-
+                return $dataEvento->day == $date->day and $dataEvento->month == $date->month and $dataEvento->year == $date->year;
             }
-            return false;
+
         });
         if($this->viewMode != 1){
             $dayEvents = $dayEvents->groupBy(function ($evento) {

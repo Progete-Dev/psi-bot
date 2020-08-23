@@ -18,7 +18,7 @@
                         Data
                     </dt>
                     <dd class="p-2  leading-5 text-gray-900 ">
-                        {{\Carbon\Carbon::parse($data)->format('d/m/y')}}
+                        {{\Carbon\Carbon::parse($data)->format('d/m/Y')}}
                     </dd>
                     </dl>
                 </li>
@@ -112,7 +112,7 @@
         </div>
     <div class="p-2 my-2">
         <div class="border-b font-bold leading-5 mb-1 pb-2 pl-2 text-primary">
-            Motivio da solicitação
+            Motivo da solicitação
         </div>
         <textarea wire:model="motivo" class="appearance-none bg-white border border-gray-300 h-40 overflow-scroll p-4 resize-none rounded w-full"></textarea>
 

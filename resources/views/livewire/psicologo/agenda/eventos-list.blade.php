@@ -1,7 +1,7 @@
 <div>
-    <ul class="flex justify-start overflow-x-scroll p-2 w-full mb-2">
+    <ul wire:loading.class="animate-pulse" class="flex justify-start overflow-x-auto p-2 w-full mb-2">
         @foreach($events as $horario)
-            <li wire:click="dispatchEventAction('{{$horario['id']}}')"  class="block hover:bg-secondary focus:outline-none focus:bg-secondary transition duration-150 ease-in-out bg-primary border border-gray-300 m-2 rounded-md">
+            <li wire:click="dispatchEventAction('{{$horario['id']}}')"  class=" cursor-pointer select-none block hover:bg-secondary focus:outline-none focus:bg-secondary transition duration-150 ease-in-out bg-primary border border-gray-300 m-2 rounded-md">
                 <div class="px-4 py-4 sm:px-6">
                     <div class="flex-col flex-wrap items-center justify-between">
                         @if(isset($horario['data_agendada']))

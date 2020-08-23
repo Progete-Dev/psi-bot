@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Models\Notificacao\Notificacao;
 use App\Models\Psicologo\Psicologo;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,8 +10,13 @@ class NotificacaoPsicologo extends Model
     protected $guarded = [];
     protected $table = 'notificacao_psicologos';
 
-    protected psicologo()
+    public function psicologo()
     {
-        return $this->public function belongsTo(Psicologo::class);
+        return $this->belongsTo(Psicologo::class,'psicologo_id','id');
     }
+    public function notificacao(){
+        return $this->belongsTo(Notificacao::class,'notificacao_id','id');
+    }
+
+
 }

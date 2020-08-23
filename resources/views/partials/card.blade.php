@@ -1,5 +1,5 @@
 <div class="my-4">
-    <div class="overflow-hidden rounded-md shadow-md @isset($class) {{$class}} @endisset">
+    <div class="rounded-md shadow-md @isset($class) {{$class}} @endisset">
         @if(isset($cardHeader))
             {{$cardHeader}}
         @elseif(isset($cardTitle))
