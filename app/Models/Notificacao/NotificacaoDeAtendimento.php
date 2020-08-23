@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class NotificacaoDeAtendimento extends Model
 {
     protected $guarded = [];
-    protected $table = 'notificacao_atendimentos'
+    protected $table = 'notificacao_atendimentos';
 
-    protected atendimento()
+    public function atendimento()
     {
-        return $this->public function belongsTo(Atendimento::class);
+        return $this->belongsTo(Atendimento::class);
     }
 }

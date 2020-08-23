@@ -26,13 +26,14 @@ Route::livewire('/pre-cadastro','auth.pre-cadastro')
 Route::middleware(['auth','psicologo'])->prefix('psicologo')->name('psicologo.')
     ->group(function () {
     Route::get('/integrate/google', [GoogleAuthController::class,'store'])->name('integrate.google');
-    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/perfil',[PsicologoController::class,'perfil'])->name('perfil');
-    Route::get('/lembretes',[PsicologoController::class,'perfil'])->name('lembretes');
-    Route::get('/configuracoes',[PsicologoController::class,'perfil'])->name('config');
-    Route::get('/historico',[PsicologoController::class,'perfil'])->name('historico');
-    Route::get('/agenda',[DashboardController::class,'index'])->name('agenda');
-    Route::get('/atendimentos')->name('atendimentos');
-    Route::get('/atendimentos/{atendimento}')->name('atendimentos.atendimento');
+    Route::get('/horarios',[PsicologoController::class,'horarios'])->name('horarios');
+
+    Route::get('/atendimento',[PsicologoController::class,'atendimentos'])->name('atendimento.index');
+    Route::get('/atendimento/{atendimento}',[PsicologoController::class,'viewAtendimento'])->name('atendimento.view');
+    Route::get('/cliente',[PsicologoController::class,'clientes'])->name('cliente.index');
+    Route::get('/cliente/{cliente}',[PsicologoController::class,'viewCliente'])->name('cliente.view');
+    Route::get('/agenda',[PsicologoController::class,'agenda'])->name('agenda');
+
 });
 Route::get('/agendar/{code}',[PacienteController::class,'index'])->name('agendar');

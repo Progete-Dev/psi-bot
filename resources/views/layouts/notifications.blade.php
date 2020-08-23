@@ -1,10 +1,13 @@
 @isset($button)
-<div x-cloak x-data="{}" x-init="initTheme();"  class="fixed md:bottom-0 md:top-auto top-0 right-0 m-4  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
+<div x-cloak x-data="{}" x-init="initTheme();"  class="fixed md:bottom-0 md:top-auto top-0 right-0 mr-10 md:mb-6 sm:mt-6  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
 <button x-on:click="$dispatch('notificaoes');" type="button" class="flex relative text-button">
-    <div class="absolute bg-menu text-primary h-3 leading-3 right-0 rounded-full shadow-md text-xs top-0 w-3 z-20 mb-4 ml-4">9</div>
+    @if(auth()->user()->hasNotifications())
+        <div class="absolute bg-red-500 h-3 leading-3 mb-4 ml-4 right-0 rounded-full shadow-md text-white text-xs top-0 w-3 z-20">
+            <span class="animate-ping bg-pink-400 duration-1000 h-full inline-flex opacity-75 rounded-full w-full"></span>
+        </div>
+    @endif
     <svg class="duration-150 ease-in-out group-focus:text-menu h-6 m-auto md:h-8 md:w-8 relative text-secondary transition w-6 z-10" stroke="none" fill="currentColor" viewBox="0 0 24 24">
       <path class="heroicon-ui" d="M15 19a3 3 0 0 1-6 0H4a1 1 0 0 1 0-2h1v-6a7 7 0 0 1 4.02-6.34 3 3 0 0 1 5.96 0A7 7 0 0 1 19 11v6h1a1 1 0 0 1 0 2h-5zm-4 0a1 1 0 0 0 2 0h-2zm0-12.9A5 5 0 0 0 7 11v6h10v-6a5 5 0 0 0-4-4.9V5a1 1 0 0 0-2 0v1.1z"></path>
-      
     </svg>
   </button>
 </div>
@@ -53,24 +56,30 @@
                   </label>
               </div>
 
-                @if($notifications != false ){
+
                   @foreach(auth()->user()->notificacoes as $notification)
-                  @component('partials.card')        
-                  @slot('class',"text-secondary  font-sans quicksandoverflow-hidden hover:bg-secondary border hover:border-indigo-400 px-1 cursor-pointer")
-                      <div class="text-sm">
-                          <p class="text-right text-xs">{{$notification->created_at->format('d, M Y')}}</p>
-                          <div class="truncate ">
-                              <h2 class="font-bold text-md h-2 mb-8 ">{{$notification->notificacao}} </h2>
+                  @component('partials.card')
+                  @slot('class',"bg-primary border border-gray-300 text-secondary  font-sans quicksand overflow-hidden hover:bg-secondary border hover:border-indigo-400 px-1 cursor-pointer")
+                      <div class="text-sm " x-data="{details:false}">
+                          <p class="text-right text-xs">{{$notification->created_at->format('d, M Y - H:i')}}</p>
+                          <div x-show="details == false" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" >
+                              <p class="text-xs text-justify">
+                                  {{$notification->mensagem}}
+                              </p>
+                              <div class="justify-end mt-4 p-2 ">
+                                  <button  x-on:click="details=true" class="text-secondary uppercase font-bold text-sm appearance-none focus:outline-none">Detalhes</button>
+                              </div>
                           </div>
-                          <p class="text-xs text-justify">
-                              {{$notification->mensagem}}
-                          <div class="justify-end mt-4 p-2 ">
-                              <a class="text-secondary uppercase font-bold text-sm" href="#">Detalhes</a>
+                          <div x-show="details == true" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                              <p class="text-xs text-justify">
+                              </p>
+                              <div class="justify-end mt-4 p-2 ">
+                                  <button  x-on:click="details=false" class="text-secondary uppercase font-bold text-sm appearance-none focus:outline-none">Ok</button>
+                              </div>
                           </div>
                       </div>
                   @endcomponent
                   @endforeach
-                  @endif
         </div>
       </div>
     </div>

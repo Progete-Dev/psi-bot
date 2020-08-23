@@ -1,7 +1,7 @@
 window._ = require('lodash');
-window.Popper = require('popper.js').default;
 
 import 'alpinejs';
+
 const Turbolinks = require("turbolinks");
 Turbolinks.start()
 
