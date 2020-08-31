@@ -6,8 +6,8 @@
                 <span class="text-lg font-bold text-primary">{{$months[$month-1]}}</span>
             @elseif($viewMode == 2)
                 <span class="text-lg font-bold text-primary">
-                                {{($betweenMonths != 0 ? $months[($month == 0 ? 11 : $month-1)].'-'.$months[$month == 12 ? 0 : $month]: $months[$month-1])}}
-                            </span>
+                    {{($betweenMonths != 0 ? $months[($month == 0 ? 11 : $month-1)].'-'.$months[$month == 12 ? 0 : $month]: $months[$month-1])}}
+                </span>
             @endif
 
             <span class="ml-1 text-lg text-primary font-normal">{{$year}}</span>
@@ -88,7 +88,7 @@
                                                         <div wire:key="{{$event['id'].$event['cliente_id']}}"
                                                              wire:click="openDetails('{{$event['id']}}',{{isset($event['recorrencia']) ? 'true' : 'false'}})"
                                                              class="p-1 {{isset($event['recorrencia']) ? 'bg-menu' : 'bg-green-500'}} cursor-pointer duration-100 ease-in-out h-full inline-flex items-center justify-center leading-none rounded text-center text-menu text-xs transition truncate">
-                                                            {{$event['hora_inicio'].' - '.$event['hora_final'] }}
+                                                            {{\Carbon\Carbon::createFromTimeString($event['hora_inicio'])->format('H:i').' - '.\Carbon\Carbon::createFromTimeString($event['hora_final'])->format('H:i') }}
                                                         </div>
                                                     @endforeach
                                                 @endif
@@ -98,16 +98,15 @@
                                 </div>
                             @endfor
                         @else
-
                             <div class="cursor-pointer h-32  flex divide-x {{($day['day'] == now()->day and $month == now()->month and $year == now()->year) ? 'text-xl bg-theme' : ''}}">
-                                <div class="flex flex-wrap w-full p-1 justify-start overflow-hidden">
+                                <div class="flex flex-wrap w-full p-1 justify-start overflow-hidden scrolling-touch">
                                     <div class="justify-start md:text-lg text-center text-start text-xs {{($viewMode == 1 and $day['firstDay'] == false) ?  'text-gray-500' : 'text-primary'}}">{{$day['day']}}</div>
                                     <div class="w-full h-full">
                                         @isset($day['events'])
                                             @foreach($day['events'] as $index => $event)
-                                                <div wire:click="openDetails('{{$event['id']}}',{{isset($event['recorrencia']) ? 'true' : 'false'}})"
-                                                     class="p-1 {{isset($event['recorrencia']) ? 'text-primary' : 'text-green-200 bg-green-500'}} cursor-pointer  inline-flex items-center justify-center leading-nonetext-center text-xs transition truncate">
-                                                    {{$event['hora_inicio'].' - '.$event['hora_final'] }}
+                                                <div wire:click="openDetails('{{$event['id']}}',{{isset($event['recorrencia']) ? 'true' : 'false'}},{{$day['day']}},{{$day['month']}},{{$year}})"
+                                                     class="p-1 {{isset($event['recorrencia']) ? 'text-menu bg-menu' : 'text-green-200 bg-green-500'}} cursor-pointer  inline-flex items-center justify-center leading-nonetext-center text-xs transition truncate">
+                                                    {{\Carbon\Carbon::createFromTimeString($event['hora_inicio'])->format('H:i').' - '.\Carbon\Carbon::createFromTimeString($event['hora_final'])->format('H:i') }}
                                                 </div>
                                             @endforeach
                                         @endisset

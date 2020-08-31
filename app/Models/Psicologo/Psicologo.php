@@ -4,6 +4,7 @@ namespace App\Models\Psicologo;
 
 
 use App\Models\Atendimento\Atendimento;
+use App\Models\Cliente\Cliente;
 use App\Models\Notificacao\Notificacao;
 use App\Models\NotificacaoPsicologo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -20,7 +21,7 @@ class Psicologo extends Authenticatable
     }
 
     public function horarios(){
-        return $this->hasMany(Horario::class);
+        return $this->hasMany(Horario::class,'psicologo_id','id');
     }
 
     public function notificacoes(){
@@ -32,6 +33,11 @@ class Psicologo extends Authenticatable
             'id',
             'notificacao_id'
         );
+    }
+
+    public function clientes()
+    {
+        return Cliente::all();
     }
 
     public function hasNotifications(){

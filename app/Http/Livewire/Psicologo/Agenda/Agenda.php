@@ -15,39 +15,57 @@ class Agenda extends Component
 {
     public $atendimentoId;
     public $openModal;
-    public $events;
     public $solicitacao = false;
+    public $dia;
+    public $mes;
+    public $ano;
     protected $listeners = [
         'open-details-modal' => 'openDetails',
         'open-solicitacoes-modal' => 'openSolicitacoesModal',
         'open-atendimentos-modal' => 'openAtendimentosModal',
     ];
-    public function mount($events){
+    public function mount(){
+
         $this->atendimentoId = null;
         $this->openModal = false;
 
         if(Auth::user()->googleAuth !=null and Auth::user()->googleAuth->expired){
             GoogleCalendar::refreshToken(Auth::user()->googleAuth);
         }
-        $this->events = $events;
     }
 
 
     public function render()
     {
-        return view('livewire.psicologo.agenda.agenda');
+        $date = now()->startOfMonth();
+        $atendimentos = Evento::paraPsicologo(Auth::user()->id)
+            ->withEventosSince($date)
+            ->with('cliente')
+            ->get();
+        $solicitacoes = Agendamento::paraPsicologo(Auth::user()->id)
+            ->withAgendamentosSince($date)
+            ->where('status','<',Agendamento::AGENDADO)
+            ->with('cliente')
+            ->get();
+        return view('livewire.psicologo.agenda.agenda',[
+            'solicitacoes' => $solicitacoes,
+            'atendimentos' => $atendimentos,
+        ]);
     }
-    public function openDetails($eventId,$solicitacao){
-
+    public function openDetails($eventId,$solicitacao,$dia,$mes,$ano){
         $this->atendimentoId = $eventId;
         $this->solicitacao = $solicitacao;
+        $this->dia = $dia;
+        $this->mes = $mes;
+        $this->ano = $ano;
         $this->openModal = true;
+
     }
-    public function openSolicitacoesModal($eventId){
-        $this->openDetails($eventId,false);
+    public function openSolicitacoesModal($eventId,$dia,$mes,$ano){
+        $this->openDetails($eventId,false,$dia,$mes,$ano);
     }
-    public function openAtendimentosModal($eventId){
-        $this->openDetails($eventId,true);
+    public function openAtendimentosModal($eventId,$dia,$mes,$ano){
+        $this->openDetails($eventId,true,$dia,$mes,$ano);
     }
     public function closeDetails(){
         $this->atendimentoId = null;
@@ -55,14 +73,21 @@ class Agenda extends Component
     }
     public function getAtendimentoProperty(){
         if($this->solicitacao == true) {
-            return Evento::with(['horario','cliente'])->find($this->atendimentoId);
+            $evento =Evento::with(['horario','cliente'])->find($this->atendimentoId);
+            return $evento;
         }
-        return Agendamento::with(['horario','cliente'])->find($this->atendimentoId);
+        $evento = Agendamento::with(['horario','cliente'])->find($this->atendimentoId);
+        return $evento;
     }
 
     public function confirmarSolicitacao(){
         Db::beginTransaction();
         $solicitacao = Agendamento::with(['horario','cliente'])->find($this->atendimentoId);
+        if($solicitacao == null){
+            session()->flash('error', 'Solicitação nao existe mais, o cliente pode ter cancelado');
+            $this->redirect("#");
+
+        }
         $solicitacao->status = Agendamento::AGENDADO;
         $solicitacao->save();
         $horaFinal = Carbon::parse($solicitacao->horario->hora_final);

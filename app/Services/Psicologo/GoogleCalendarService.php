@@ -12,6 +12,7 @@ use Exception;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
+use Google_Service_Exception;
 use Illuminate\Support\Facades\Log;
 use RRule\RRule;
 
@@ -135,47 +136,51 @@ class GoogleCalendarService
         $psicologo = $horario->psicologo;
         $cliente   = $event->cliente;
         $auth = GoogleAuth::where('psicologo_id',$psicologo->id)->first();
-        $calendarId = $this->getCalendarId($psicologo->id);
 
+        $calendarId = $this->getCalendarId($auth);
+        if($calendarId == null){
+            throw new Google_Service_Exception('No Calendar integration');
+        }
         $startDateTime = $event->inicio;
-        $endDateTime =  $event->final;
+        $endDateTime =  $event->inicio->copy()
+            ->hour($event->final->hour)
+            ->minute($event->final->minute)
+            ->second($event->final->second);
 
-
+        /** @var Carbon $startDateTime $newEvent */
         $newEvent = new Google_Service_Calendar_Event([
-            'summary'     => 'Atendimento:'.$event->inicio->format('H:m'),
+            'summary'     => 'Atendimento: '.$event->horario->hora_inicio->format('H:i'). ' - '. $event->horario->hora_final->format('H:i'),
             'description' => 'Cliente: '.$cliente->nome,
             'start'       => [
-                'dateTime' => $startDateTime->toIsoString(),
+                'dateTime' => $startDateTime->toDateTimeLocalString(),
                 'timeZone' => 'America/Sao_Paulo'
             ],
             'end'         => [
-                'dateTime' => $endDateTime->toIsoString(),
+                'dateTime' => $endDateTime->toDateTimeLocalString(),
                 'timeZone' => 'America/Sao_Paulo'
             ],
             'attendees'   => [
                 ['email' => $cliente->email]
             ]
         ]);
-        if(count($event->recorrencia) > 0) {
-            $rrule = 'RRULE:';
-                $rr = new RRule($event->recorrencia);
-                $rr = $rr->getRule();
-            $rules = array_keys(RRule::FREQUENCIES);
 
-            foreach($rr as $rule => $value){
-                if($value != null) {
-                    if($rule == 'FREQ'){
-                        $value = $rules[$value+1];
-                    }
-                    $rrule .= $rule . '=' . $value.';';
-                }
-            }
-            $newEvent->setRecurrence([$rrule]);
+        if(count($event->recorrencia) > 0) {
+            $rr = new RRule($event->recorrencia);
+            $weekDay = Evento::WEEKDAYS[$event->horario->dia_semana];
+            $rr = new RRule([
+                'UNTIL' => $rr->getRule()['UNTIL'],
+                'FREQ' => $rr->getRule()['FREQ'],
+                'BYDAY' => $weekDay,
+                'INTERVAL' => $rr->getRule()['INTERVAL'],
+                'WKST'  => 'MO'
+            ]);
+            $rrule = $rr->rfcString();
+            $newEvent->setRecurrence(['RRULE:'.$rrule]);
         }
-        $newEvent->setGuestsCanInviteOthers(false);
+
         $this->client->setAccessToken($auth->access_token);
         $return = $this->calendar()->events->insert($calendarId, $newEvent);
-        Log::info($return->id);
+
         return  $return;
     }
 
@@ -185,14 +190,11 @@ class GoogleCalendarService
 
         return $this->calendar()->events->delete($calendarId, $event->google_calendar_id);
     }
-    public function getCalendarId($psicologo){
-        $auth = GoogleAuth::where('psicologo_id',$psicologo)->first();
-        $calendarId = null;
-        if($auth !== null) {
+    public function getCalendarId($auth){
+        if($auth != null) {
            return $auth->check_calendars[0];
-        }else{
-            throw new  Exception("No calendar integration");
         }
+        return null;
     }
 
     public function setAccessToken($token): self

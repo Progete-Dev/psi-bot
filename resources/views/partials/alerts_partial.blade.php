@@ -1,4 +1,4 @@
-<div class="fixed bottom-0 mb-12 md:top-0 right-0 md:mt-6 mr-6 p-2">
+<div class="fixed mb-12 md:top-0 md:bottom-auto sm:bottom-0 right-0 md:mt-6 mr-6 p-2">
   <div x-cloak x-data="{show : false,message:''}" x-init="{{session()->has('success') ? 'setTimeout(()=>{show=true;message =\''.session()->get('success').'\'; setTimeout(()=>{show=false},5200)},250)' : ''}}" x-on:open-success-notification.window="setTimeout(()=>show=true,250); message= event.detail; setTimeout(()=>show=false,5200);" x-show="show" class="rounded-md bg-green-200 p-4 mx-2 my-2"
        x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
   >

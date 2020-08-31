@@ -14,6 +14,9 @@ class Agendamento extends Model
     const FINALIZADO = 4;
 
     protected $guarded = [];
+    protected $casts = [
+        'data_agendada' => 'datetime'
+    ];
 
     public function cliente(){
         return $this->belongsTo(Cliente::class,'cliente_id','id');
