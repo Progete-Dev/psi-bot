@@ -62,7 +62,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="grid grid-cols-{{$viewMode == 1 ? '7' : '8'}} border divide-x">
+        <div class="grid {{$viewMode == 1 ? 'grid-cols-7' : 'grid-cols-8'}} border divide-x">
             @if($viewMode != 1)
                 <div class="grid gap-2 mt-10 p-2">
                     @for($i = 0 ; $i <= 23 ; $i++)

@@ -135,7 +135,7 @@ class NovoAtendimento extends Component
 
         if ($this->data_inicio != null and !($this->data_inicio instanceof Carbon)) {
             $data = Carbon::createFromFormat('d/m/Y',$this->data_inicio);
-            $horarios = Auth::user()->horarios()->paraDia($data)->get( );
+            $horarios = Auth::user()->horarios()->paraDia($data)->get();
         }
         return view('livewire.psicologo.atendimento.novo-atendimento',['horarios' => $horarios]);
     }
