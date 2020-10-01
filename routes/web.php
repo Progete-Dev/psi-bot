@@ -11,6 +11,7 @@
 |
 */
 
+use App\Facades\TokenLink;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\PacienteController;
@@ -37,3 +38,6 @@ Route::middleware(['auth','psicologo'])->prefix('psicologo')->name('psicologo.')
 
 });
 Route::get('/agendar/{code}',[PacienteController::class,'index'])->name('agendar');
+Route::get('test/agendar/',function(){
+    return redirect()->to(TokenLink::generateLink(1));
+});

@@ -18,13 +18,18 @@ class NovoAtendimento extends Component
 
     public $open;
     public $horariosDiaSemana;
+
+
+    public $listeners = [
+        'novo-atendimento' => 'novoAtendimentoEvent'
+    ];
     public function mount(){
         $this->open = false;
         $this->cliente = null;
         $this->horario = null;
         $this->data_inicio = null;
         $this->data_final = null;
-        $this->tipo = null;
+        $this->tipo = -1;
         $this->horariosDiaSemana = Auth::user()->horarios()->select('dia_semana')->distinct()
             ->get()
             ->pluck('dia_semana')
@@ -68,16 +73,30 @@ class NovoAtendimento extends Component
         return null;
     }
 
+    public function novoAtendimentoEvent($dia,$mes,$ano){
+        if ($dia >= now()->day and $mes >= now()->month and $ano >= now()->year) {
+            $this->fill([
+                'data_inicio' => "$dia/$mes/$ano",
+            ]);
+            $this->openForm();
+        }else{
+            $this->dispatchBrowserEvent('open-error-notification','A data para o atendimento precisa ser depois de : '. now()->subDay()->format('d/m/Y'). ' !');
+        }
+    }
     public function novoAtendimento(NovoAtendimentoService $service){
         $data = $this->validate([
             'data_inicio' => 'required',
             'cliente' => 'required|exists:clientes,id',
             'horario' => 'required|exists:horario_psicologos,id',
-            'tipo' => 'required|in:-1,7,14',
+            'tipo' => '',
+        ],[
+            'cliente.required' => 'Selecione um Cliente para o atendimento',
+            'horario.required' => 'Selecione um horario para o atendimento',
+            'horario.exists' => 'Selecione um horario, ou adicione um novo horario'
         ]);
 
         $horario = Auth::user()->horarios()->find($data['horario']);
-        $data_inicio = Carbon::parse($this->data_inicio);
+        $data_inicio = Carbon::createFromFormat('d/m/Y', $this->data_inicio);
 
         $data_final = $data_inicio
             ->copy()
@@ -114,7 +133,7 @@ class NovoAtendimento extends Component
     {
         $horarios = [];
 
-        if ($this->data_inicio != null) {
+        if ($this->data_inicio != null and !($this->data_inicio instanceof Carbon)) {
             $data = Carbon::createFromFormat('d/m/Y',$this->data_inicio);
             $horarios = Auth::user()->horarios()->paraDia($data)->get( );
         }

@@ -1,7 +1,9 @@
 const pagination = require('tailwindcss-plugins/pagination');
 
 module.exports = {
-  purge: [],
+  purge: [
+    './resources/views/**/*.blade.php',
+  ],
   theme: {
     extend: {
       textColor: {

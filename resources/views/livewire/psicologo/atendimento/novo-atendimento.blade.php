@@ -54,9 +54,9 @@
         </script>
     @endpush
     <div class="flex justify-end p-2 ">
-        <button wire:click="openForm" type="button" class="flex bg-theme hover:bg-secondary text-primary font-semibold  border border-gray-600 rounded-lg shadow-sm px-2 py-2 mx-2">
-            Novo Atendimento
-        </button>
+{{--        <button wire:click="openForm" type="button" class="flex bg-theme hover:bg-secondary text-primary font-semibold  border border-gray-600 rounded-lg shadow-sm px-2 py-2 mx-2">--}}
+{{--            Novo Atendimento--}}
+{{--        </button>--}}
     </div>
     @if($open)
         <x-side-over wire:click="closeForm">
@@ -80,17 +80,22 @@
                                     @endforeach
                                 </select>
                             </ul>
+                            @error('cliente')
+                            <span class="invalid-feedback text-red-500 text-xs p-2" role="alert">
+                                {{$message}}
+                            </span>
+                            @enderror
                         </div>
-                        @if($cliente != null)
-                        <div class="sm:gap-4 my-2">
-                            <div class="border-b text-md font-bold leading-5 mb-1 pb-2 pl-2 text-primary">
-                                Data
-                            </div>
-                            <ul class="flex flex-wrap justify-between m-auto gap-3">
-                                <x:date-picker wire:model.lazy="data_inicio"  type="date" class="w-full mt-2 rounded shadow focus:outline-none text-primary px-4 py-3 bg-white "  min="{{now()->addDay()->format('Y-m-d')}}"/>
-                            </ul>
-                        </div>
-                        @endif
+{{--                        @if($cliente != null)--}}
+{{--                        <div class="sm:gap-4 my-2">--}}
+{{--                            <div class="border-b text-md font-bold leading-5 mb-1 pb-2 pl-2 text-primary">--}}
+{{--                                Data--}}
+{{--                            </div>--}}
+{{--                            <ul class="flex flex-wrap justify-between m-auto gap-3">--}}
+{{--                                <x:date-picker wire:model.lazy="data_inicio"  type="date" class="w-full mt-2 rounded shadow focus:outline-none text-primary px-4 py-3 bg-white "  min="{{now()->addDay()->format('Y-m-d')}}"/>--}}
+{{--                            </ul>--}}
+{{--                        </div>--}}
+{{--                        @endif--}}
                         @if($data_inicio != null)
                         <div class="sm:gap-4 my-2">
                             <div class="border-b text-md font-bold leading-5 mb-1 pb-2 pl-2 text-primary">
@@ -104,33 +109,38 @@
                                     @endforeach
                                 </select>
                             </ul>
+                            @error('horario')
+                            <span class="invalid-feedback text-red-500 text-xs p-2" role="alert">
+                                {{$message}}
+                            </span>
+                            @enderror
                         </div>
-                        <div class="sm:gap-4 my-2">
-                            <div class="border-b text-md font-bold leading-5 mb-1 pb-2 pl-2 text-primary">
-                                Recorrência
-                            </div>
-                            <ul class="flex flex-wrap justify-between m-auto gap-3">
-                                @if($horario != null)
-                                <li class="w-full p-2">
-                                    <select wire:model.lazy="tipo" class="focus:outline-none px-4 py-2 bg-secondary text-primary w-full" >
-                                        <option>Selecione o tipo de Recorrência</option>
-                                        <option value="-1"> Sem Recorrência</option>
-                                        <option value="7">Semanal</option>
-                                        <option value="14">Quinzenal</option>
-                                    </select>
-                                </li>
-                                @endif
-                                @if($tipo > 0)
-                                <li>
-                                    <label for="quantidade" class="text-primary font-medium leading-5 p-2">
-                                        Informe a data do ultimo Atendimento
-                                    </label>
-                                    <x:date-picker :min-date="$data_inicio" wire:model.lazy="data_final"  type="date" class="w-full mt-2 rounded shadow focus:outline-none text-primary px-4 py-3 bg-white "  min="{{now()->addDay()->format('Y-m-d')}}"/>
-                                </li>
+{{--                        <div class="sm:gap-4 my-2">--}}
+{{--                            <div class="border-b text-md font-bold leading-5 mb-1 pb-2 pl-2 text-primary">--}}
+{{--                                Recorrência--}}
+{{--                            </div>--}}
+{{--                            <ul class="flex flex-wrap justify-between m-auto gap-3">--}}
+{{--                                @if($horario != null)--}}
+{{--                                <li class="w-full p-2">--}}
+{{--                                    <select wire:model.lazy="tipo" class="focus:outline-none px-4 py-2 bg-secondary text-primary w-full" >--}}
+{{--                                        <option>Selecione o tipo de Recorrência</option>--}}
+{{--                                        <option value="-1"> Sem Recorrência</option>--}}
+{{--                                        <option value="7">Semanal</option>--}}
+{{--                                        <option value="14">Quinzenal</option>--}}
+{{--                                    </select>--}}
+{{--                                </li>--}}
+{{--                                @endif--}}
+{{--                                @if($tipo > 0)--}}
+{{--                                <li>--}}
+{{--                                    <label for="quantidade" class="text-primary font-medium leading-5 p-2">--}}
+{{--                                        Informe a data do ultimo Atendimento--}}
+{{--                                    </label>--}}
+{{--                                    <x:date-picker :min-date="$data_inicio" wire:model.lazy="data_final"  type="date" class="w-full mt-2 rounded shadow focus:outline-none text-primary px-4 py-3 bg-white "  min="{{now()->addDay()->format('Y-m-d')}}"/>--}}
+{{--                                </li>--}}
 
-                                @endif
-                            </ul>
-                        </div>
+{{--                                @endif--}}
+{{--                            </ul>--}}
+{{--                        </div>--}}
                         @endif
                     </div>
                 </div>
