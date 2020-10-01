@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Facades\TokenLink;
+use App\Jobs\NovaSolicitacao;
 use App\Models\Notificacao\Notificacao;
 use App\Models\NotificacaoPsicologo;
 use App\Models\Psicologo\Horario;
@@ -76,15 +77,16 @@ class AgendarHorario extends Component
                         'data_agendada' => $date,
                         'status' => 1
                     ]);
-                $notificacao = Notificacao::create([
-                    'mensagem' => 'Nova Solicitação de Atendimento',
-                    'meta_data' => ['solicitacao_id' => $solicitacao->id],
-                ]);
-                NotificacaoPsicologo::create([
-                    'psicologo_id' => $horario->psicologo_id,
-                    'notificacao_id' => $notificacao->id,
-                    'notificado' => false
-                ]);
+//                $notificacao = Notificacao::create([
+//                    'mensagem' => 'Nova Solicitação de Atendimento',
+//                    'meta_data' => ['solicitacao_id' => $solicitacao->id],
+//                ]);
+//                NotificacaoPsicologo::create([
+//                    'psicologo_id' => $horario->psicologo_id,
+//                    'notificacao_id' => $notificacao->id,
+//                    'notificado' => false
+//                ]);
+                NovaSolicitacao::dispatch($solicitacao);
                 $this->confirmarSucesso();
             } else {
                 $this->confirmarErro();

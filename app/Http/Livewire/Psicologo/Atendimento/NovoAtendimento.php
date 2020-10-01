@@ -34,7 +34,6 @@ class NovoAtendimento extends Component
             ->get()
             ->pluck('dia_semana')
             ->reduce(function($atual,$dia_semana){
-
                 $data =["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 $atual []= $data[$dia_semana];
                 return $atual;
