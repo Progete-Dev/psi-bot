@@ -91,15 +91,30 @@
   }
   function switchTheme(e) {
         if (e.checked == true) {
-            localStorage.setItem('theme', 'dark');
-            document.documentElement.setAttribute('data-theme', 'dark');
-
+            if(!cookieExists("temaCookie", "dark")){
+              document.documentElement.setAttribute('data-theme', 'dark');
+              setCookies("temaCookie", "dark")
+            }
         } else {
-            localStorage.setItem('theme', 'light');
             document.documentElement.setAttribute('data-theme', 'light');
+            setCookies("temaCookie", "light")
         }    
     }
-  
+    function setCookies(name,value,expirationInDays= 1,path = "/",domain = null,samesite=null,secure=false) {
+      const date = new Date();
+      date.setTime(date.getTime() + (expirationInDays * 24 * 60 * 60 * 1000));
+      document.cookie = name + '=' + value
+        + ';expires=' + date.toUTCString()
+        + ';path='+path
+        + (domain ? ';domain='+domain : '')
+        + (secure ? ';secure' : '')
+        + ';samesite='+ ( samesite ?? 'Lax');
+	  }
+	  function cookieExists(name,value) {
+      return document.cookie.split(';').filter(
+        (cookie) => cookie.trim() == name+'='+value
+      ).length > 0;
+    }
   
 </script>
 
