@@ -1,5 +1,5 @@
 @isset($button)
-<div x-cloak x-data="{}" x-init="initTheme();"  class="fixed md:bottom-0 md:top-auto top-0 right-0 mr-10 md:mb-6 sm:mt-6  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
+<div x-cloak x-data="{}" class="fixed md:bottom-0 md:top-auto top-0 right-0 mr-10 md:mb-6 sm:mt-6  p-2 md:w-12 md:h-12  h-10 w-10 bg-menu rounded-full shadow-md">
 <button x-on:click="$dispatch('notificaoes');" type="button" class="flex relative text-button">
     @if(auth()->user()->hasNotifications())
         <div class="absolute bg-red-500 h-3 leading-3 mb-4 ml-4 right-0 rounded-full shadow-md text-white text-xs top-0 w-3 z-20">
@@ -85,10 +85,7 @@
     </div>
 </div>
 <script>
-  function initTheme(){
-    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'))
-    document.getElementById('toogleTheme').checked = localStorage.getItem('theme') == 'dark';
-  }
+ 
   function switchTheme(e) {
         if (e.checked == true) {
             if(!cookieExists("temaCookie", "dark")){
