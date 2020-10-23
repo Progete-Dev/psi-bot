@@ -2,7 +2,10 @@
 
 namespace App\Http\Livewire\Psicologo\Agenda;
 
+use App\Models\Atendimento\Agendamento;
+use App\Models\Atendimento\Evento;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use RRule\RRule;
 
@@ -16,7 +19,7 @@ class Calendario extends Component
     public $viewMode;
     public $events;
 
-    public function mount($events){
+    public function mount(){
         $date = Carbon::now();
         $this->month = $date->month;
         $this->year  = $date->year;
@@ -24,7 +27,7 @@ class Calendario extends Component
         $this->week = $date->weekOfYear;
         $this->days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
         $this->months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        $this->events = $events;
+
 
     }
     public function eventosPara($events,$day){
@@ -33,8 +36,8 @@ class Calendario extends Component
         }
         $dayEvents= collect($events[$day->dayOfWeek])->filter(function($evento) use ($day){
             if(isset($evento['recorrencia'])) {
-                $dataEvento = Carbon::parseFromLocale($evento['inicio']);
-                $date = Carbon::create($day->year,$day->month,$day->day,$dataEvento->hour,$dataEvento->minute,$dataEvento->second)->timezone('America/Sao_Paulo');
+                $dataEvento = Carbon::createFromTimeString($evento['inicio']);
+                $date = Carbon::create($day->year,$day->month,$day->day,$dataEvento->hour,$dataEvento->minute,$dataEvento->second);
                 if(count($evento['recorrencia']) > 0) {
                     $rrule = new RRule($evento['recorrencia']);
                     $recorrencias = $rrule->getOccurrences();
@@ -49,7 +52,7 @@ class Calendario extends Component
                     return $dataEvento->day == $date->day and $dataEvento->month == $date->month and $dataEvento->year == $date->year;
                 }
             }else{
-                $dataEvento = Carbon::parseFromLocale($evento['data_agendada']);
+                $dataEvento = Carbon::createFromTimeString($evento['data_agendada']);
                 $date = Carbon::create($day->year,$day->month,$day->day,$dataEvento->hour,$dataEvento->minute,$dataEvento->second)->timezone('America/Sao_Paulo');
                 return $dataEvento->day == $date->day and $dataEvento->month == $date->month and $dataEvento->year == $date->year;
             }
@@ -58,11 +61,12 @@ class Calendario extends Component
         if($this->viewMode != 1){
             $dayEvents = $dayEvents->groupBy(function ($evento) {
                 if(isset($evento['recorrencia'])) {
-                    $dataEvento = Carbon::parseFromLocale($evento['inicio']);
+                    $dataEvento = Carbon::createFromTimeString($evento['inicio']);
 
                     return $dataEvento->hour;
                 }else{
-                    $dataEvento = Carbon::parseFromLocale($evento['data_agendada']);
+
+                    $dataEvento = Carbon::createFromTimeString($evento['data_agendada']);
                     return $dataEvento->hour;
                 }
 
@@ -101,14 +105,13 @@ class Calendario extends Component
         }
     }
 
-    public function openDetails($eventId,$event=true)
+    public function openDetails($eventId,$event=true,$day,$month,$year)
     {
-        $this->emitUp('open-details-modal',$eventId,$event);
+        $this->emitUp('open-details-modal',$eventId,$event,$day,$month,$year);
     }
     public function render()
     {
         $daysList  =[ ];
-        $events = collect($this->events);
         if($this->viewMode == 1) {
             $firstDay = Carbon::create($this->year, $this->month, 1)->startOfWeek()->subDay();
             $this->week = $firstDay->week;
@@ -134,8 +137,21 @@ class Calendario extends Component
 
         $date = $firstDay->copy();
         $count = ( ($firstDay->day  != 1 and $firstDay->month != $lastDay->month) ? $firstDay->day - $firstDay->copy()->endOfMonth()->day : $firstDay->day);
-
         $firstDay = false;
+        $atendimentos = Evento::paraPsicologo(Auth::user()->id)
+            ->withEventosSince($date)
+            ->withEventosUntil($lastDay->endOfDay())
+            ->with('cliente')
+            ->get();
+        $solicitacoes = Agendamento::paraPsicologo(Auth::user()->id)
+            ->withAgendamentosSince($date)
+            ->withAgendamentosUntil($lastDay->endOfDay())
+            ->where('status','<',Agendamento::AGENDADO)
+            ->with('cliente')
+            ->get();
+        $events =$atendimentos->mergeRecursive($solicitacoes)->groupBy(function ($event){
+            return $event->dia_semana;
+        })->toArray();
         while($count <= $lastDay->day){
             if($date->day ==1){
                 $firstDay = true;

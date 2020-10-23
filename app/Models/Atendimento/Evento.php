@@ -7,9 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Evento extends Model{
 
+    const WEEKDAYS = [
+        'SU',
+        'MO',
+        'TU',
+        'WE',
+        'TH',
+        'FR',
+        'SA'
+    ];
     protected $guarded = [];
     protected $casts = [
-        'recorrencia' => 'array'
+        'recorrencia' => 'array',
+        'hora_inicio' => 'datetime',
+        'hora_final'  => 'datetime'
     ];
 
     public function cliente(){

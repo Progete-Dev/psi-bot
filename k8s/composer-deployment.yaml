@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml --volumes hostPath
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: composer
+  name: composer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: composer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml --volumes hostPath
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/backend: "true"
+        io.kompose.service: composer
+    spec:
+      containers:
+      - image: composer:latest
+        imagePullPolicy: ""
+        name: composer-psi
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: composer-hostpath0
+        workingDir: /var/www/html
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - hostPath:
+          path: /home/luiz/PhpstormProjects/psi-bot
+        name: composer-hostpath0
+status: {}

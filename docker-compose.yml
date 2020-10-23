@@ -1,10 +1,11 @@
-version: '3.6'
+version: '3.3'
 networks:
   backend:
   frontend:
 services:
   mysql:
     image: mysql:5.7
+    container_name: mysql-psi
     ports:
       - '32768:3306'
     networks:
@@ -42,17 +43,6 @@ services:
     networks:
       - backend
 
-  composer:
-    image: composer:latest
-    container_name: composer-psi
-    volumes:
-      - ./:/var/www/html
-    working_dir: /var/www/html
-    depends_on:
-      - php
-    networks:
-      - backend
-
   npm:
     image: node:13.7
     container_name: npm-psi
@@ -60,17 +50,3 @@ services:
       - ./:/var/www/html
     working_dir: /var/www/html
     entrypoint: ['npm']
-
-  artisan:
-    build:
-      context: .
-      dockerfile: php.dockerfile
-    container_name: artisan-psi
-    volumes:
-      - ./:/var/www/html
-    depends_on:
-      - mysql
-    working_dir: /var/www/html
-    entrypoint: ['php', '/var/www/html/artisan']
-    networks:
-      - backend
