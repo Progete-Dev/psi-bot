@@ -33,7 +33,7 @@ class Boasvindas extends Conversation
         if($this->campo == null){
             $this->ask('Para completar o seu cadastro precisammos que informe um Email',function(Answer $resposta){
                 $validator = Validator::make(['email' =>  $resposta->getText()], [
-                    'email' => 'required|unique:users|email',
+                    'email' => 'required|unique:clientes,email|unique:psicologos,email|email',
                     
                 ]);
     
@@ -68,9 +68,11 @@ class Boasvindas extends Conversation
                 break;
             case 2:
                 $opcoes = [];
-                
-                foreach($this->campo->opcoesArray() as $opcao){
-                    $opcoes []= Button::create($opcao->nome)->value($opcao->valor);
+                if(count($this->campo->opcoesArray()) > 0) {
+
+                    foreach ($this->campo->opcoesArray() as $opcao) {
+                        $opcoes [] = Button::create($opcao->nome)->value($opcao->valor);
+                    }
                 }
 
                 $pergunta = Question::create($this->campo->nome.": ")

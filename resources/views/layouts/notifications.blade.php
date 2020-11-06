@@ -90,11 +90,11 @@
         if (e.checked == true) {
             if(!cookieExists("temaCookie", "dark")){
               document.documentElement.setAttribute('data-theme', 'dark');
-              setCookies("temaCookie", "dark")
+              setCookies("temaCookie", "dark",1000)
             }
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
-            setCookies("temaCookie", "light")
+            setCookies("temaCookie", "light",1000)
         }    
     }
     function setCookies(name,value,expirationInDays= 1,path = "/",domain = null,samesite=null,secure=false) {
