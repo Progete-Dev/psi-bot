@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Facades\TokenLink;
 use App\Jobs\NovaSolicitacao;
 use App\Models\Notificacao\Notificacao;
-use App\Models\NotificacaoPsicologo;
+use App\Models\Notificacao\NotificacaoPsicologo;
 use App\Models\Psicologo\Horario;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;

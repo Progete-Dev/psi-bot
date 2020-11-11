@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\NotificacaoPsicologo;
+use App\Models\Notificacao\NotificacaoPsicologo;
 
 
 class NotificacaoPsicologosRepository extends BaseRepository
