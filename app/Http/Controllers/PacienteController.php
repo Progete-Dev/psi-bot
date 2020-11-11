@@ -22,4 +22,9 @@ class PacienteController extends Controller
         }
         return response('Link Inválido', 403);
     }
+
+    public function chat()
+    {
+        return view('chat');
+    }
 }

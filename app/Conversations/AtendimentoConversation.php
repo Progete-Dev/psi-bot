@@ -9,21 +9,12 @@ use BotMan\BotMan\Messages\Conversations\Conversation;
 
 class AtendimentoConversation extends Conversation
 {
-    use GeraPergunta;
-    protected $service;
-    protected $horarioService;
     public $user;
-    public $data;
-    public $hora;
-    public function __construct(PsicologoService $service, $user)
+    public function __construct($user)
     {
         $this->user = $user;
-        $this->service = $service;
-
-
 
     }
-
 
     public function run()
     {

@@ -2,19 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
+use App\Models\Psicologo\Psicologo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class TestNotification extends TestCase
+class NotificationTest extends TestCase
 {
     use RefreshDatabase;
 
     public function setUp(): void{
         parent::setUp();
-        $this->actingAs(factory(User::class)->create([
-            'ehpsicologo'=>true,
-            
+        $this->actingAs(factory(Psicologo::class)->create([
         ]));
     }
 
