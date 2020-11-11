@@ -18,6 +18,20 @@
        }
     </style>
     @laravelPWA
+    @if(env('APP_DEBUG') == true)
+
+            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/assets/css/chat.min.css">
+
+
+            <script>
+                var botmanWidget = {
+                    chatServer: '/api/botman',
+                    aboutText : 'Papo!'
+                };
+            </script>
+            <script defer src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
+
+    @endif
 </head>
 <body >
   <main class="flex bg-theme">
@@ -40,6 +54,7 @@
     @auth('psicologo')
         @include('layouts.notifications',['notifications' => true])
     @endauth
+
   </main>
   @livewireScripts
 

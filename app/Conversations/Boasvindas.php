@@ -33,8 +33,7 @@ class Boasvindas extends Conversation
         if($this->campo == null){
             $this->ask('Para completar o seu cadastro precisammos que informe um Email',function(Answer $resposta){
                 $validator = Validator::make(['email' =>  $resposta->getText()], [
-                    'email' => 'required|unique:users|email',
-                    
+                    'email' => 'required|unique:clientes,email|email',
                 ]);
     
                 if($validator->fails()){
@@ -46,14 +45,15 @@ class Boasvindas extends Conversation
                     $user = $this->getBot()->getUser();
                     $cliente = Cliente::create([
                         'nome' => $this->respostas[0]['resposta'],
-                        'email' => $this->email,
+                        'email' => $email,
                         'telefone' => $user->getId(),
                         'whatsapp' => true,
                         'motivo' => $resposta->getText(),
+                        'password' => $user->getId().'#'.$email
                     ]);
                     GeraAtendimento::dispatch($this->respostas,$cliente->id);
                     $this->say('Suas informações foram cadastradas com sucesso!');
-                    return $this->bot->startConversation(new AtendimentoConversation($cliente));
+                    $this->bot->startConversation(new AtendimentoConversation($cliente));
                 });
 
             });            
@@ -68,9 +68,11 @@ class Boasvindas extends Conversation
                 break;
             case 2:
                 $opcoes = [];
-                
-                foreach($this->campo->opcoesArray() as $opcao){
-                    $opcoes []= Button::create($opcao->nome)->value($opcao->valor);
+                if(count($this->campo->opcoesArray()) > 0) {
+
+                    foreach ($this->campo->opcoesArray() as $opcao) {
+                        $opcoes [] = Button::create($opcao->nome)->value($opcao->valor);
+                    }
                 }
 
                 $pergunta = Question::create($this->campo->nome.": ")

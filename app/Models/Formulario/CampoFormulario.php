@@ -18,6 +18,7 @@ class CampoFormulario extends Model
         'opcoes' => 'array'
     ];
 
+
     public function renderInput($class,$opcao = null){
         switch($this->tipo){
             case 1:
@@ -47,7 +48,7 @@ class CampoFormulario extends Model
     }
     
     public function opcoesArray(){
-        return $this->opcoes;
+        return json_decode($this->opcoes);
     }
 
     public function formulario(){
