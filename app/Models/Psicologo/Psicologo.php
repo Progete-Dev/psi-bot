@@ -6,7 +6,7 @@ namespace App\Models\Psicologo;
 use App\Models\Atendimento\Atendimento;
 use App\Models\Cliente\Cliente;
 use App\Models\Notificacao\Notificacao;
-use App\Models\NotificacaoPsicologo;
+use App\Models\Notificacao\NotificacaoPsicologo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
