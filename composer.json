@@ -13,11 +13,10 @@
         "php": "^7.4",
         "ext-bcmath": "*",
         "ext-json": "*",
-        "botman/botman": "2.0.x-dev",
-        "botman/driver-google-assistant": "dev-master",
+        "botman/botman": "2.6",
         "botman/driver-telegram": "^1.6",
         "botman/driver-web": "~1.0",
-        "botman/studio-addons": "dev-master",
+        "botman/studio-addons": "1.6.1",
         "exatasmente/whatsapp-go": "@dev",
         "facade/ignition": "^2.0",
         "fideloper/proxy": "^4.0",
@@ -89,7 +88,6 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    
     "repositories": [
         {
             "type": "path",
@@ -97,12 +95,6 @@
             "options": {
                 "symlink": true
             }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/recca0120/studio-addons"
         }
-        
-        
     ]
 }
