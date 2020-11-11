@@ -33,8 +33,7 @@ class Boasvindas extends Conversation
         if($this->campo == null){
             $this->ask('Para completar o seu cadastro precisammos que informe um Email',function(Answer $resposta){
                 $validator = Validator::make(['email' =>  $resposta->getText()], [
-                    'email' => 'required|unique:clientes,email|unique:psicologos,email|email',
-                    
+                    'email' => 'required|unique:clientes,email|email',
                 ]);
     
                 if($validator->fails()){
@@ -46,14 +45,15 @@ class Boasvindas extends Conversation
                     $user = $this->getBot()->getUser();
                     $cliente = Cliente::create([
                         'nome' => $this->respostas[0]['resposta'],
-                        'email' => $this->email,
+                        'email' => $email,
                         'telefone' => $user->getId(),
                         'whatsapp' => true,
                         'motivo' => $resposta->getText(),
+                        'password' => $user->getId().'#'.$email
                     ]);
                     GeraAtendimento::dispatch($this->respostas,$cliente->id);
                     $this->say('Suas informações foram cadastradas com sucesso!');
-                    return $this->bot->startConversation(new AtendimentoConversation($cliente));
+                    $this->bot->startConversation(new AtendimentoConversation($cliente));
                 });
 
             });            

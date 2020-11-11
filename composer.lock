@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea108976d0de9896d7cdbc6e2e351b9e",
+    "content-hash": "89e7724aee387a6d5e9eeb3937944303",
     "packages": [
         {
             "name": "botman/botman",
@@ -80,6 +80,67 @@
                 "chatbot"
             ],
             "time": "2020-09-21T01:23:15+00:00"
+        },
+        {
+            "name": "botman/driver-google-assistant",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/botman/driver-google-assistant.git",
+                "reference": "555dcb177e5a45f4e530df17ed1e56cc72cd85f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/botman/driver-google-assistant/zipball/555dcb177e5a45f4e530df17ed1e56cc72cd85f7",
+                "reference": "555dcb177e5a45f4e530df17ed1e56cc72cd85f7",
+                "shasum": ""
+            },
+            "require": {
+                "botman/botman": "~2.0",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "botman/studio-addons": "~1.0",
+                "ext-curl": "*",
+                "illuminate/contracts": "~5.5.0",
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "~5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BotMan\\Drivers\\GoogleAssistant\\Providers\\GoogleAssistantServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BotMan\\Drivers\\GoogleAssistant\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcel Pociot",
+                    "email": "m.pociot@gmail.com"
+                },
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Google Assistant driver for BotMan",
+            "homepage": "http://github.com/botman/driver-google-assistant",
+            "keywords": [
+                "Botman",
+                "Google Assistant",
+                "bot"
+            ],
+            "time": "2020-09-10T04:46:53+00:00"
         },
         {
             "name": "botman/driver-telegram",
@@ -6630,6 +6691,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
@@ -8389,6 +8451,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "botman/botman": 20,
+        "botman/driver-google-assistant": 20,
         "botman/studio-addons": 20,
         "exatasmente/whatsapp-go": 20
     },

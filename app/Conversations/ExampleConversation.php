@@ -44,7 +44,7 @@ class ExampleConversation extends Conversation
     {
         $this->ask('Qual seu email pra te identificar nos nossos arquivos?', function(Answer $answer) {
             $validator = Validator::make(['email' =>  $answer->getText()], [
-                'email' => 'required|email',
+                'email' => 'required|email|exists:clientes,email',
             ]);
             
             if($validator->fails()){
@@ -81,7 +81,7 @@ class ExampleConversation extends Conversation
            
             switch(intval($opcao)){
                 case 1:
-                    $this->bot->startConversation(new AtendimentoConversation(resolve('App\Services\Psicologo\PsicologoService'),$this->user));
+                    $this->bot->startConversation(new AtendimentoConversation($this->user));
                 
                     break;
                 case 2:

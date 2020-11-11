@@ -20,6 +20,7 @@ use App\Http\Controllers\PsicologoController;
 Route::get('/',function(){
     return redirect('/login');
 });
+Route::get('/assistente',[PacienteController::class,'chat']);
 Auth::routes(['register'=> false]);
 Route::livewire('/pre-cadastro','auth.pre-cadastro')
     ->name('pre-cadastro')
