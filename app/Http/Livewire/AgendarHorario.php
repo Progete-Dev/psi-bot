@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Facades\TokenLink;
 use App\Jobs\NovaSolicitacao;
 use App\Models\Notificacao\Notificacao;
-use App\Models\NotificacaoPsicologo;
+use App\Models\Notificacao\NotificacaoPsicologo;
 use App\Models\Psicologo\Horario;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +24,7 @@ class AgendarHorario extends Component
     public $status;
 
     protected $updatesQueryString = ['data','slot'];
+    protected $listeners = ['selecionaHorario'];
 
 
     public function mount($token)
@@ -55,8 +56,9 @@ class AgendarHorario extends Component
             $this->cancelar();
         }
     }
-    public function selecionaHorario($id){
+    public function selecionaHorario($id, $data){
         $this->slot = $id;
+        $this->data = $data;
     }
 
     public function getHorarioProperty(){
