@@ -89,7 +89,7 @@ class GoogleCalendarService
                         'info' => $this->getEntryPoints($event->getConferenceData()),
                         'recurrence' => isset($event->recurrence[0]) ? $this->parseRecurrenceRule($event->recurrence[0]) : '',
                         'status' => $event->status,
-                        'descricao' => $event->description,
+                        'description' => $event->description,
                     ]);
 
             }

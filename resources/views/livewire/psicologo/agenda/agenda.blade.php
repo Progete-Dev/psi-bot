@@ -19,6 +19,7 @@
         <div class="container mx-auto px-4">
             @component('partials.card')
                 @slot('class','bg-primary')
+
                 @if(auth()->user()->googleAuth == null)
                     <a href="{{$this->googleUrl}}" class="m-4 px-4 py-2 border border-gray-300 bg-button text-button rounded-md hover:bg-secondary hover:text-secondary ">Integrar ao Google Calendário</a>
                 @endif

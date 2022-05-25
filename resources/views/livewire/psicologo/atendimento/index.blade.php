@@ -1,4 +1,4 @@
-<div>
+        <div>
     @component('partials.card')
         @slot('class','bg-primary container py-2 py-4 mx-auto')
         <div class="flex flex-col">
