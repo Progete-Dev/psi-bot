@@ -12,8 +12,6 @@ php artisan migrate --force
 
 # Clear caches
 php artisan optimize:clear
-# Clear expired password reset tokens
-php artisan auth:clear-resets
 
 ## Up api
 php artisan up;
