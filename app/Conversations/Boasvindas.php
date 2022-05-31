@@ -38,7 +38,7 @@ class Boasvindas extends Conversation
                 ]);
     
                 if($validator->fails()){
-                      return $this->pegaResposta(false);
+                      $this->pegaResposta(false);
                 }  
                 $email = $resposta->getText();
                 
