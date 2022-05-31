@@ -1,7 +1,7 @@
 <div>
 
     <div class="flex justify-center md:justify-start pt-12 ">
-        <a href="#" class="bg-black text-button font-bold text-xl p-4">Logo</a>
+        <a href="#" class="bg-black text-button font-bold text-xl p-4">Progete! PSI</a>
     </div>
 
     <div class="flex flex-col justify-center md:justify-start p-10">
