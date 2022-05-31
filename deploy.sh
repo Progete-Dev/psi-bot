@@ -1,4 +1,4 @@
-#git fetch &> /dev/null
+git fetch &> /dev/null
 diffs=$(git diff "$1" origin/"$1")
 if [ -z "$diffs" ]; then
    echo "no changes"
