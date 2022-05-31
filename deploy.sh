@@ -1,3 +1,13 @@
+if [ $1 = "--check" ]; then
+git fetch &> /dev/null
+diffs=$(git diff master origin/master)
+
+if [ -z "$diffs" ]
+then
+  echo "Empty"
+fi
+else
+
 # down for update
 php artisan down
 
@@ -15,3 +25,5 @@ php artisan optimize:clear
 
 ## Up api
 php artisan up;
+
+fi
