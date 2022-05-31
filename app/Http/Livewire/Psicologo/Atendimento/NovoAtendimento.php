@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Psicologo\Atendimento;
 
+use App\Models\Psicologo\Horario;
 use App\Services\Psicologo\NovoAtendimentoService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -94,8 +95,15 @@ class NovoAtendimento extends Component
             'horario.exists' => 'Selecione um horario, ou adicione um novo horario'
         ]);
 
+        /** @var Horario $horario */
         $horario = Auth::user()->horarios()->find($data['horario']);
-        $data_inicio = Carbon::createFromFormat('d/m/Y', $this->data_inicio);
+        if (!$horario) {
+
+        }
+        $data_inicio = Carbon::createFromFormat('d/m/Y', $this->data_inicio)
+            ->hour($horario->hora_inicio->hour)
+            ->minute($horario->hora_inicio->minute)
+            ->second($horario->hora_inicio->second);;
 
         $data_final = $data_inicio
             ->copy()
@@ -104,15 +112,22 @@ class NovoAtendimento extends Component
             ->second($horario->hora_final->second);
         $recorrencia = [];
         if($data['tipo'] != -1) {
-            $data_inicio = $data_inicio->hour($horario->hora_inicio->hour)
-                ->minute($horario->hora_inicio->minute)
-                ->second($horario->hora_inicio->second);
-            $data_final = Carbon::parse($data['data_final'])->hour($horario->hora_final->hour)
-                ->minute($horario->hora_final->minute)
-                ->second($horario->hora_final->second);
-
             $recorrencia = $this->geraRecorrencia($horario, $data_inicio, $data_final);
+
         }
+
+        $possuiConflito = $horario->eventos()->where('inicio', '=', $data_inicio)
+            ->where('final', '=', $data_final)
+            ->exists()
+            || $horario->solicitacoes()->where('data_agendada', '=', $data_inicio)
+                ->exists();
+        if ($possuiConflito) {
+            $this->dispatchBrowserEvent('open-error-notification','Já existe outro agendamento para o horário selecionado, selecione outro e tente novamente.');
+            return;
+        }
+
+
+
         $service->create([
             'horario_id' => $data['horario'],
             'cliente_id' => $data['cliente'],
@@ -121,8 +136,9 @@ class NovoAtendimento extends Component
             'final' => $data_final,
             'google_calendar_id' => ''
         ]);
-        session()->flash('success','Novo Atendimento cadastrado com sucesso!');
-        $this->redirect("#");
+        $this->dispatchBrowserEvent('open-success-notification','Novo Atendimento Agendado');
+        $this->emitTo('psicologo.agenda.calendario', 'update-list');
+        $this->closeForm();
     }
 
     public function test(){
@@ -135,6 +151,7 @@ class NovoAtendimento extends Component
         if ($this->data_inicio != null and !($this->data_inicio instanceof Carbon)) {
             $data = Carbon::createFromFormat('d/m/Y',$this->data_inicio);
             $horarios = Auth::user()->horarios()->paraDia($data)->get();
+
         }
         return view('livewire.psicologo.atendimento.novo-atendimento',['horarios' => $horarios]);
     }
