@@ -30,7 +30,7 @@ class GeraAtendimento implements ShouldQueue
     {
         
         Db::beginTransaction();
-
+dd($this->respostas);
         foreach ($this->respostas as $resposta) {
             RespostaFormulario::insert([
                 'formulario_id' => $resposta['formulario_id'],

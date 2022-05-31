@@ -19,6 +19,10 @@ class Calendario extends Component
     public $viewMode;
     public $events;
 
+    public $listeners = [
+        'update-list' => '$refresh'
+    ];
+
     public function mount(){
         $date = Carbon::now();
         $this->month = $date->month;

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
-class TokenLinkService extends BaseService{
+class TokenLinkService extends BaseService {
 
     public function __construct(TokenLinkRepository $repo)
     {

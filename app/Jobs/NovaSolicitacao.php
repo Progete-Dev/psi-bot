@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Atendimento\Agendamento;
 use App\Models\Notificacao\Notificacao;
-use App\Models\NotificacaoPsicologo;
+use App\Models\Notificacao\NotificacaoPsicologo;
 use App\Notifications\NotificaPsicologos;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

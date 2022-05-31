@@ -1,5 +1,5 @@
 <?php
-namespace App\Models;
+namespace App\Models\Notificacao;
 
 use App\Models\Notificacao\Notificacao;
 use App\Models\Psicologo\Psicologo;

@@ -31,7 +31,8 @@ class ExampleConversation extends Conversation
                 $opcao = $resposta;
                 if($opcao == 'sim'){
                     $this->say('Seja bem vindo! Vamos fazer um cadastro para melhor atendê-lo. 😊');
-                    $formulario = Formulario::first();
+
+                    $formulario = Formulario::find(2);
                     $this->bot->startConversation(new Boasvindas($formulario));
                 }elseif($opcao == 'não'){
                     $this->askEmail();

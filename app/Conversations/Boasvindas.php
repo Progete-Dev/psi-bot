@@ -9,6 +9,7 @@ use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Outgoing\Question;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -43,17 +44,23 @@ class Boasvindas extends Conversation
                 
                 $this->ask('Qual motivo para o seu contato conosco?',function(Answer $resposta) use($email){
                     $user = $this->getBot()->getUser();
-                    $cliente = Cliente::create([
-                        'nome' => $this->respostas[0]['resposta'],
-                        'email' => $email,
-                        'telefone' => $user->getId(),
-                        'whatsapp' => true,
-                        'motivo' => $resposta->getText(),
-                        'password' => $user->getId().'#'.$email
-                    ]);
+                    DB::beginTransaction();
+                        $cliente = Cliente::create([
+                            'nome' => $this->respostas[0]['resposta'],
+                            'email' => $email,
+                            'telefone' => $user->getId(),
+                            'whatsapp' => true,
+                            'motivo' => $resposta->getText(),
+                            'password' => $user->getId().'#'.$email
+                        ]);
+
+                    DB::commit();
+                    
                     GeraAtendimento::dispatch($this->respostas,$cliente->id);
                     $this->say('Suas informações foram cadastradas com sucesso!');
                     $this->bot->startConversation(new AtendimentoConversation($cliente));
+                    
+
                 });
 
             });            

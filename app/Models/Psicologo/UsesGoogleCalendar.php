@@ -8,6 +8,6 @@ trait UsesGoogleCalendar
 {
     public function googleAuth()
     {
-        return $this->hasOne(GoogleAuth::class);
+        return $this-> hasOne(GoogleAuth::class);
     }
 }
