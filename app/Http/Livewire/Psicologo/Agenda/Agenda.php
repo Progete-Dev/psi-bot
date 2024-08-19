@@ -30,7 +30,7 @@ class Agenda extends Component
         $this->openModal = false;
 
         if(Auth::user()->googleAuth !=null and Auth::user()->googleAuth->expired){
-            GoogleCalendar::refreshToken(Auth::user()->googleAuth);
+            #GoogleCalendar::refreshToken(Auth::user()->googleAuth);
         }
     }
 
@@ -121,7 +121,7 @@ class Agenda extends Component
     }
 
     public function getGoogleUrlProperty(){
-        return GoogleCalendar::getAuthUrl();
+        return '';
     }
 
 
