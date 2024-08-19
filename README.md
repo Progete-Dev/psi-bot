@@ -1,28 +1,22 @@
 
 ![Laravel](https://github.com/Progete-Dev/psi-bot/workflows/Laravel/badge.svg)
 
-<p align="center"><img height="188" width="198" src="https://botman.io/img/botman.png"></p>
-<h1 align="center">BotMan Studio</h1>
+<h1 align="center">PSI-BOT</h1>
 
-## About BotMan Studio
+## Para executar use os comandos abaixo no terminal (CLI)
+- *Necessário docker e docker compose
 
-While BotMan itself is framework agnostic, BotMan is also available as a bundle with the great [Laravel](https://laravel.com) PHP framework. This bundled version is called BotMan Studio and makes your chatbot development experience even better. By providing testing tools, an out of the box web driver implementation and additional tools like an enhanced CLI with driver installation, class generation and configuration support, it speeds up the development significantly.
+- git clone https://github.com/Progete-Dev/psi-bot.git
+- cd psi-bot
+- docker-compose up -d
 
-## Documentation
-
-You can find the BotMan and BotMan Studio documentation at [http://botman.io](http://botman.io).
-
-## Support the development
-**Do you like this project? Support it by donating**
-
-- PayPal: [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=m%2epociot%40googlemail%2ecom&lc=CY&item_name=BotMan&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest)
-- Patreon: [Donate](https://www.patreon.com/botman)
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within BotMan or BotMan Studio, please send an e-mail to Marcel Pociot at m.pociot@gmail.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-BotMan is free software distributed under the terms of the MIT license.
-
+## Setup após primeira execução use os comandos abaixo no terminal (CLI):
+- *pode excutar o ./setup-env.bat (Windows) ou ./setup-env.sh (Linux) e ignorar os passos abaixo
+- docker-compose exec php cat .env.example > .env
+- docker-compose exec php composer install
+- docker-compose exec php composer dump-autoload
+- docker-compose exec php php artisan config:clear
+- docker-compose exec php php artisan cache:clear
+- docker-compose exec php php artisan key:generate --force
+- docker-compose exec php php artisan migrate:fresh --force
+- docker-compose exec php php artisan db:seed --force
