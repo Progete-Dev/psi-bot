@@ -24,6 +24,7 @@ class AgendarHorario extends Component
     public $status;
 
     protected $updatesQueryString = ['data','slot'];
+    protected $listeners = ['selecionaHorario'];
 
 
     public function mount($token)
@@ -55,8 +56,9 @@ class AgendarHorario extends Component
             $this->cancelar();
         }
     }
-    public function selecionaHorario($id){
+    public function selecionaHorario($id, $data){
         $this->slot = $id;
+        $this->data = $data;
     }
 
     public function getHorarioProperty(){
